@@ -1,0 +1,13 @@
+DEBUG = /MDd /Od /Zi
+OPT = /MD /Ox /G6 /GL
+LINKER = /link /SUBSYSTEM:WINDOWS /LTCG
+CFLAGS = /Iinclude /W3 /WX /DWINDOWS $(OPT) /nologo
+SDLLIB = SDLmain.lib SDL.lib
+LIBS = $(SDLLIB)
+O=.obj
+EXE=.exe
+CC = cl
+COMPILE = /c
+LINK = /Fe
+
+include makefile.rule

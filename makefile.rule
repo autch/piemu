@@ -1,0 +1,19 @@
+
+OBJS = bcu$(O) core$(O) flash$(O) fram$(O) iomem$(O) lcdc$(O) sram$(O) \
+	usbc$(O) emu$(O) main$(O) piemu$(O)
+
+all: $(OBJS) piemu$(EXE)
+
+-include makefile.dep
+
+%$(O): %.c
+	$(CC) $(COMPILE) $(CFLAGS) $<
+
+piemu$(EXE): $(OBJS)
+	$(CC) $(LINK)$@ $(CFLAGS) $(OBJS) $(LIBS) $(LINKER)
+
+clean:
+	rm -f *$(O)
+
+depend:
+	gcc -MM -I./include *.c | sed "s/\.o/$(O)/g;" > makefile.dep

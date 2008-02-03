@@ -1,0 +1,15 @@
+DEBUG = -g
+OPT = -s -O9 -fomit-frame-pointer -funroll-loops -ffast-math -fno-math-errno
+LINKER = 
+SDLDIR = 
+CFLAGS = -Iinclude -Wall $(shell sdl-config --cflags) -DLINUX $(OPT)
+SDLLIB = $(shell sdl-config --libs)
+LIBS = $(SDLLIB)
+O=.o
+A=
+EXE=.linux
+CC = gcc
+COMPILE = -c
+LINK = -o 
+
+include makefile.rule
