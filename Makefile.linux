@@ -1,0 +1,13 @@
+
+CC ?= gcc
+LD ?= ld
+AR ?= ar
+
+CFLAGS += -DDEBUG
+
+SDL_CONFIG ?= sdl-config
+
+SDL_CFLAGS := `$(SDL_CONFIG) --cflags`
+SDL_LIBS := `$(SDL_CONFIG) --libs`
+
+include Makefile.in

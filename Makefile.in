@@ -1,0 +1,20 @@
+.PHONY: all clean depend
+.SUFFIXES: .c .o .a
+VPATH = 
+
+TARGET = piemu
+
+INCLUDES = -I.
+CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+LIBS += $(SDL_LIBS) -lrt -L.
+EXT_OBJS = 
+
+OBJS = main.o
+
+include Makefile.rule
+
+piemu: $(OBJS)
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
+-include Makefile.dep
+
