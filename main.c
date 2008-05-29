@@ -6,8 +6,11 @@
 #include <SDL_thread.h>
 
 int main_event_loop(void);
-
+#ifdef __linux__
 int main(int argc, char** argv)
+#else
+int SDL_main(int argc, char** argv)
+#endif
 {
   SDL_Init(SDL_INIT_EVERYTHING);
 

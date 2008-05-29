@@ -9,7 +9,7 @@ CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
 LIBS += $(SDL_LIBS) -lrt -L.
 EXT_OBJS = 
 
-OBJS = main.o
+OBJS = main.o inst.o
 
 include Makefile.rule
 
