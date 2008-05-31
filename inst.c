@@ -17,7 +17,6 @@
 #define EXT1 (core->ext[0])
 #define EXT2 (core->ext[1])
 
-
 #define Rs   (R(inst.rs))
 #define Rd   (R(inst.rd))
 #define Rb   (R(inst.rb))

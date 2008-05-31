@@ -5,6 +5,8 @@ clean:
 	rm -f *.o *.a
 
 depend:
+
+Makefile.dep: Makefile.in
 	$(CC) -MM $(CFLAGS) $(addsuffix .c,$(basename $(OBJS))) > Makefile.dep
 
 %.o: %.c

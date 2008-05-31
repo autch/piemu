@@ -4,7 +4,7 @@ VPATH =
 
 TARGET = piemu
 
-INCLUDES = -I.
+INCLUDES = -I. -Iinclude
 CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
 LIBS += $(SDL_LIBS) -lrt -L.
 EXT_OBJS = 
