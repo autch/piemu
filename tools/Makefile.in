@@ -1,0 +1,22 @@
+.PHONY: all clean depend
+.SUFFIXES: .c .cpp .o .a
+VPATH = 
+
+TARGET = pfar mkpfi
+
+INCLUDES = -I. -I../include
+CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+LIBS += $(SDL_LIBS) -lrt -L.
+EXT_OBJS = 
+
+OBJS = pfar.o pffs.o pfi.o mkpfi.o
+
+include Makefile.rule
+
+pfar: pfar.o pffs.o pfi.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+mkpfi: mkpfi.o pffs.o pfi.o
+	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
+-include Makefile.dep
+

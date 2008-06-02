@@ -17,10 +17,10 @@ typedef struct systeminfo
   c33word  sys_clock;    //  8 システム・クロック(Hz)
   c33hword vdde_voltage; // 12 VDDE(周辺)電圧(mV)
   c33hword resv1;        // 14 予約
-  c33hword sram_top;     // 16 SRAM 開始アドレス
-  c33hword sram_end;     // 20 SRAM 終了アドレス+1
-  c33hword pffs_top;     // 24 pffs 開始アドレス
-  c33hword pffs_end;     // 28 pffs 終了アドレス
+  c33word sram_top;     // 16 SRAM 開始アドレス
+  c33word sram_end;     // 20 SRAM 終了アドレス+1
+  c33word pffs_top;     // 24 pffs 開始アドレス
+  c33word pffs_end;     // 28 pffs 終了アドレス
 } SYSTEMINFO;
 
 #endif
