@@ -11,5 +11,3 @@ Makefile.dep: Makefile.in
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
-%.o: %.cpp
-	$(CXX) -c $(CFLAGS) -o $@ $<
