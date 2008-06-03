@@ -10,17 +10,17 @@
 // derived from P/ECE SDK
 typedef struct systeminfo
 {
-  c33hword size;         //  0 ¤³¤Î¹½Â¤ÂÎ¤Î¥µ¥¤¥º
-  c33hword hard_ver;     //  2 ¥Ï¡¼¥É¥¦¥¨¥¢¡¦¥Ğ¡¼¥¸¥ç¥ó
-  c33hword bios_ver;     //  4 BIOS¥Ğ¡¼¥¸¥ç¥ó
-  c33hword bios_date;    //  6 BIOS¹¹¿·Æü YY(7):MM(4):DD(5)
-  c33word  sys_clock;    //  8 ¥·¥¹¥Æ¥à¡¦¥¯¥í¥Ã¥¯(Hz)
-  c33hword vdde_voltage; // 12 VDDE(¼şÊÕ)ÅÅ°µ(mV)
-  c33hword resv1;        // 14 Í½Ìó
-  c33word sram_top;     // 16 SRAM ³«»Ï¥¢¥É¥ì¥¹
-  c33word sram_end;     // 20 SRAM ½ªÎ»¥¢¥É¥ì¥¹+1
-  c33word pffs_top;     // 24 pffs ³«»Ï¥¢¥É¥ì¥¹
-  c33word pffs_end;     // 28 pffs ½ªÎ»¥¢¥É¥ì¥¹
+  c33hword size;         //  0 ã“ã®æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+  c33hword hard_ver;     //  2 ãƒãƒ¼ãƒ‰ã‚¦ã‚¨ã‚¢ãƒ»ãƒãƒ¼ã‚¸ãƒ§ãƒ³
+  c33hword bios_ver;     //  4 BIOSãƒãƒ¼ã‚¸ãƒ§ãƒ³
+  c33hword bios_date;    //  6 BIOSæ›´æ–°æ—¥ YY(7):MM(4):DD(5)
+  c33word  sys_clock;    //  8 ã‚·ã‚¹ãƒ†ãƒ ãƒ»ã‚¯ãƒ­ãƒƒã‚¯(Hz)
+  c33hword vdde_voltage; // 12 VDDE(å‘¨è¾º)é›»åœ§(mV)
+  c33hword resv1;        // 14 äºˆç´„
+  c33word sram_top;     // 16 SRAM é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+  c33word sram_end;     // 20 SRAM çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹+1
+  c33word pffs_top;     // 24 pffs é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+  c33word pffs_end;     // 28 pffs çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 } SYSTEMINFO;
 
 #endif

@@ -56,7 +56,7 @@ int CheckFileName(const char* szFileName)
   return 4;
 }
 
-// е╒ебедеыдм│фдъ┼Ўд╞дщдьд╞дддые╟егеьепе╚еъеиеєе╚еъдЄ╜ч╚╓д╦╩╓д╣
+// уГХуВбуВдуГлуБМхЙ▓уВКх╜УуБжуВЙуВМуБжуБДуВЛуГЗуВгуГмуВпуГИуГкуВиуГ│уГИуГкуВТщаЖчХкуБлш┐ФуБЩ
 DIRECTORY* FindNextDirEntry(PFI* pfi, DIRECTORY** pDir)
 {
   DIRECTORY* p;
@@ -71,7 +71,7 @@ DIRECTORY* FindNextDirEntry(PFI* pfi, DIRECTORY** pDir)
   return NULL;
 }
 
-// е╒ебедеы╠╛д╦е▐е├е┴д╣дые╟егеьепе╚еъеиеєе╚еъдЄ╩╓д╣
+// уГХуВбуВдуГлхРНуБлуГЮуГГуГБуБЩуВЛуГЗуВгуГмуВпуГИуГкуВиуГ│уГИуГкуВТш┐ФуБЩ
 DIRECTORY* FindFile(PFI* pfi, char* szFileName)
 {
   DIRECTORY* pDir = NULL;
@@ -87,7 +87,7 @@ DIRECTORY* FindFile(PFI* pfi, char* szFileName)
   return pDir;
 }
 
-// е╒ебедеы pDir д╬ nSector ╚╓╠▄д╬е╗епе┐д╪д╬е▌едеєе┐дЄ╞└ды
+// уГХуВбуВдуГл pDir уБо nSector чХкчЫоуБоуВ╗уВпуВ┐уБ╕уБоуГЭуВдуГ│уВ┐уВТх╛ЧуВЛ
 c33byte* GetFilesNthSector(PFI* pfi, DIRECTORY* pDir, int nSector)
 {
   int c;
@@ -96,13 +96,13 @@ c33byte* GetFilesNthSector(PFI* pfi, DIRECTORY* pDir, int nSector)
   return PFIGetPFFSTop(pfi) + (c << 12);
 }
 
-// е╒ебедеые╖е╣е╞ер└ш╞мдлдщ┐Їдид┐е╗епе┐╚╓╣цдЄе▌едеєе┐д╪╩╤┤╣
+// уГХуВбуВдуГлуВ╖уВ╣уГЖуГахЕИщануБЛуВЙцХ░уБИуБЯуВ╗уВпуВ┐чХкхП╖уВТуГЭуВдуГ│уВ┐уБ╕хдЙцПЫ
 c33byte* SectorToPointer(PFI* pfi, int nSector)
 {
   return PFIGetPFFSTop(pfi) + (nSector << 12);
 }
 
-// i ╚╓╠▄░╩╣▀длдщ╢їдн FAT дЄ├╡д╣
+// i чХкчЫоф╗ещЩНуБЛуВЙчй║уБН FAT уВТцОвуБЩ
 c33word GetFreeFAT(PFI* pfi, FAT* pFat, int i)
 {
   // maximum available sectors
@@ -140,7 +140,7 @@ DIRECTORY* PFFSDir(PFI* pfi, int nIndex)
   return pDir;
 }
 
-// ╢їдн FAT д╬╕─┐ЇдЄ╩╓д╣бг<<12 д╣дыд╚е╨еде╚├▒░╠д╦д╩дыбг
+// чй║уБН FAT уБохАЛцХ░уВТш┐ФуБЩуАВ<<12 уБЩуВЛуБиуГРуВдуГИхНШф╜НуБлуБкуВЛуАВ
 c33word PFFSFree(PFI* pfi)
 {
   int n = 0, i;
@@ -206,7 +206,7 @@ int PFFSDeleteFile(PFI* pfi, char* pPFFSFileName)
   old_msb = pfi->msb;
   new_msb = *pfi->msb;
   pfi->msb = &new_msb;
-  // д│д╬ pDir д╧ msb д╬├цдЄ╗╪д╣д╬д╟вмд╬дшджд╦е▌едеєе┐д┤д╚║╣д╖┬╪диды╔м═╫дмдвды
+  // уБУуБо pDir уБп msb уБоф╕нуВТцМЗуБЩуБоуБзтЖСуБоуВИуБЖуБлуГЭуВдуГ│уВ┐уБФуБих╖оуБЧцЫ┐уБИуВЛх┐ЕшжБуБМуБВуВЛ
   pDir = FindFile(pfi, pPFFSFileName);
   if(!pDir) return 0;
   nSector = pDir->chain;
@@ -259,7 +259,7 @@ int PFFSAddFile(PFI* pfi, char* pFileName)
   nSectors = (dwSize + 4095) >> 12;
   nOldSectors = 0;
 
-  // MSB д╬е╨е├епеве├е╫дЄ║юды
+  // MSB уБоуГРуГГуВпуВвуГГуГЧуВТф╜ЬуВЛ
   old_msb = pfi->msb;
   new_msb = *pfi->msb;
   pfi->msb = &new_msb;
@@ -308,7 +308,7 @@ int WriteFileToSectors(PFI* pfi, DIRECTORY* pDir, char* szFileName,
   if(!fp) return 0;
   nSector = pDir->chain;
 
-  // дшдждфдпе╒ебедеы╜ёдн╣■д▀
+  // уВИуБЖуВДуБПуГХуВбуВдуГлцЫ╕уБНш╛╝уБ┐
   for(i = 0; i < nSectors; i++)
   {
     fread(SectorToPointer(pfi, nSector), 1, 4096, fp);
@@ -325,31 +325,31 @@ int AllocateSectors(PFI* pfi, DIRECTORY* pDir, int nSectors, int nOldSectors)
   int n, nn = 0, nSector = 0;
   FAT* pFat;
 
-  // ┐╖╡ье╒ебедеыд╬епеще╣е┐е┴езедеє└ш╞м
+  // цЦ░цЧзуГХуВбуВдуГлуБоуВпуГйуВ╣уВ┐уГБуВзуВдуГ│хЕИщан
   pChain = &pDir->chain;
-  // FAT └ш╞м
+  // FAT хЕИщан
   pFat = pfi->msb->fat;
 
-  // ╜р╚ўд╖д┐дде╗епе┐┐Їд└д▒▓єды
+  // ц║ЦхВЩуБЧуБЯуБДуВ╗уВпуВ┐цХ░уБауБСхЫЮуВЛ
   for(nSector = 0; nSector < nSectors; nSector++)
   {
     n = *pChain;
     if(n == FAT_FREE || n == FAT_END)
     {
-      // ╡ье╒ебедеыдшдъдтд┐дпд╡дєе╗епе┐дмд█д╖дд
-      n = GetFreeFAT(pfi, pFat, nn);// nn д╧║╟╕хд╦╠д╗╚═╤е╗епе┐дЄ╕лд─д▒д┐д╚д│дэ
-      if(n < 0) return 0;           // ╢їднд╩д╖
-      *pChain = n;                  // е┴езедеєд╬╝бд╬═╫┴╟д╦д╣ды
+      // цЧзуГХуВбуВдуГлуВИуВКуВВуБЯуБПуБХуВУуВ╗уВпуВ┐уБМуБ╗уБЧуБД
+      n = GetFreeFAT(pfi, pFat, nn);// nn уБпцЬАх╛МуБлцЬкф╜┐чФиуВ╗уВпуВ┐уВТшжЛуБдуБСуБЯуБиуБУуВН
+      if(n < 0) return 0;           // чй║уБНуБкуБЧ
+      *pChain = n;                  // уГБуВзуВдуГ│уБоцмбуБошжБч┤ауБлуБЩуВЛ
       nn = n + 1;
     }
-    pChain = &pFat[n].chain;        // д╜д╬╝бд╬═╫┴╟дмдвдьд╨д╜дьдЄ╗╚дж
-    // д╩д▒дьд╨д▐д┐│фдъ┼Ўд╞ды
+    pChain = &pFat[n].chain;        // уБЭуБоцмбуБошжБч┤ауБМуБВуВМуБ░уБЭуВМуВТф╜┐уБЖ
+    // уБкуБСуВМуБ░уБ╛уБЯхЙ▓уВКх╜УуБжуВЛ
   }
 
-  nn = *pChain;                     // ║╟╕хд╬┐╖╡ме╗епе┐
+  nn = *pChain;                     // цЬАх╛МуБоцЦ░шжПуВ╗уВпуВ┐
   *pChain = FAT_END;
 
-  // ═╛д├д┐╠д╗╚═╤е╗епе┐д╦ FREE е▐б╝епдЄд─д▒ды
+  // ф╜ЩуБгуБЯцЬкф╜┐чФиуВ╗уВпуВ┐уБл FREE уГЮуГ╝уВпуВТуБдуБСуВЛ
   for(; nSector < nOldSectors; nSector++)
   {
     pChain = &pFat[nn].chain;

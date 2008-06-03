@@ -41,18 +41,18 @@ void exec_delay(C33CORE* core, c33word dflag)
 
   if(dflag)
   {
-    /* ǰ�Τ��ᡢ�ǥ��쥤�ɤ���ŤˤʤäƤ��ʤ����Ȥ򸡺� */
+    /* 念のため、ディレイドが二重になっていないことを検査 */
     if(D) DIE();  
-    D = 1;    /* �ǥ��쥤�ɳ��� */
+    D = 1;    /* ディレイド開始 */
     d_inst.s = mem_readH(core, PC.w + 2);
     inst_exec(core, d_inst);
-    if(!D) DIE(); /* ǰ�Τ��ᡢͽ�����ʤ��ǥ��쥤�ɲ�����ʤ����Ȥ򸡺� */
-    D = 0;    /* �ǥ��쥤�ɽ�λ */
+    if(!D) DIE(); /* 念のため、予期しないディレイド解除がないことを検査 */
+    D = 0;    /* ディレイド終了 */
   }
 }
 
 /****************************************************************************
- *  ¨�ͳ�ĥ
+ *  即値拡張
  ****************************************************************************/
 
 c33int ext_imm6(C33CORE* core, c33int imm6)
@@ -143,8 +143,8 @@ c33int ext_SPxIMM6(C33CORE* core, c33int imm6, c33int size)
 
 c33int ext_3op(C33CORE* core)
 {
-  /* NOTE1: ���ʤ��Ȥ�EXT1��¸�ߤ��뤳�Ȥ�ƤӽФ�¦�ǳ�ǧ���Ƥ��������� */
-  /* NOTE2: cmp/and/or/xor/not�⡢3op��ĥ����sign�ǤϤʤ�imm�Ȥʤ�ޤ��� */
+  /* NOTE1: 少なくともEXT1が存在することを呼び出し側で確認してください。 */
+  /* NOTE2: cmp/and/or/xor/notも、3op拡張時はsignではなくimmとなります。 */
   c33int data;
   if(EXT2.s)
   {
@@ -188,7 +188,7 @@ c33int ext_PCxSIGN8(C33CORE* core, c33int sign8)
 }
 
 /****************************************************************************
- *  ���̱黻��PSR����
+ *  共通演算とPSR設定
  ****************************************************************************/
 
 c33int add(C33CORE* core, c33int a, c33int b)
@@ -347,13 +347,13 @@ C33_OP(nop)
 
 C33_OP(slp)
 {
-  /* ��TODO: */
+  /* ※TODO: */
   PC.w += 2;
 }
 
 C33_OP(halt)
 {
-  /* ��TODO: */
+  /* ※TODO: */
   PC.w += 2;
 }
 
@@ -848,7 +848,7 @@ C33_OP(cmp_rd_sign6)
 {
   c33int sn;
   sn = ext_sign6(core, inst.imm6_sign6);
-  sub(core, Rd.i, sn); /* �����ա�imm6�ǤϤʤ�sign6�Ǥ��� */
+  sub(core, Rd.i, sn); /* 要注意！imm6ではなくsign6です！ */
   PC.w += 2;
 }
 
@@ -1072,13 +1072,13 @@ C33_OP(div0u_rs)
 C33_OP(div1_rs)
 {
   c33word tmp;
-  /* div0x�ʳ��Ǥϡ����������㳰��ȯ�����ޤ��� */
+  /* div0x以外では、ゼロ除算例外は発生しません。 */
   AR <<= 1;
   if(!PSR.ds)
   {
     if(!PSR.n)
     {
-      /* ������ */
+      /* 正÷正 */
       tmp = AHR.i - Rs.i;
       if(tmp <= AHR.i)
       { 
@@ -1089,7 +1089,7 @@ C33_OP(div1_rs)
     }
     else
     {
-      /* ������ */
+      /* 正÷負 */
       tmp = AHR.i + Rs.i;
       if(tmp < AHR.i)
       {
@@ -1103,7 +1103,7 @@ C33_OP(div1_rs)
   {
     if(!PSR.n)
     { 
-      /* ����� */
+      /* 負÷正 */
       tmp = AHR.i + Rs.i;
       if(tmp >= AHR.i)
       {
@@ -1114,7 +1114,7 @@ C33_OP(div1_rs)
     }
     else
     {
-      /* ����� */
+      /* 負÷負 */
       tmp = AHR.i - Rs.i;
       if(tmp > AHR.i)
       {
@@ -1130,7 +1130,7 @@ C33_OP(div1_rs)
 C33_OP(div2s_rs)
 {
   c33word tmp;
-  /* div0x�ʳ��Ǥϡ����������㳰��ȯ�����ޤ��� */
+  /* div0x以外では、ゼロ除算例外は発生しません。 */
   if(PSR.ds)
   {
     if(!PSR.n)
@@ -1152,10 +1152,10 @@ C33_OP(div2s_rs)
 
 C33_OP(div3s)
 {
-  /* div0x�ʳ��Ǥϡ����������㳰��ȯ�����ޤ��� */
+  /* div0x以外では、ゼロ除算例外は発生しません。 */
   if(PSR.ds != PSR.n)
   {
-    ALR.i = 0 - ALR.i;  /* ALR = -ALR �ǤϷٹ�ˤʤ�Τǡ� */
+    ALR.i = 0 - ALR.i;  /* ALR = -ALR では警告になるので… */
   }
   PC.w += 2;
 }
@@ -1169,14 +1169,14 @@ C33_OP(div3s)
 
 C33_OP(ld_w_sd_rs)
 {
-  /* �¤ϥǥ��쥤�ɲ�ǽ��EPSON�饤�֥��ν����롼���󤬻ȤäƤ�*/
+  /* 実はディレイド可能！EPSONライブラリの除算ルーチンが使ってる*/
   S(inst.sd_rd).w = R(inst.rs_ss).w;
   PC.w += 2;
 }
 
 C33_OP(ld_w_rd_ss)
 {
-  /* �¤ϥǥ��쥤�ɲ�ǽ��EPSON�饤�֥��ν����롼���󤬻ȤäƤ�*/
+  /* 実はディレイド可能！EPSONライブラリの除算ルーチンが使ってる*/
   R(inst.sd_rd).w = S(inst.rs_ss).w;
   PC.w += 2;
 }
@@ -1237,25 +1237,25 @@ C33_OP(sbc_rd_rs)
   PC.w += 2;
 }
 
-C33_OP(ld_b_rd_rs)   /*�����ա��ǥ��쥤���Բġ�*/
+C33_OP(ld_b_rd_rs)   /*要注意！ディレイド不可！*/
 {
   Rd.i = (c33char)Rs.i;
   PC.w += 2;
 }
 
-C33_OP(ld_ub_rd_rs)    /*�����ա��ǥ��쥤���Բġ�*/
+C33_OP(ld_ub_rd_rs)    /*要注意！ディレイド不可！*/
 {
   Rd.w = (c33byte)Rs.w;
   PC.w += 2;
 }
 
-C33_OP(ld_h_rd_rs)    /*�����ա��ǥ��쥤���Բġ�*/
+C33_OP(ld_h_rd_rs)    /*要注意！ディレイド不可！*/
 {
   Rd.i = (c33hint)Rs.i;
   PC.w += 2;
 }
 
-C33_OP(ld_uh_rd_rs)    /*�����ա��ǥ��쥤���Բġ�*/
+C33_OP(ld_uh_rd_rs)    /*要注意！ディレイド不可！*/
 {
   Rd.w = (c33hword)Rs.w;
   PC.w += 2;
@@ -1291,7 +1291,7 @@ C33_OP(mltu_w_rd_rs)
 //  b = (short)mem_read(R(inst.rs + 1), 2) * (short)mem_read(R(inst.rs + 2), 2);
 //  c = a + b;
 //  AR = a;
-//  if(!PSR.mo) { /* 1��0�ˤ��Ѳ����ʤ� */
+//  if(!PSR.mo) { /* 1→0には変化しない */
 //    PSR.mo = (a < 0  && b <  0 && c >= 0) ||
 //             (a >= 0 && b >= 0 && c <  0);
 //  }
@@ -1303,8 +1303,8 @@ C33_OP(mltu_w_rd_rs)
 //PC.w += 2;
 //CLK += 4;
 //
-//�������Ϥ����Ǥ�����mac̿��¹���˳����ߤ�����դ��뤿��ˡ����Τ褦���ѹ����ޤ�����
-//���µ��Ȱ㤤���mac̿���ե��å����Ƥ��ޤ����ᡢ�µ�����¹ԥ������뤬�����Ƥ��ޤ���
+//↑本当はこうですが、mac命令実行中に割り込みを受け付けるために、次のように変更しました。
+//↓実機と違い毎回mac命令をフェッチしてしまうため、実機よりも実行サイクルが増えています。
 //
 
 C33_OP(mac_rs)
@@ -1318,14 +1318,14 @@ C33_OP(mac_rs)
     AR = a;
     if(!PSR.mo)
     {
-      /* 1��0�ˤ��Ѳ����ʤ� */
+      /* 1→0には変化しない */
       PSR.mo = (a < 0  && b <  0 && c >= 0)
 	|| (a >= 0 && b >= 0 && c <  0);
     }
     Rs.i--;
     R(inst.rs + 1).i += 2;
     R(inst.rs + 2).i += 2;
-    /* PC�Ϥ��Τޤޡ�����⤳��mac̿���¹Ԥ��ޤ��� */
+    /* PCはそのまま。次回もこのmac命令を実行します。 */
   }
   else
   {
@@ -1358,10 +1358,10 @@ C33_OP(ext_imm13)
 
   PC.w += 2;
 
-  /* ��ĥ�����̿���¹ԡ��ʤ��δ֤γ����ߤ�ػߤ��뤿��� */
+  /* 拡張される命令を実行。（この間の割り込みを禁止するため） */
   inst2.s = mem_readH(core, PC);
   core_inst(core, inst2);
-  if(EXT1.s) DIE(); /* �μ¤�ext�����񤵤�Ƥ��뤳�� */
+  if(EXT1.s) DIE(); /* 確実にextが消費されていること */
 }
 
 #undef INST

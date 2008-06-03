@@ -9,20 +9,20 @@
 //		1999.07.29	T.Mineshima start c33208 structure and define
 //		1999.08.04	T.Mineshima change define name.
 //
-//	‚±‚êˆÈ~‚ÌC³‚ÍANaoyuki Sawa<nsawa@north.hokkai.net>‚É‚æ‚é‚à‚Ì‚Å‚·B
-//		2002.07.04	u`33208`v‚Æ‚¢‚¤–¼Ì‚ğu`33209`v‚É•ÏXB
-//		2002.07.04	IDMA_ST‚ÌbBLK‚ÆbSIN‚Ì“à—e‚ª‹t‚¾‚Á‚½‚Ì‚ğC³B
-//		2002.07.05	pINT_PSIO1_PAD‚ÌƒRƒƒ“ƒg—“‚ÌƒAƒhƒŒƒXŠÔˆá‚¢‚ğC³B
-//		2002.07.05	plc_IO‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	8ƒrƒbƒgƒ^ƒCƒ}Ch.4-5‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	ƒVƒŠƒAƒ‹I/F  Ch.2-3‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	ƒ|[ƒgSIO‹@”\Šg’£ƒŒƒWƒXƒ^‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.24	CLKDIV_8T1_32`4096‚ÌƒRƒƒ“ƒg‚ª"8-bit timer 2"
-//				‚Æ‚È‚Á‚Ä‚¢‚½‚Ì‚ğ"8-bit timer 1"‚ÉC³‚µ‚Ü‚µ‚½B
-//		2002.10.24	Š„‚è‚İƒxƒNƒ^”Ô†‚Ì’è‹`‚ğ’Ç‰Á‚µ‚Ü‚µ‚½B
+//	ã“ã‚Œä»¥é™ã®ä¿®æ­£ã¯ã€Naoyuki Sawa<nsawa@north.hokkai.net>ã«ã‚ˆã‚‹ã‚‚ã®ã§ã™ã€‚
+//		2002.07.04	ã€Œã€œ33208ã€œã€ã¨ã„ã†åç§°ã‚’ã€Œã€œ33209ã€œã€ã«å¤‰æ›´ã€‚
+//		2002.07.04	IDMA_STã®bBLKã¨bSINã®å†…å®¹ãŒé€†ã ã£ãŸã®ã‚’ä¿®æ­£ã€‚
+//		2002.07.05	pINT_PSIO1_PADã®ã‚³ãƒ¡ãƒ³ãƒˆæ¬„ã®ã‚¢ãƒ‰ãƒ¬ã‚¹é–“é•ã„ã‚’ä¿®æ­£ã€‚
+//		2002.07.05	plc_IOã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	8ãƒ“ãƒƒãƒˆã‚¿ã‚¤ãƒCh.4-5ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	ã‚·ãƒªã‚¢ãƒ«I/F  Ch.2-3ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	ãƒãƒ¼ãƒˆSIOæ©Ÿèƒ½æ‹¡å¼µãƒ¬ã‚¸ã‚¹ã‚¿ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.24	CLKDIV_8T1_32ã€œ4096ã®ã‚³ãƒ¡ãƒ³ãƒˆãŒ"8-bit timer 2"
+//				ã¨ãªã£ã¦ã„ãŸã®ã‚’"8-bit timer 1"ã«ä¿®æ­£ã—ã¾ã—ãŸã€‚
+//		2002.10.24	å‰²ã‚Šè¾¼ã¿ãƒ™ã‚¯ã‚¿ç•ªå·ã®å®šç¾©ã‚’è¿½åŠ ã—ã¾ã—ãŸã€‚
 //
 //	NOTE:
-//		* struct c_IOtag‚ÌDummy*‚ÍAƒRƒƒ“ƒg‚ÌƒAƒhƒŒƒX”ÍˆÍ‚ª¶‰E‹t‚Å‚·B
+//		* struct c_IOtagã®Dummy*ã¯ã€ã‚³ãƒ¡ãƒ³ãƒˆã®ã‚¢ãƒ‰ãƒ¬ã‚¹ç¯„å›²ãŒå·¦å³é€†ã§ã™ã€‚
 //
 //****************************************************************************
 
@@ -34,7 +34,7 @@
 /****************************************************************/
 
 //#define plc_IO ((volatile struct c_IOtag*)0x40000)
-//«2003/04/12:ƒGƒ~ƒ…ƒŒ[ƒ^—p‚É•ÏX
+//â†“2003/04/12:ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ç”¨ã«å¤‰æ›´
 #define plc_IO ((volatile struct c_IOtag*)context->iomem.mem)
 
 /****************************************************************/
@@ -2472,10 +2472,10 @@ struct IDMA_ST_tag {
 // Port SIO function extension register
 #define pPSIO3_CFEX		plc_IO->c_PCTL_P1.rCFEX.ucCFEX	/* Port SIO function extension register (0x402d7) */
 #define fPSIO3_CFEX		plc_IO->c_PCTL_P1.rCFEX.bCFEX	/* Port SIO function extension register bit field */
-#define bPSIO3_CFEX_SSIN3	fPSIO3_CFEX.CFEX0		/* SSIN3  P33 function selection  SIN3 /      #DMAACK1¥P33 */
-#define bPSIO3_CFEX_SSOUT3	fPSIO3_CFEX.CFEX1		/* SSOUT3 P16 function selection  SOUT3/EXCL5¥#DMAEND1¥P16 */
-#define bPSIO3_CFEX_SSCLK3	fPSIO3_CFEX.CFEX2		/* SSCLK3 P15 function selection #SCLK3/EXCL4¥#DMAEND0¥P15 */
-#define bPSIO3_CFEX_SSRDY3	fPSIO3_CFEX.CFEX3		/* SSRDY3 P32 function selection #SRDY3/      #DMAACK0¥P32 */
+#define bPSIO3_CFEX_SSIN3	fPSIO3_CFEX.CFEX0		/* SSIN3  P33 function selection  SIN3 /      #DMAACK1ãƒ»P33 */
+#define bPSIO3_CFEX_SSOUT3	fPSIO3_CFEX.CFEX1		/* SSOUT3 P16 function selection  SOUT3/EXCL5ãƒ»#DMAEND1ãƒ»P16 */
+#define bPSIO3_CFEX_SSCLK3	fPSIO3_CFEX.CFEX2		/* SSCLK3 P15 function selection #SCLK3/EXCL4ãƒ»#DMAEND0ãƒ»P15 */
+#define bPSIO3_CFEX_SSRDY3	fPSIO3_CFEX.CFEX3		/* SSRDY3 P32 function selection #SRDY3/      #DMAACK0ãƒ»P32 */
 
 ////////////////////////////////////////////////////////////////
 // P2X port register
@@ -2516,10 +2516,10 @@ struct IDMA_ST_tag {
 // Port SIO function extension register
 #define pPSIO2_CFEX		plc_IO->c_PCTL_P2.rCFEX.ucCFEX	/* Port SIO function extension register (0x402db) */
 #define fPSIO2_CFEX		plc_IO->c_PCTL_P2.rCFEX.bCFEX	/* Port SIO function extension register bit field */
-#define bPSIO2_CFEX_SSIN2	fPSIO2_CFEX.CFEX0		/* SSIN2  P27 function selection  SIN2 /TM5¥P27 */
-#define bPSIO2_CFEX_SSOUT2	fPSIO2_CFEX.CFEX1		/* SSOUT2 P26 function selection  SOUT2/TM4¥P26 */
-#define bPSIO2_CFEX_SSCLK2	fPSIO2_CFEX.CFEX2		/* SSCLK2 P25 function selection #SCLK2/TM3¥P25 */
-#define bPSIO2_CFEX_SSRDY2	fPSIO2_CFEX.CFEX3		/* SSRDY2 P24 function selection #SRDY2/TM2¥P24 */
+#define bPSIO2_CFEX_SSIN2	fPSIO2_CFEX.CFEX0		/* SSIN2  P27 function selection  SIN2 /TM5ãƒ»P27 */
+#define bPSIO2_CFEX_SSOUT2	fPSIO2_CFEX.CFEX1		/* SSOUT2 P26 function selection  SOUT2/TM4ãƒ»P26 */
+#define bPSIO2_CFEX_SSCLK2	fPSIO2_CFEX.CFEX2		/* SSCLK2 P25 function selection #SCLK2/TM3ãƒ»P25 */
+#define bPSIO2_CFEX_SSRDY2	fPSIO2_CFEX.CFEX3		/* SSRDY2 P24 function selection #SRDY2/TM2ãƒ»P24 */
 
 ////////////////////////////////////////////////////////////////
 // P3X port register
@@ -2988,18 +2988,18 @@ struct IDMA_ST_tag {
 #define HS3_DISABLE	bHS3_EN_HS3EN = 0
 
 /****************************************************************/
-/*	Š„‚è‚İƒxƒNƒ^”Ô†					*/
+/*	å‰²ã‚Šè¾¼ã¿ãƒ™ã‚¯ã‚¿ç•ªå·					*/
 /****************************************************************/
 
-/*  0`15F—áŠO—vˆö“™‚Ì“à•”Š„‚è‚İ
- *         ƒVƒ“ƒ{ƒ‹‚Ì–¼Ì‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/drv33A104/ad/vector.s ‚É]‚¢‚Ü‚µ‚½B
- *         Š„‚è‚İ‚Ìà–¾‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/inclink/prog1/table.s ‚ğg‚¢‚Ü‚µ‚½B
- * 16`71Fƒ}ƒXƒN‰Â”\‚ÈŠO•”Š„‚è‚İ
- *         ƒVƒ“ƒ{ƒ‹‚Ì–¼Ì‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/hdr33208/c33208.h ‚É]‚¢‚Ü‚µ‚½B
- *         Š„‚è‚İ‚Ìà–¾‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/hdr33208/c33208.h ‚ğg‚¢‚Ü‚µ‚½B
+/*  0ã€œ15ï¼šä¾‹å¤–è¦å› ç­‰ã®å†…éƒ¨å‰²ã‚Šè¾¼ã¿
+ *         ã‚·ãƒ³ãƒœãƒ«ã®åç§°ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/drv33A104/ad/vector.s ã«å¾“ã„ã¾ã—ãŸã€‚
+ *         å‰²ã‚Šè¾¼ã¿ã®èª¬æ˜ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/inclink/prog1/table.s ã‚’ä½¿ã„ã¾ã—ãŸã€‚
+ * 16ã€œ71ï¼šãƒã‚¹ã‚¯å¯èƒ½ãªå¤–éƒ¨å‰²ã‚Šè¾¼ã¿
+ *         ã‚·ãƒ³ãƒœãƒ«ã®åç§°ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/hdr33208/c33208.h ã«å¾“ã„ã¾ã—ãŸã€‚
+ *         å‰²ã‚Šè¾¼ã¿ã®èª¬æ˜ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/hdr33208/c33208.h ã‚’ä½¿ã„ã¾ã—ãŸã€‚
  */
 
-/* —áŠO—vˆö“™‚Ì“à•”Š„‚è‚İ */
+/* ä¾‹å¤–è¦å› ç­‰ã®å†…éƒ¨å‰²ã‚Šè¾¼ã¿ */
 #define TRAP_RESET	0	/* Reset */
 				/* 1-3: reserved */
 #define TRAP_ZERODIV	4	/* Zero Div. */
@@ -3011,7 +3011,7 @@ struct IDMA_ST_tag {
 #define TRAP_SOFTINT1	13	/* Software Exception 1 */
 #define TRAP_SOFTINT2	14	/* Software Exception 2 */
 #define TRAP_SOFTINT3	15	/* Software Exception 3 */
-/* ƒ}ƒXƒN‰Â”\‚ÈŠO•”Š„‚è‚İ */
+/* ãƒã‚¹ã‚¯å¯èƒ½ãªå¤–éƒ¨å‰²ã‚Šè¾¼ã¿ */
 #define TRAP_P0		16	/* Port input 0 */
 #define TRAP_P1		17	/* Port input 1 */
 #define TRAP_P2		18	/* Port input 2 */

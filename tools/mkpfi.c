@@ -12,7 +12,7 @@
 
 #define KERNEL_SIGNATURE "Piece Kernel Program"
 
-// ����͡�pffs_end ���������ͤˤ���Τ�˺��ʤ�����
+// 初期値。pffs_end を正しい値にするのを忘れないこと
 SYSTEMINFO siDefault =
 {
   0x0020, 0x0100, 0x011d, 0x0aa7, 0x016e3600, 0x0ce4, 0x0000,
