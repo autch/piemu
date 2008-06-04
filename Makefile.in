@@ -4,17 +4,29 @@ VPATH =
 
 TARGET = piemu
 
-INCLUDES = -I. -Iinclude
-CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
-LIBS += $(SDL_LIBS) -lrt -L.
-EXT_OBJS = 
+INCLUDES = -I. -Iinclude -Iinst
+CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+LIBS := $(LIBS) $(SDL_LIBS) -lrt -L. -Linst
+EXT_DIRS = inst
 
-OBJS = main.o inst.o
+OBJS = main.o
+
+INST = inst/inst.o inst/inst_common.o \
+	inst/inst_c0a.o inst/inst_c0b.o \
+	inst/inst_c1a.o inst/inst_c1b.o \
+	inst/inst_c2.o \
+	inst/inst_c3.o \
+	inst/inst_c4a.o inst/inst_c4b.o inst/inst_c4c.o \
+	inst/inst_c5a.o inst/inst_c5b.o inst/inst_c5c.o \
+	inst/inst_c6.o 
 
 include Makefile.rule
 
-piemu: $(OBJS)
+piemu: $(OBJS) inst/inst.a
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
+inst/inst.a: $(INST)
+	$(AR) rucs $@ $(INST)
 
 -include Makefile.dep
 

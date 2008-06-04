@@ -5,8 +5,8 @@ VPATH =
 TARGET = pfar mkpfi
 
 INCLUDES = -I. -I../include
-CFLAGS += $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
-LIBS += $(SDL_LIBS) -lrt -L.
+CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+LIBS := $(LIBS) $(SDL_LIBS) -lrt -L.
 EXT_OBJS = 
 
 OBJS = pfar.o pffs.o pfi.o mkpfi.o

@@ -7,7 +7,7 @@ CFLAGS += -DDEBUG
 
 SDL_CONFIG ?= sdl-config
 
-SDL_CFLAGS := `$(SDL_CONFIG) --cflags`
-SDL_LIBS := `$(SDL_CONFIG) --libs`
+SDL_CFLAGS := $(shell $(SDL_CONFIG) --cflags)
+SDL_LIBS := $(shell $(SDL_CONFIG) --libs)
 
 include Makefile.in

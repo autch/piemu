@@ -14,6 +14,8 @@ int SDL_main(int argc, char** argv)
 {
   SDL_Init(SDL_INIT_EVERYTHING);
 
+  SDL_SetVideoMode(128, 88, 32, SDL_HWSURFACE);
+
   main_event_loop();
 
   SDL_Quit();

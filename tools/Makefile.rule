@@ -3,6 +3,7 @@ all: $(TARGET)
 
 clean:
 	rm -f *.o *.a
+	for dir in $(EXT_DIRS); do rm -rf $$dir/*.o $$dir/*.a; done
 
 depend:
 
@@ -11,3 +12,4 @@ Makefile.dep: Makefile.in
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
+
