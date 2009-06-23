@@ -1,5 +1,11 @@
-/** @pfifile.c
- * PFI editor functions
+/** @file pfi.c
+ * PFI ファイルフォーマットの操作関数
+ *
+ * PFI ファイルをディスクから開いてバッファの準備をし、また安全に PFI
+ * ファイルを書き込むことが出来るようにする。
+ *
+ * これらの関数は PFI ファイルのコンテナを操作するだけなので、PFI ファ
+ * イルに含まれる PFFS などの編集は pffs.c などに分けられている。
  */
 #include <stdio.h>
 #include <stdlib.h>

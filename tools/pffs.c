@@ -1,3 +1,13 @@
+/** @file pffs.c
+ * PFFS 操作関数
+ *
+ * PFFS ファイルシステムの操作をする。あらかじめ PFFS イメージのための
+ * バッファが確保されていることが前提となっていて、ここでは PFI ファイ
+ * ル中のバッファを参照している。あらかじめ、PFIOpen() などで PFI ファ
+ * イルを開いておく必要がある。
+ * 
+ * PFI ファイルフォーマットの操作は pfi.c にわかれている。
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -140,7 +150,16 @@ DIRECTORY* PFFSDir(PFI* pfi, int nIndex)
   return pDir;
 }
 
-// 空き FAT の個数を返す。<<12 するとバイト単位になる。
+/**
+ * PFFS の空きセクタの個数を返す。
+ *
+ * PFFS で未使用とマークされているセクタの個数を数えて返す。PFFS では
+ * 1 セクタは 4096 バイトなので、空きバイト数が欲しいときはこの関数の戻
+ * り値を 12 ビット左シフトすればよい。
+ *
+ * @param pfi 空きセクタ数を知りたい PFFS を持っている PFI
+ * @return PFFS FAT チェインで未使用とマークされたセクタの個数
+ */
 c33word PFFSFree(PFI* pfi)
 {
   int n = 0, i;
@@ -153,20 +172,38 @@ c33word PFFSFree(PFI* pfi)
 // for debugging
 void PFFSDumpDirEntries(PFI* pfi)
 {
-  int i;
+  int i, count;
+  int total_size = 0;
+
   printf("idx: %-24s attr chain %10s\n", "filename", "size");
-  for(i = 0; i < PFFSDirCount(pfi); i++)
+  for(i = 0, count = PFFSDirCount(pfi); i < count; i++)
   {
     DIRECTORY* pDir = PFFSDir(pfi, i);
     if(!pDir) break;
     printf("%3d: %-24s  %02x  %04x  %10d\n",
 	   pDir - pfi->msb->dir, pDir->name,
 	   pDir->attr, pDir->chain, pDir->size);
+    total_size += pDir->size;
   }
-  printf("\n%d sectors (%d bytes) free\n",
+  for(i = 0; i < 51; i++) putchar('-');
+  printf("\n%3d files %30s %10d bytes\n", count, "", total_size);
+  printf("%d sectors (%d bytes) free\n",
 	 PFFSFree(pfi), PFFSFree(pfi) << 12);
 }
 
+/**
+ * PFFS からファイルをコピーしてディスクに保存する
+ *
+ * PFFS 上の pPFFSFileName で特定されるファイルを、ディスクに
+ * pDiskFileName というファイル名でコピーする。
+ *
+ * pDiskFileName が既に存在すれば上書きされる。
+ *
+ * @param pfi 操作対象 PFFS を持っている PFI
+ * @param pPFFSFileName コピー元の PFFS 上のファイル名
+ * @param pDiskFileName コピー先のディスク上のファイル名
+ * @return コピー成功時 1, それ以外 0
+ */
 int PFFSExtractFile(PFI* pfi, char* pPFFSFileName, char* pDiskFileName)
 {
   DIRECTORY* pDir;
@@ -196,6 +233,19 @@ int PFFSExtractFile(PFI* pfi, char* pPFFSFileName, char* pDiskFileName)
   return 1;
 }
 
+/**
+ * PFFS 上のファイルを削除する
+ *
+ * PFFS 上にある pPFFSFileName で特定されるファイルをディレクトリエント
+ * リから削除し、関連付けられた FAT チェインを解放する。
+ *
+ * この関数が成功すれば直ちにファイルシステム上の空き容量が増えることに
+ * なる。
+ *
+ * @param pfi 操作対象の PFFS を持っている PFI
+ * @param pPFFSFileName 削除したい PFFS 上のファイル名
+ * @return 削除の成功時 1, それ以外 0
+ */
 int PFFSDeleteFile(PFI* pfi, char* pPFFSFileName)
 {
   pffsMASTERBLOCK new_msb;
@@ -237,6 +287,20 @@ DIRECTORY* FindFreeDir(PFI* pfi)
   return NULL;
 }
 
+/**
+ * PFFS へディスクのファイルを追加する
+ *
+ * ディスクのファイル名 pFileName で指定したファイルを、PFFS の同名のファ
+ * イルへコピーする。PFFS に同名のファイルが既にあれば上書きされる。
+ *
+ * pFileName が PFFS のファイル名にも使われるので、pFileName は PFFS と
+ * しても有効なファイル名でなければならない。
+ *
+ * @param pfi 書き込み先の PFFS を持っている PFI
+ * @param pFileName 書き込み対象のディスク上のファイル名、また PFFS で
+ * のファイル名にもなる。
+ * @return 書き込み成功の時 1, それ以外 0
+ */
 int PFFSAddFile(PFI* pfi, char* pFileName)
 {
   FILE* fp;
