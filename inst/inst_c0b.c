@@ -104,7 +104,7 @@ C33_OP(call_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   SP.w -= 4;
-  mem_writeW(core, SP.w, PC.w + 2);
+  core->mem_write(core, SP.w, 4, PC.w + 2);
   PC.w = addr;
 }
 

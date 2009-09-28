@@ -31,7 +31,7 @@ C33_OP(pushn_rs)
   for(rs = inst.imm2_rd_rs; rs >= 0; rs--)
   {
     SP.w -= 4;
-    mem_writeW(core, SP.w, R(rs).w);
+    core->mem_write(core, SP.w, 4, R(rs).w);
   }
   PC.w += 2;
 }
@@ -41,7 +41,7 @@ C33_OP(popn_rd)
   c33int rd;
   for(rd = 0; rd <= inst.imm2_rd_rs; rd++)
   {
-    R(rd).w = mem_readW(core, SP.w);
+	  R(rd).w = core->mem_read(core, SP.w, 4);
     SP.w += 4;
   }
   PC.w += 2;
@@ -66,10 +66,10 @@ C33_OP(int_imm2)
 
 C33_OP(reti)
 {
-  S(0).w = mem_readW(core, SP.w);
-  SP.w += 4;
-  PC.w = mem_readW(core, SP.w);
-  SP.w += 4;
+	S(0).w = core->mem_read(core, SP.w, 4);
+	SP.w += 4;
+	PC.w = core->mem_read(core, SP.w, 4);
+	SP.w += 4;
 }
 
 C33_OP(call_rb)
@@ -78,14 +78,14 @@ C33_OP(call_rb)
   addr = R(inst.imm2_rd_rs).w;
   exec_delay(core, inst.d);
   SP.w -= 4;
-  mem_writeW(core, SP.w, PC.w + 2);
+  core->mem_write(core, SP.w, 4, PC.w + 2);
   PC.w = addr;
 }
 
 C33_OP(ret)
 {
   c33word addr;
-  addr = mem_readW(core, SP.w);
+  addr = core->mem_read(core, SP.w, 4);
   SP.w += 4;
   exec_delay(core, inst.d);
   PC.w = addr;

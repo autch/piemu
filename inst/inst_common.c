@@ -17,8 +17,8 @@ void exec_delay(C33CORE* core, c33word dflag)
     /* 念のため、ディレイドが二重になっていないことを検査 */
     if(D) DIE();  
     D = 1;    /* ディレイド開始 */
-    d_inst.s = mem_readH(core, PC.w + 2);
-    inst_exec(core, d_inst);
+    d_inst.s = core->mem_read(core, PC.w + 2, 2);
+    inst_decode(core, d_inst);
     if(!D) DIE(); /* 念のため、予期しないディレイド解除がないことを検査 */
     D = 0;    /* ディレイド終了 */
   }
