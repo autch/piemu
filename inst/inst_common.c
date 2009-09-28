@@ -14,18 +14,18 @@ void exec_delay(C33CORE* core, c33word dflag)
 
   if(dflag)
   {
-    /* ǰ�Τ��ᡢ�ǥ��쥤�ɤ���ŤˤʤäƤ��ʤ����Ȥ򸡺� */
+    /* 念のため、ディレイドが二重になっていないことを検査 */
     if(D) DIE();  
-    D = 1;    /* �ǥ��쥤�ɳ��� */
+    D = 1;    /* ディレイド開始 */
     d_inst.s = core->mem_read(core, PC.w + 2, 2);
     inst_decode(core, d_inst);
-    if(!D) DIE(); /* ǰ�Τ��ᡢͽ�����ʤ��ǥ��쥤�ɲ�����ʤ����Ȥ򸡺� */
-    D = 0;    /* �ǥ��쥤�ɽ�λ */
+    if(!D) DIE(); /* 念のため、予期しないディレイド解除がないことを検査 */
+    D = 0;    /* ディレイド終了 */
   }
 }
 
 /****************************************************************************
- *  ¨�ͳ�ĥ
+ *  即値拡張
  ****************************************************************************/
 
 c33int ext_imm6(C33CORE* core, c33int imm6)
@@ -116,9 +116,9 @@ c33int ext_SPxIMM6(C33CORE* core, c33int imm6, c33int size)
 
 c33int ext_3op(C33CORE* core)
 {
-  /* NOTE1: ���ʤ��Ȥ�EXT1��¸�ߤ��뤳�Ȥ�ƤӽФ�¦�ǳ�ǧ���Ƥ��������� */
-  /* NOTE2: cmp/and/or/xor/not�⡢3op��ĥ����sign�ǤϤʤ�imm�Ȥʤ�ޤ��� */
-  c33int data;
+  /* NOTE1: 少なくともEXT1が存在することを呼び出し側で確認してください。 */
+  /* NOTE2: cmp/and/or/xor/notも、3op拡張時はsignではなくimmとなります。 */
+  c33int data = 0;
   if(EXT2.s)
   {
     data = (EXT2.c6.imm13 << 0) | (EXT1.c6.imm13 << 13);
@@ -161,7 +161,7 @@ c33int ext_PCxSIGN8(C33CORE* core, c33int sign8)
 }
 
 /****************************************************************************
- *  ���̱黻��PSR����
+ *  共通演算とPSR設定
  ****************************************************************************/
 
 c33int add(C33CORE* core, c33int a, c33int b)

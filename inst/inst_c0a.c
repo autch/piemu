@@ -11,18 +11,21 @@
 C33_OP(nop)
 {
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(slp)
 {
-  /* ¢¨TODO: */
+  /* â€»TODO: */
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(halt)
 {
-  /* ¢¨TODO: */
+  /* â€»TODO: */
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(pushn_rs)
@@ -32,6 +35,7 @@ C33_OP(pushn_rs)
   {
     SP.w -= 4;
     core->mem_write(core, SP.w, 4, R(rs).w);
+	CLK += 1;
   }
   PC.w += 2;
 }
@@ -42,7 +46,8 @@ C33_OP(popn_rd)
   for(rd = 0; rd <= inst.imm2_rd_rs; rd++)
   {
 	  R(rd).w = core->mem_read(core, SP.w, 4);
-    SP.w += 4;
+	  SP.w += 4;
+	  CLK += 1;
   }
   PC.w += 2;
 }
@@ -61,6 +66,7 @@ C33_OP(int_imm2)
 {
   if(inst.imm2_rd_rs < 0 || inst.imm2_rd_rs > 3) DIE();
   PC.w += 2;
+  CLK += 10;
   core_trap(core, TRAP_SOFTINT0 + inst.imm2_rd_rs, 0);
 }
 
@@ -70,6 +76,7 @@ C33_OP(reti)
 	SP.w += 4;
 	PC.w = core->mem_read(core, SP.w, 4);
 	SP.w += 4;
+	CLK += 5;
 }
 
 C33_OP(call_rb)
@@ -80,6 +87,7 @@ C33_OP(call_rb)
   SP.w -= 4;
   core->mem_write(core, SP.w, 4, PC.w + 2);
   PC.w = addr;
+  CLK += !D ? 3 : 2;
 }
 
 C33_OP(ret)
@@ -89,6 +97,7 @@ C33_OP(ret)
   SP.w += 4;
   exec_delay(core, inst.d);
   PC.w = addr;
+  CLK += !D ? 4 : 3;
 }
 
 C33_OP(jp_rb)
@@ -97,5 +106,6 @@ C33_OP(jp_rb)
   addr = R(inst.imm2_rd_rs).w;
   exec_delay(core, inst.d);
   PC.w = addr;
+  CLK += !D ? 2 : 1;
 }
 

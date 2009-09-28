@@ -26,6 +26,8 @@
 #define Rb   (R(inst.rb))
 #define Rsd  (R(inst.rs_rd))
 
+#define CLK  (core->clk)
+
 // shortcut for definition
 #define C33_OP(name)      void c33op_##name(C33CORE* core, INST inst)
 // shortcut for calling

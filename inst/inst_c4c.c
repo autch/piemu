@@ -21,6 +21,7 @@ C33_OP(scan0_rd_rs)
   PSR.z = ub == 0;
   PSR.c = ub == 8;
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(scan1_rd_rs)
@@ -36,6 +37,7 @@ C33_OP(scan1_rd_rs)
   PSR.z = ub == 0;
   PSR.c = ub == 8;
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(swap_rd_rs)
@@ -47,6 +49,7 @@ C33_OP(swap_rd_rs)
     | ((ua & 0x00ff0000) >>  8)
     | ((ua & 0xff000000) >> 24);
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(mirror_rd_rs)
@@ -62,6 +65,7 @@ C33_OP(mirror_rd_rs)
     | ((ua & 0x40404040) >> 5)
     | ((ua & 0x80808080) >> 7);
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(div0s_rs)
@@ -71,6 +75,7 @@ C33_OP(div0s_rs)
   PSR.ds = ALR.w >> 31;
   PSR.n = Rs.w >> 31;
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(div0u_rs)
@@ -80,6 +85,7 @@ C33_OP(div0u_rs)
   PSR.ds = 0;
   PSR.n = 0;
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(div1_rs)
@@ -138,6 +144,7 @@ C33_OP(div1_rs)
     }
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(div2s_rs)
@@ -161,6 +168,7 @@ C33_OP(div2s_rs)
     }
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(div3s)
@@ -171,5 +179,6 @@ C33_OP(div3s)
     ALR.i = 0 - ALR.i;  /* ALR = -ALR では警告になるので… */
   }
   PC.w += 2;
+  CLK += 1;
 }
 

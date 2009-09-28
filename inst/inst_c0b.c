@@ -15,6 +15,7 @@ C33_OP(jrgt_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrge_sign8)
@@ -24,6 +25,7 @@ C33_OP(jrge_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrlt_sign8)
@@ -33,6 +35,7 @@ C33_OP(jrlt_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrle_sign8)
@@ -42,6 +45,7 @@ C33_OP(jrle_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrugt_sign8)
@@ -51,6 +55,7 @@ C33_OP(jrugt_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jruge_sign8)
@@ -60,6 +65,7 @@ C33_OP(jruge_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrult_sign8)
@@ -69,6 +75,7 @@ C33_OP(jrult_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrule_sign8)
@@ -78,6 +85,7 @@ C33_OP(jrule_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jreq_sign8)
@@ -87,6 +95,7 @@ C33_OP(jreq_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(jrne_sign8)
@@ -96,6 +105,7 @@ C33_OP(jrne_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = cc ? addr : PC.w + 2;
+  CLK += (cc && !D) ? 2 : 1;
 }
 
 C33_OP(call_sign8)
@@ -106,6 +116,7 @@ C33_OP(call_sign8)
   SP.w -= 4;
   core->mem_write(core, SP.w, 4, PC.w + 2);
   PC.w = addr;
+  CLK += !D ? 3 : 2;
 }
 
 C33_OP(jp_sign8)
@@ -114,5 +125,6 @@ C33_OP(jp_sign8)
   addr = ext_PCxSIGN8(core, inst.sign8);
   exec_delay(core, inst.d);
   PC.w = addr;
+  CLK += !D ? 2 : 1;
 }
 

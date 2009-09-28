@@ -42,9 +42,9 @@ typedef struct c33core
 
 	C33REG  pc;
 	C33INST ext[2];
-	C33REG  acc;
 
-	int     d;
+	int     d; // delayed
+	uint32_t clk;
 
 	c33word (*mem_read)(struct c33core* core, c33word address, c33word size);
 	c33word (*mem_write)(struct c33core* core, c33word address,

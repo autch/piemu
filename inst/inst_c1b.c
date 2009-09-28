@@ -21,6 +21,7 @@ C33_OP(add_rd_rs)
     Rd.i = add(core, Rs.i, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(sub_rd_rs)
@@ -36,6 +37,7 @@ C33_OP(sub_rd_rs)
     Rd.i = sub(core, Rs.i, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(cmp_rd_rs)
@@ -51,12 +53,14 @@ C33_OP(cmp_rd_rs)
     sub(core, Rs.i, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(ld_w_rd_rs)
 {
   Rd.i = Rs.i;
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(and_rd_rs)
@@ -72,6 +76,7 @@ C33_OP(and_rd_rs)
     Rd.w = and(core, Rs.w, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(or_rd_rs)
@@ -87,6 +92,7 @@ C33_OP(or_rd_rs)
     Rd.w = or(core, Rs.w, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(xor_rd_rs)
@@ -102,11 +108,13 @@ C33_OP(xor_rd_rs)
     Rd.w = xor(core, Rs.w, un);
   }
   PC.w += 2;
+  CLK += 1;
 }
 
 C33_OP(not_rd_rs)
 {
   Rd.w = not(core, Rs.w);
   PC.w += 2;
+  CLK += 1;
 }
 

@@ -9,7 +9,6 @@ depend:
 
 Makefile.dep: Makefile.in
 	$(CC) -MM $(CFLAGS) $(addsuffix .c,$(basename $(OBJS))) > Makefile.dep
-	if [ "$(INST)" ]; then $(CC) -MM $(CFLAGS) $(addsuffix .c,$(basename $(INST))) >> Makefile.dep; fi
 
 %.o: %.c
 	$(CC) -c $(CFLAGS) -o $@ $<
