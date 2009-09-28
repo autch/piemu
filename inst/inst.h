@@ -193,4 +193,6 @@ c33int sla(C33CORE* core, c33int a, c33int b);
 c33word rr(C33CORE* core, c33word a, c33word b);
 c33word rl(C33CORE* core, c33word a, c33word b);
 
+void inst_decode(C33CORE* core, C33INST inst);
+
 #endif
