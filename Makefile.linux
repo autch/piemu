@@ -1,0 +1,14 @@
+
+CC ?= gcc
+CXX ?= g++
+LD ?= ld
+AR ?= ar
+
+CFLAGS += -DDEBUG
+
+SDL_CONFIG ?= sdl-config
+
+SDL_CFLAGS := $(shell $(SDL_CONFIG) --cflags)
+SDL_LIBS := $(shell $(SDL_CONFIG) --libs)
+
+include Makefile.in

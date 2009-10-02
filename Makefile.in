@@ -1,0 +1,23 @@
+.PHONY: all clean depend
+.SUFFIXES: .cpp .c .o .a
+VPATH = 
+
+TARGET = piemu
+
+INCLUDES = -I. -Iinclude -Icore
+CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+CXXFLAGS := $(CFLAGS)
+LIBS := $(LIBS) $(SDL_LIBS) -lrt -L. -Lcore
+EXT_DIRS = core devices hosts
+
+OBJS = main.o
+
+include Makefile.rule
+
+piemu: $(OBJS) core/core.a
+	$(CXX) $(CXXFLAGS) -o $@ $^ $(LIBS)
+
+core/core.a:
+	$(MAKE) -C core -f Makefile.in
+
+-include Makefile.dep

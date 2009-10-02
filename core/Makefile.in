@@ -1,0 +1,24 @@
+.PHONY: all clean depend
+.SUFFIXES: .cpp .o .a
+VPATH = 
+
+TARGET = core.a
+OBJS = 
+INCLUDES = -I. -I../include
+CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+CXXFLAGS := $(CFLAGS)
+
+CORE = core.a(\
+	c33core.o inst_common.o \
+	inst_c0a.o inst_c0b.o \
+	inst_c1a.o inst_c1b.o \
+	inst_c2.o \
+	inst_c3.o \
+	inst_c4a.o inst_c4b.o inst_c4c.o \
+	inst_c5a.o inst_c5b.o inst_c5c.o \
+	inst_c6.o)
+
+core.a: $(CORE)
+	ranlib $@
+
+include ../Makefile.rule
