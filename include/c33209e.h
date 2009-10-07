@@ -37,6 +37,8 @@
 //↓2003/04/12:エミュレータ用に変更
 #define plc_IO ((volatile struct c_IOtag*)iomem.mem)
 
+#define IOMEM_OFFSET(v) (v - plc_IO)
+
 /****************************************************************/
 /* [8-bit timer clock select register] c_CLKSEL			*/
 /****************************************************************/
