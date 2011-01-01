@@ -1,0 +1,4 @@
+*.o
+piemu
+Makefile.dep
+
