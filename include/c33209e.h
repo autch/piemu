@@ -33,11 +33,9 @@
 /*	c33209.h	: C33209 symbol definition file		*/
 /****************************************************************/
 
-//#define plc_IO ((volatile struct c_IOtag*)0x40000)
+#define plc_IO ((volatile struct c_IOtag*)0x40000)
 //↓2003/04/12:エミュレータ用に変更
-#define plc_IO ((volatile struct c_IOtag*)iomem.mem)
-
-#define IOMEM_OFFSET(v) (v - plc_IO)
+//#define plc_IO ((volatile struct c_IOtag*)context->iomem.mem)
 
 /****************************************************************/
 /* [8-bit timer clock select register] c_CLKSEL			*/

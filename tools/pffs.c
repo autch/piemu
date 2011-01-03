@@ -17,8 +17,8 @@
 #include "pfi.h"
 
 int CheckFileName(const char* szFileName);
-DIRECTORY* FindNextDirEntry(PFI* pfi, DIRECTORY** pDir);
 DIRECTORY* FindFile(PFI* pfi, char* szFileName);
+DIRECTORY* FindNextDirEntry(PFI* pfi, DIRECTORY** pDir);
 c33byte* GetFilesNthSector(PFI* pfi, DIRECTORY* pDir, int nSector);
 c33byte* SectorToPointer(PFI* pfi, int nSector);
 c33word GetFreeFAT(PFI* pfi, FAT* pFat, int i);
@@ -82,7 +82,7 @@ DIRECTORY* FindNextDirEntry(PFI* pfi, DIRECTORY** pDir)
 }
 
 // ファイル名にマッチするディレクトリエントリを返す
-DIRECTORY* FindFile(PFI* pfi, char* szFileName)
+DIRECTORY* PFFSFindFile(PFI* pfi, char* szFileName)
 {
   DIRECTORY* pDir = NULL;
   DIRECTORY* pWork;
@@ -95,6 +95,11 @@ DIRECTORY* FindFile(PFI* pfi, char* szFileName)
     if(!strncmp((char*)pDir->name, (char*)szFileName, 24)) break;
   }
   return pDir;
+}
+
+DIRECTORY* FindFile(PFI* pfi, char* szFileName)
+{
+  return PFFSFindFile(pfi, szFileName);
 }
 
 // ファイル pDir の nSector 番目のセクタへのポインタを得る
@@ -212,7 +217,7 @@ int PFFSExtractFile(PFI* pfi, char* pPFFSFileName, char* pDiskFileName)
   FILE* fp;
   int nBytesToRead, nBytesRead;
 
-  pDir = FindFile(pfi, pPFFSFileName);
+  pDir = PFFSFindFile(pfi, pPFFSFileName);
   if(!pDir) return 0;
 
   if(!pDiskFileName) pDiskFileName = pPFFSFileName;

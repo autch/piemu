@@ -221,8 +221,8 @@ static struct fuse_operations fusepfi_oper = {
 //	.access		= fusepfi_access,
 	.getattr	= fusepfi_getattr,
 	.readdir	= fusepfi_readdir,
-//	.open		= fusepfi_open,
-//	.read		= fusepfi_read,
+	.open		= fusepfi_open,
+	.read		= fusepfi_read,
 //	.release	= fusepfi_release,
 //	.fsync		= fusepfi_fsync,
 

@@ -1,5 +1,6 @@
 *.o
 mkpfi
 pfar
+fusepfi
 Makefile.dep
 

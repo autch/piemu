@@ -2,11 +2,13 @@
 .SUFFIXES: .c .cpp .o .a
 VPATH = 
 
-TARGET = pfar mkpfi
+TARGET = pfar mkpfi fusepfi
 
 INCLUDES = -I. -I../include
-CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2
+CFLAGS_FUSE := $(shell pkg-config fuse --cflags)
+CFLAGS := -s $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2 -D_FILE_OFFSET_BITS=64
 LIBS := $(LIBS) $(SDL_LIBS) -lrt -L.
+LIBS_FUSE := $(shell pkg-config fuse --libs)
 EXT_OBJS = 
 
 OBJS = pfar.o pffs.o pfi.o mkpfi.o
@@ -17,6 +19,9 @@ pfar: pfar.o pffs.o pfi.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
 mkpfi: mkpfi.o pffs.o pfi.o
 	$(CC) $(CFLAGS) -o $@ $^ $(LIBS)
+
+fusepfi: fusepfi.o pfi.o pffs.o
+	$(CC) $(CFLAGS) $(CFLAGS_FUSE) -o $@ $^ $(LIBS) $(LIBS_FUSE)
 
 -include Makefile.dep
 
