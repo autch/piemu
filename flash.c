@@ -32,12 +32,12 @@ flash_init(PIEMU_CONTEXT* context)
 #define FLASH_TOP	0x0c00000
 #define READ_UNIT	0x1000
 
-	int size, bits;
+	uint32_t size, bits;
 
 	memset(&context->flash, 0, sizeof context->flash);
 
 	/* CFIクエリー情報作成。(とりあえず必要なフィールドだけ) */
-	size = (int)context->emu.sysinfo.pffs_end - FLASH_TOP;
+	size = (uint32_t)(context->emu.sysinfo.pffs_end) - (uint32_t)FLASH_TOP;
 	bits = 0;
 	for(;;) {
 		if(1 << bits >= size) break;
@@ -47,7 +47,7 @@ flash_init(PIEMU_CONTEXT* context)
 
 	/* メモリ割り当て。 */
 	context->flash.mem_size = 1 << context->flash.cfiinfo.device_size;
-	context->flash.mem = (unsigned char*)calloc(context->flash.mem_size, 1);
+	context->flash.mem = (uint8_t*)calloc(context->flash.mem_size, 1);
 
 	/* イメージ読み込み。 */
   context->pfnLoadFlashImage(context, &context->flash, context->pUser);

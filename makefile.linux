@@ -1,8 +1,8 @@
-DEBUG = -g
+DEBUG = -g -Wall
 OPT = -s -O9 -fomit-frame-pointer -funroll-loops -ffast-math -fno-math-errno
 LINKER = 
 SDLDIR = 
-CFLAGS = -Iinclude -Wall $(shell sdl-config --cflags) -DLINUX $(OPT)
+CFLAGS = -Iinclude -Wall $(shell sdl-config --cflags) -DLINUX $(DEBUG)
 SDLLIB = $(shell sdl-config --libs)
 LIBS = $(SDLLIB)
 O=.o

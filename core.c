@@ -70,7 +70,7 @@
 // #endif /*CORE_DEBUG*/
 
 /* 値dataのビット(bits-1)を、ビット31～bitsに符号拡張します。 */
-INLINE int
+int
 sign_ext(int data, int bits)
 {
   data <<= 32 - bits;
@@ -94,7 +94,7 @@ sign_ext(int data, int bits)
  *  即値拡張
  ****************************************************************************/
 
-INLINE int
+ int
 ext_imm6(PIEMU_CONTEXT* context, int imm6)
 {
   int data;
@@ -111,7 +111,7 @@ ext_imm6(PIEMU_CONTEXT* context, int imm6)
   return data;
 }
 
-INLINE int
+ int
 ext_sign6(PIEMU_CONTEXT* context, int sign6)
 {
   int data, bits;
@@ -131,7 +131,7 @@ ext_sign6(PIEMU_CONTEXT* context, int sign6)
   return sign_ext(data, bits);
 }
 
-INLINE int
+ int
 ext_RB(PIEMU_CONTEXT* context, int rb)
 {
   int disp;
@@ -147,7 +147,7 @@ ext_RB(PIEMU_CONTEXT* context, int rb)
   return R(rb) + disp;
 }
 
-INLINE int
+ int
 ext_SPxIMM6(PIEMU_CONTEXT* context, int imm6, int size)
 {
   int disp;
@@ -172,7 +172,7 @@ ext_SPxIMM6(PIEMU_CONTEXT* context, int imm6, int size)
   return SP + disp;
 }
 
-INLINE int
+ int
 ext_3op(PIEMU_CONTEXT* context)
 {
   /* NOTE1: 少なくともEXT1が存在することを呼び出し側で確認してください。 */
@@ -190,7 +190,7 @@ ext_3op(PIEMU_CONTEXT* context)
   return data;
 }
 
-INLINE int
+int
 ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
 {
   int disp, bits;
@@ -1081,16 +1081,16 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1; \
 }
 #define exec_mlt_w_rd_rs(inst) { NO_EXT NO_DELAY \
-  AR = (int64)(int)R(inst.rd) * (int64)(int)R(inst.rs); \
+  AR = (int64_t)(int)R(inst.rd) * (int64_t)(int)R(inst.rs); \
   PC += 2; \
   CLK += 5; \
 }
 #define exec_mltu_w_rd_rs(inst) { NO_EXT NO_DELAY \
-  AR = (uint64)(unsigned)R(inst.rd) * (uint64)(unsigned)R(inst.rs); \
+  AR = (uint64_t)(unsigned)R(inst.rd) * (uint64_t)(unsigned)R(inst.rs); \
   PC += 2; \
   CLK += 5; \
 }
-  //int64 a, b, c;
+  //int64_t a, b, c;
   //while(R(inst.rs) != 0) {
   //  a = AR;
   //  b = (short)mem_read(R(inst.rs + 1), 2) * (short)mem_read(R(inst.rs + 2), 2);
@@ -1243,7 +1243,7 @@ core_inst(PIEMU_CONTEXT* context, INST inst)
   int c = 0, d = 0;
   int cc = 0;
   unsigned ua = 0, ub = 0;
-  int64 a64, b64, c64;
+  int64_t a64, b64, c64;
   unsigned tmp;
   unsigned un;
   int sn;

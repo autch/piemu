@@ -59,7 +59,7 @@ typedef struct _IOMEM {
 	int nQueuedBuffers;
 } IOMEM;
 
-#define IOOFS(p)	((unsigned)(p) - (unsigned)context->iomem.mem)
+#define IOOFS(p)	((uint32_t)(p) - (uint32_t)context->iomem.mem)
 
 void iomem_init(struct tagPIEMU_CONTEXT* context);
 void iomem_work(struct tagPIEMU_CONTEXT* context);

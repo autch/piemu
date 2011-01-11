@@ -18,6 +18,7 @@
 
 #include <SDL.h>
 
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -34,32 +35,20 @@
 #define ABOUT_TEXT  "P/EMU - P/ECE Emulator (" VERSION ")\n" \
       "Copyright(C) 2003 Naoyuki Sawa"
 
-#ifdef WIN32
-typedef          __int64   int64;
-typedef unsigned __int64  uint64;
-#define INLINE      __inline
-#else
-#ifndef PSP
-typedef          long long  int64;
-#endif
-typedef unsigned long long  uint64;
-#define INLINE      __inline__
-#endif
-
 /* /usr/PIECE/include/piece.hより… */
 typedef struct tagSYSTEMINFO {    // (piece.hより)
-  unsigned short size;    //  0 この構造体のサイズ
-  unsigned short hard_ver;  //  2 ハードウエア・バージョン
-  unsigned short bios_ver;  //  4 BIOSバージョン
-  unsigned short bios_date; //  6 BIOS更新日 YY(7):MM(4):DD(5)
-  unsigned long sys_clock;  //  8 システム・クロック(Hz)
-  unsigned short vdde_voltage;  // 12 VDDE(周辺)電圧(mV)
-  unsigned short resv1;   // 14 予約
-  unsigned char *sram_top;  // 16 SRAM 開始アドレス
-  unsigned char *sram_end;  // 20 SRAM 終了アドレス+1
-  unsigned char *pffs_top;  // 24 pffs 開始アドレス
-  unsigned char *pffs_end;  // 28 pffs 終了アドレス
-} SYSTEMINFO;
+  uint16_t size;    //  0 この構造体のサイズ
+  uint16_t hard_ver;  //  2 ハードウエア・バージョン
+  uint16_t bios_ver;  //  4 BIOSバージョン
+  uint16_t bios_date; //  6 BIOS更新日 YY(7):MM(4):DD(5)
+  uint32_t sys_clock;  //  8 システム・クロック(Hz)
+  uint16_t vdde_voltage;  // 12 VDDE(周辺)電圧(mV)
+  uint16_t resv1;   // 14 予約
+  uint32_t sram_top;  // 16 SRAM 開始アドレス
+  uint32_t sram_end;  // 20 SRAM 終了アドレス+1
+  uint32_t pffs_top;  // 24 pffs 開始アドレス
+  uint32_t pffs_end;  // 28 pffs 終了アドレス
+} SYSTEMINFO  __attribute__((packed));
 
 struct tagPIEMU_CONTEXT;
 

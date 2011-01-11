@@ -1,3 +1,3 @@
-TYPE=vc7
+TYPE=linux
 
 include makefile.$(TYPE)

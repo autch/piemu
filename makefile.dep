@@ -1,46 +1,40 @@
-bcu.obj: bcu.c app.h  \
-  ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-core.obj: core.c app.h \
-  ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-emu.obj: emu.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-flash.obj: flash.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-fram.obj: fram.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-iomem.obj: iomem.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-lcdc.obj: lcdc.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-main.obj: main.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-piemu.obj: piemu.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h pfi.h
-sram.obj: sram.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
-usbc.obj: usbc.c app.h ./include/emu.h ./include/fram.h \
-  ./include/iomem.h ./include/sram.h ./include/usbc.h ./include/flash.h \
-  ./include/lcdc.h ./include/bcu.h ./include/core.h ./include/c33209e.h \
-  ./include/vector.h ./include/piemu.h
+bcu.o: bcu.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+core.o: core.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+emu.o: emu.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+flash.o: flash.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+fram.o: fram.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+iomem.o: iomem.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+lcdc.o: lcdc.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+piemu.o: piemu.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h pfi.h
+sram.o: sram.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
+usbc.o: usbc.c app.h include/sleep.h include/emu.h include/fram.h \
+ include/bcu.h include/iomem.h include/sram.h include/usbc.h \
+ include/flash.h include/lcdc.h include/bcu.h include/core.h \
+ include/c33209e.h include/vector.h include/piemu.h
