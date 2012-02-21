@@ -41,7 +41,6 @@
 
 static int fusepfi_access(const char *path, int mask)
 {
-	int res;
 /*
 	if(strcmp(path, "/") == 0
 	   || strcmp(path, ".") == 0
@@ -58,7 +57,7 @@ static int fusepfi_getattr(const char *path, struct stat *stbuf)
 	struct fuse_context* ctx = fuse_get_context();
 	PFI* pPfi = ctx->private_data;
 	DIRECTORY* pDir;
-	char* pp = path;
+	char* pp = (char*)path;
 	int ret;
 
 	if(strcmp(path, "/") == 0
@@ -111,7 +110,7 @@ static int fusepfi_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 		st.st_mode = S_IFREG | 0660;
 		st.st_uid = ctx->uid;
 		st.st_gid = ctx->gid;
-		filler(buf, pDir->name, NULL, 0);
+		filler(buf, (const char*)pDir->name, NULL, 0);
 	}
 
 	return 0;
@@ -119,33 +118,71 @@ static int fusepfi_readdir(const char *path, void *buf, fuse_fill_dir_t filler,
 
 static int fusepfi_open(const char *path, struct fuse_file_info *fi)
 {
-	int res;
+	struct fuse_context* ctx = fuse_get_context();
+	PFI* pPfi = ctx->private_data;
+	DIRECTORY* pDir;
+    const char* pPath;
 
-	res = open(path, fi->flags);
-	if (res == -1)
-		return -errno;
+    if((fi->flags & (O_WRONLY | O_RDWR)) != 0)
+    {
+        return -EACCES;
+    }
 
-	close(res);
+    pPath = strrchr(path, '/');
+    if(pPath != NULL) pPath++; else pPath = path;
+
+	pDir = PFFSFindFile(pPfi, (char*)pPath);
+	if(pDir == NULL)
+	{
+		return -ENOENT;
+	}
+
+	fi->fh = (uint64_t)pDir;
+    fi->nonseekable = 1;
+
 	return 0;
 }
 
 static int fusepfi_read(const char *path, char *buf, size_t size, off_t offset,
-		    struct fuse_file_info *fi)
+                        struct fuse_file_info *fi)
 {
-	int fd;
-	int res;
+	struct fuse_context* ctx = fuse_get_context();
+	PFI* pPfi = ctx->private_data;
+	DIRECTORY* pDir;
 
-	(void) fi;
-	fd = open(path, O_RDONLY);
-	if (fd == -1)
-		return -errno;
+    pDir = (DIRECTORY*)fi->fh;
+    if(pDir == NULL)
+    {
+        return -ENOENT;
+    }
 
-	res = pread(fd, buf, size, offset);
-	if (res == -1)
-		res = -errno;
+    int nFileSize = pDir->size;
+    int nBytesToSkip = offset;
+    int nSector = pDir->chain;
+    while(nBytesToSkip > 4096 && nFileSize > 0 && nSector != FAT_END) {
+		nSector = pPfi->msb->fat[nSector].chain;
+        nBytesToSkip -= 4096;
+        nFileSize -= 4096;
+    }
 
-	close(fd);
-	return res;
+    // オフセットまで飛ばすうちにファイル終了
+    if(nFileSize <= 0 || nSector == FAT_END) return 0;
+   
+    int nBytesToRead, nBytesRead = 0;
+    int nBytesToCopy = size;
+	while(nFileSize > 0 && nSector != FAT_END)
+	{
+		nBytesToRead = (nFileSize > 4096) ? 4096 : nFileSize;
+        if(nBytesToCopy < nBytesToRead) nBytesToRead = nBytesToCopy;
+        memcpy(buf + nBytesToSkip, PFFSSectorToPointer(pPfi, nSector), nBytesToRead - nBytesToSkip);
+        nBytesToSkip = 0;
+		nBytesRead += nBytesToRead - nBytesToSkip;
+        buf += nBytesToRead;
+		nFileSize -= nBytesToRead - nBytesToSkip;
+		nSector = pPfi->msb->fat[nSector].chain;
+	}
+
+	return nBytesRead;
 }
 
 static int fusepfi_write(const char *path, const char *buf, size_t size,
@@ -172,8 +209,8 @@ static int fusepfi_release(const char *path, struct fuse_file_info *fi)
 	/* Just a stub.	 This method is optional and can safely be left
 	   unimplemented */
 
-	(void) path;
-	(void) fi;
+	fi->fh = 0;
+
 	return 0;
 }
 
@@ -213,7 +250,7 @@ void fusepfi_destroy(void* data)
 
 struct fusepfi_param
 {
-	char* filename;
+	const char* filename;
 	int is_help;
 };
 
@@ -223,7 +260,7 @@ static struct fuse_operations fusepfi_oper = {
 	.readdir	= fusepfi_readdir,
 	.open		= fusepfi_open,
 	.read		= fusepfi_read,
-//	.release	= fusepfi_release,
+	.release	= fusepfi_release,
 //	.fsync		= fusepfi_fsync,
 
 	.init		= fusepfi_init,
