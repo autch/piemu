@@ -7,7 +7,7 @@ TARGET = pfar mkpfi fusepfi
 INCLUDES = -I. -I../include
 CFLAGS_FUSE := $(shell pkg-config fuse --cflags)
 CFLAGS := $(CFLAGS) $(SDL_CFLAGS) $(INCLUDES) -g -pthread -Wall -O2 -D_FILE_OFFSET_BITS=64
-LIBS := $(LIBS) $(SDL_LIBS) -lrt -L.
+LIBS := $(LIBS) $(SDL_LIBS) -L.
 LIBS_FUSE := $(shell pkg-config fuse --libs)
 EXT_OBJS = 
 
