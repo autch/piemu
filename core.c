@@ -5,26 +5,26 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - ì¬ŠJnB
+ *  - ä½œæˆé–‹å§‹ã€‚
  *  * Sat Apr 19 12:30:00 JST 2003 Naoyuki Sawa
- *  - scan0/scan1‚ÌƒoƒOC³Bi‘–¸•ûŒü‚ª‹t‚Å‚µ‚½j
+ *  - scan0/scan1ã®ãƒã‚°ä¿®æ­£ã€‚ï¼ˆèµ°æŸ»æ–¹å‘ãŒé€†ã§ã—ãŸï¼‰
  *
  *  * Aug 23 ... 30, 2005.
- *  * ‚±‚ñ‚È‚à‚ñ‘S•”ƒ}ƒNƒ‚¶‚á[
+ *  * ã“ã‚“ãªã‚‚ã‚“å…¨éƒ¨ãƒã‚¯ãƒ­ã˜ã‚ƒãƒ¼
  */
 #include "app.h"
 
 /****************************************************************************
- *  ƒOƒ[ƒoƒ‹•Ï”
+ *  ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
  ****************************************************************************/
 
 //CORE core;
 
 /****************************************************************************
- *  ƒ}ƒNƒE•â•ŠÖ”
+ *  ãƒã‚¯ãƒ­ãƒ»è£œåŠ©é–¢æ•°
  ****************************************************************************/
 
-// (1 << NOP_WAIT) ‰ñ nop ‚ªŒÄ‚Î‚ê‚½‚ç SDL_Delay(1)
+// (1 << NOP_WAIT) å› nop ãŒå‘¼ã°ã‚ŒãŸã‚‰ SDL_Delay(1)
 #define NOP_WAIT 9
 
 #define NOP_CLK_MULTIPLY      2
@@ -45,7 +45,7 @@
 #define STD_NOP OS_YIELD() //__asm { nop }
 #endif
 
-/* ŠÖ”‚Ìæ“ª‚Åg‚¦‚é‚æ‚¤‚ÉAƒ_ƒ~[•Ï”‚ğ‰Šú‰»‚µ‚Ü‚·B */
+/* é–¢æ•°ã®å…ˆé ­ã§ä½¿ãˆã‚‹ã‚ˆã†ã«ã€ãƒ€ãƒŸãƒ¼å¤‰æ•°ã‚’åˆæœŸåŒ–ã—ã¾ã™ã€‚ */
 // #ifdef CORE_DEBUG
 // static int no_ext()  { if(EXT1.s) DIE(); return 0; }
 // static int no_delay()  { if(core.d) DIE(); return 0; }
@@ -56,7 +56,7 @@
 #define NO_DELAY
 // #endif /*CORE_DEBUG*/
 
-/* ƒCƒ“ƒfƒNƒXŒŸ¸•t‚«‚Ì”Ä—p/ƒVƒXƒeƒ€ƒŒƒWƒXƒ^ƒAƒNƒZƒX@*/
+/* ã‚¤ãƒ³ãƒ‡ã‚¯ã‚¹æ¤œæŸ»ä»˜ãã®æ±ç”¨/ã‚·ã‚¹ãƒ†ãƒ ãƒ¬ã‚¸ã‚¹ã‚¿ã‚¢ã‚¯ã‚»ã‚¹ã€€*/
 // #ifdef CORE_DEBUG
 // static int check_r(int n) { if(n < 0 || n > 15) DIE(); return n; }
 // static int check_s(int n) { if(n < 0 || n >  3) DIE(); return n; }
@@ -69,7 +69,7 @@
 #define RZ context->core.rZ
 // #endif /*CORE_DEBUG*/
 
-/* ’ldata‚Ìƒrƒbƒg(bits-1)‚ğAƒrƒbƒg31`bits‚É•„†Šg’£‚µ‚Ü‚·B */
+/* å€¤dataã®ãƒ“ãƒƒãƒˆ(bits-1)ã‚’ã€ãƒ“ãƒƒãƒˆ31ã€œbitsã«ç¬¦å·æ‹¡å¼µã—ã¾ã™ã€‚ */
 INLINE int
 sign_ext(int data, int bits)
 {
@@ -78,20 +78,20 @@ sign_ext(int data, int bits)
   return data;
 }
 
-/* ƒfƒBƒŒƒCƒh•ªŠò–½—ß‚Ì’†‚©‚çg—pBˆø”d‚É1‚ªw’è‚³‚ê‚½‚çAƒfƒBƒŒƒCƒh–½—ß‚ğÀs‚µ‚Ü‚·B */
+/* ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰åˆ†å²å‘½ä»¤ã®ä¸­ã‹ã‚‰ä½¿ç”¨ã€‚å¼•æ•°dã«1ãŒæŒ‡å®šã•ã‚ŒãŸã‚‰ã€ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰å‘½ä»¤ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚ */
 #define exec_delay(dflag) { \
   if(dflag) { \
-    if(context->core.d) DIE();  /* ”O‚Ì‚½‚ßAƒfƒBƒŒƒCƒh‚ª“ñd‚É‚È‚Á‚Ä‚¢‚È‚¢‚±‚Æ‚ğŒŸ¸ */ \
-    context->core.d = 1;    /* ƒfƒBƒŒƒCƒhŠJn */ \
+    if(context->core.d) DIE();  /* å¿µã®ãŸã‚ã€ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰ãŒäºŒé‡ã«ãªã£ã¦ã„ãªã„ã“ã¨ã‚’æ¤œæŸ» */ \
+    context->core.d = 1;    /* ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰é–‹å§‹ */ \
     d_inst.s = mem_readH(context, PC + 2); \
     core_inst(context, d_inst); \
-    if(!context->core.d) DIE(); /* ”O‚Ì‚½‚ßA—\Šú‚µ‚È‚¢ƒfƒBƒŒƒCƒh‰ğœ‚ª‚È‚¢‚±‚Æ‚ğŒŸ¸ */ \
-    context->core.d = 0;    /* ƒfƒBƒŒƒCƒhI—¹ */ \
+    if(!context->core.d) DIE(); /* å¿µã®ãŸã‚ã€äºˆæœŸã—ãªã„ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰è§£é™¤ãŒãªã„ã“ã¨ã‚’æ¤œæŸ» */ \
+    context->core.d = 0;    /* ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰çµ‚äº† */ \
   } \
 }
 
 /****************************************************************************
- *  ‘¦’lŠg’£
+ *  å³å€¤æ‹¡å¼µ
  ****************************************************************************/
 
 INLINE int
@@ -175,8 +175,8 @@ ext_SPxIMM6(PIEMU_CONTEXT* context, int imm6, int size)
 INLINE int
 ext_3op(PIEMU_CONTEXT* context)
 {
-  /* NOTE1: ­‚È‚­‚Æ‚àEXT1‚ª‘¶İ‚·‚é‚±‚Æ‚ğŒÄ‚Ño‚µ‘¤‚ÅŠm”F‚µ‚Ä‚­‚¾‚³‚¢B */
-  /* NOTE2: cmp/and/or/xor/not‚àA3opŠg’£‚Ísign‚Å‚Í‚È‚­imm‚Æ‚È‚è‚Ü‚·B */
+  /* NOTE1: å°‘ãªãã¨ã‚‚EXT1ãŒå­˜åœ¨ã™ã‚‹ã“ã¨ã‚’å‘¼ã³å‡ºã—å´ã§ç¢ºèªã—ã¦ãã ã•ã„ã€‚ */
+  /* NOTE2: cmp/and/or/xor/notã‚‚ã€3opæ‹¡å¼µæ™‚ã¯signã§ã¯ãªãimmã¨ãªã‚Šã¾ã™ã€‚ */
   int data;
   if(EXT2.s) {
     data = (EXT2.c6.imm13 << 0) | (EXT1.c6.imm13 << 13);
@@ -210,10 +210,10 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   return PC + sign_ext(disp, bits) * 2;
 }
 
-// yui: 2005.09.21: ˆÈ‰º core_*() ˆÈŠO‚Í‘S•”ƒ}ƒNƒ(;L„DM)
+// yui: 2005.09.21: ä»¥ä¸‹ core_*() ä»¥å¤–ã¯å…¨éƒ¨ãƒã‚¯ãƒ­(;Â´Ğ”ï½€)
 
 /****************************************************************************
- *  ‹¤’Ê‰‰Z‚ÆPSRİ’è
+ *  å…±é€šæ¼”ç®—ã¨PSRè¨­å®š
  ****************************************************************************/
 
 #define add(a, b, r) \
@@ -360,17 +360,17 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1 * NOP_CLK_MULTIPLY; \
 }
 
-// ŒÄ‚Î‚ê‚Ä‚È‚¢‚ç‚µ‚¢H
+// å‘¼ã°ã‚Œã¦ãªã„ã‚‰ã—ã„ï¼Ÿ
 #define exec_slp(inst) { NO_EXT NO_DELAY \
   STD_NOP; \
-  /* ¦TODO: */ \
+  /* â€»TODO: */ \
   context->core.in_halt = 1; \
   PC += 2; \
   CLK += 1 * NOP_CLK_MULTIPLY; \
 }
 #define exec_halt(inst) { NO_EXT NO_DELAY       \
       STD_NOP;                                  \
-    /* ¦TODO: */                               \
+    /* â€»TODO: */                               \
     /*context->core.in_halt = 1;*/              \
     PC += 2;                                    \
     CLK += 1 * HALT_CLK_MULTIPLY;               \
@@ -573,43 +573,43 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   R(inst.rs_rd) = (unsigned char)mem_readB(context, R(inst.rb)); \
   R(inst.rb) += 1; \
   PC += 2; \
-  CLK += 2; /* “Ç‚İ‚İ‘¤‚Ì[%rb]+‚Í2ƒNƒƒbƒN—v‚·‚é */ \
+  CLK += 2; /* èª­ã¿è¾¼ã¿å´ã®[%rb]+ã¯2ã‚¯ãƒ­ãƒƒã‚¯è¦ã™ã‚‹ */ \
 }
 #define exec_ld_h_rd_RBx(inst) { NO_EXT NO_DELAY \
   R(inst.rs_rd) = (short)mem_readH(context, R(inst.rb)); \
   R(inst.rb) += 2; \
   PC += 2; \
-  CLK += 2; /* “Ç‚İ‚İ‘¤‚Ì[%rb]+‚Í2ƒNƒƒbƒN—v‚·‚é */ \
+  CLK += 2; /* èª­ã¿è¾¼ã¿å´ã®[%rb]+ã¯2ã‚¯ãƒ­ãƒƒã‚¯è¦ã™ã‚‹ */ \
 }
 #define exec_ld_uh_rd_RBx(inst) { NO_EXT NO_DELAY \
   R(inst.rs_rd) = (unsigned short)mem_readH(context, R(inst.rb)); \
   R(inst.rb) += 2; \
   PC += 2; \
-  CLK += 2; /* “Ç‚İ‚İ‘¤‚Ì[%rb]+‚Í2ƒNƒƒbƒN—v‚·‚é */ \
+  CLK += 2; /* èª­ã¿è¾¼ã¿å´ã®[%rb]+ã¯2ã‚¯ãƒ­ãƒƒã‚¯è¦ã™ã‚‹ */ \
 }
 #define exec_ld_w_rd_RBx(inst) { NO_EXT NO_DELAY \
   R(inst.rs_rd) = mem_readW(context, R(inst.rb)); \
   R(inst.rb) += 4; \
   PC += 2; \
-  CLK += 2; /* “Ç‚İ‚İ‘¤‚Ì[%rb]+‚Í2ƒNƒƒbƒN—v‚·‚é */ \
+  CLK += 2; /* èª­ã¿è¾¼ã¿å´ã®[%rb]+ã¯2ã‚¯ãƒ­ãƒƒã‚¯è¦ã™ã‚‹ */ \
 }
 #define exec_ld_b_RBx_rs(inst) { NO_EXT NO_DELAY \
   mem_writeB(context, R(inst.rb), R(inst.rs_rd)); \
   R(inst.rb) += 1; \
   PC += 2; \
-  CLK += 1; /* ‘‚«‚İ‘¤‚Ì[%rb]+‚Í1ƒNƒƒbƒN‚ÅÏ‚Ş */ \
+  CLK += 1; /* æ›¸ãè¾¼ã¿å´ã®[%rb]+ã¯1ã‚¯ãƒ­ãƒƒã‚¯ã§æ¸ˆã‚€ */ \
 }
 #define exec_ld_h_RBx_rs(inst) { NO_EXT NO_DELAY \
   mem_writeH(context, R(inst.rb), R(inst.rs_rd)); \
   R(inst.rb) += 2; \
   PC += 2; \
-  CLK += 1; /* ‘‚«‚İ‘¤‚Ì[%rb]+‚Í1ƒNƒƒbƒN‚ÅÏ‚Ş */ \
+  CLK += 1; /* æ›¸ãè¾¼ã¿å´ã®[%rb]+ã¯1ã‚¯ãƒ­ãƒƒã‚¯ã§æ¸ˆã‚€ */ \
 }
 #define exec_ld_w_RBx_rs(inst) { NO_EXT NO_DELAY \
   mem_writeW(context, R(inst.rb), R(inst.rs_rd)); \
   R(inst.rb) += 4; \
   PC += 2; \
-  CLK += 1; /* ‘‚«‚İ‘¤‚Ì[%rb]+‚Í1ƒNƒƒbƒN‚ÅÏ‚Ş */ \
+  CLK += 1; /* æ›¸ãè¾¼ã¿å´ã®[%rb]+ã¯1ã‚¯ãƒ­ãƒƒã‚¯ã§æ¸ˆã‚€ */ \
 }
 
 /****************************************************************************
@@ -637,7 +637,7 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1; \
 }
 
-// RZ ‚Íƒ_ƒ~[ƒŒƒWƒXƒ^
+// RZ ã¯ãƒ€ãƒŸãƒ¼ãƒ¬ã‚¸ã‚¹ã‚¿
 #define exec_cmp_rd_rs(inst) { \
   if(!EXT1.s) { \
     sub(R(inst.rd), R(inst.rs), RZ); \
@@ -750,10 +750,10 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   PC += 2; \
   CLK += 1; \
 }
-// RZ ‚Íƒ_ƒ~[ƒŒƒWƒXƒ^
+// RZ ã¯ãƒ€ãƒŸãƒ¼ãƒ¬ã‚¸ã‚¹ã‚¿
 #define exec_cmp_rd_sign6(inst) { \
   sn = ext_sign6(context, inst.imm6_sign6); \
-  sub(R(inst.rd), sn, RZ); /* —v’ˆÓIimm6‚Å‚Í‚È‚­sign6‚Å‚·I */ \
+  sub(R(inst.rd), sn, RZ); /* è¦æ³¨æ„ï¼imm6ã§ã¯ãªãsign6ã§ã™ï¼ */ \
   PC += 2; \
   CLK += 1; \
 }
@@ -934,16 +934,16 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1; \
 }
 #define exec_div1_rs(inst) { NO_EXT NO_DELAY \
-  /* div0xˆÈŠO‚Å‚ÍAƒ[ƒœZ—áŠO‚Í”­¶‚µ‚Ü‚¹‚ñB */ \
+  /* div0xä»¥å¤–ã§ã¯ã€ã‚¼ãƒ­é™¤ç®—ä¾‹å¤–ã¯ç™ºç”Ÿã—ã¾ã›ã‚“ã€‚ */ \
   AR <<= 1; \
   if(!PSR.ds) { \
-    if(!PSR.n) { /* ³€³ */ \
+    if(!PSR.n) { /* æ­£Ã·æ­£ */ \
       tmp = AHR - R(inst.rs); \
       if(tmp <= AHR) { /* !C */ \
         AHR = tmp; \
         ALR |= 1; \
       } \
-    } else { /* ³€•‰ */ \
+    } else { /* æ­£Ã·è²  */ \
       tmp = AHR + R(inst.rs); \
       if(tmp < AHR) { /* C */ \
         AHR = tmp; \
@@ -951,13 +951,13 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
       } \
     } \
   } else { \
-    if(!PSR.n) { /* •‰€³ */ \
+    if(!PSR.n) { /* è² Ã·æ­£ */ \
       tmp = AHR + R(inst.rs); \
       if(tmp >= AHR) { /* !C */ \
         AHR = tmp; \
         ALR |= 1; \
       } \
-    } else { /* •‰€•‰ */ \
+    } else { /* è² Ã·è²  */ \
       tmp = AHR - R(inst.rs); \
       if(tmp > AHR) { /* !C */ \
         AHR = tmp; \
@@ -969,7 +969,7 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1; \
 }
 #define exec_div2s_rs(inst) { NO_EXT NO_DELAY \
-  /* div0xˆÈŠO‚Å‚ÍAƒ[ƒœZ—áŠO‚Í”­¶‚µ‚Ü‚¹‚ñB */ \
+  /* div0xä»¥å¤–ã§ã¯ã€ã‚¼ãƒ­é™¤ç®—ä¾‹å¤–ã¯ç™ºç”Ÿã—ã¾ã›ã‚“ã€‚ */ \
   if(PSR.ds) { \
     if(!PSR.n) { \
       tmp = AHR + R(inst.rs); \
@@ -985,9 +985,9 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   CLK += 1; \
 }
 #define exec_div3s(inst) { NO_EXT NO_DELAY \
-  /* div0xˆÈŠO‚Å‚ÍAƒ[ƒœZ—áŠO‚Í”­¶‚µ‚Ü‚¹‚ñB */ \
+  /* div0xä»¥å¤–ã§ã¯ã€ã‚¼ãƒ­é™¤ç®—ä¾‹å¤–ã¯ç™ºç”Ÿã—ã¾ã›ã‚“ã€‚ */ \
   if(PSR.ds != PSR.n) { \
-    ALR = 0 - ALR;  /* ALR = -ALR ‚Å‚ÍŒx‚É‚È‚é‚Ì‚Åc */ \
+    ALR = 0 - ALR;  /* ALR = -ALR ã§ã¯è­¦å‘Šã«ãªã‚‹ã®ã§â€¦ */ \
   } \
   PC += 2; \
   CLK += 1; \
@@ -997,12 +997,12 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
  *  CLASS 5A
  ****************************************************************************/
 
-#define exec_ld_w_sd_rs(inst) { NO_EXT /*NO_DELAY À‚ÍƒfƒBƒŒƒCƒh‰Â”\IEPSONƒ‰ƒCƒuƒ‰ƒŠ‚ÌœZƒ‹[ƒ`ƒ“‚ªg‚Á‚Ä‚é*/ \
+#define exec_ld_w_sd_rs(inst) { NO_EXT /*NO_DELAY å®Ÿã¯ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰å¯èƒ½ï¼EPSONãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®é™¤ç®—ãƒ«ãƒ¼ãƒãƒ³ãŒä½¿ã£ã¦ã‚‹*/ \
   S(inst.sd_rd) = R(inst.rs_ss); \
   PC += 2; \
   CLK += 1; \
 }
-#define exec_ld_w_rd_ss(inst) { NO_EXT /*NO_DELAY À‚ÍƒfƒBƒŒƒCƒh‰Â”\IEPSONƒ‰ƒCƒuƒ‰ƒŠ‚ÌœZƒ‹[ƒ`ƒ“‚ªg‚Á‚Ä‚é*/ \
+#define exec_ld_w_rd_ss(inst) { NO_EXT /*NO_DELAY å®Ÿã¯ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰å¯èƒ½ï¼EPSONãƒ©ã‚¤ãƒ–ãƒ©ãƒªã®é™¤ç®—ãƒ«ãƒ¼ãƒãƒ³ãŒä½¿ã£ã¦ã‚‹*/ \
   R(inst.sd_rd) = S(inst.rs_ss); \
   PC += 2; \
   CLK += 1; \
@@ -1050,22 +1050,22 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   PC += 2; \
   CLK += 1; \
 }
-#define exec_ld_b_rd_rs(inst) { NO_EXT NO_DELAY /*—v’ˆÓIƒfƒBƒŒƒCƒh•s‰ÂI*/ \
+#define exec_ld_b_rd_rs(inst) { NO_EXT NO_DELAY /*è¦æ³¨æ„ï¼ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰ä¸å¯ï¼*/ \
   R(inst.rd) = (char)R(inst.rs); \
   PC += 2; \
   CLK += 1; \
 }
-#define exec_ld_ub_rd_rs(inst) {  NO_EXT NO_DELAY /*—v’ˆÓIƒfƒBƒŒƒCƒh•s‰ÂI*/ \
+#define exec_ld_ub_rd_rs(inst) {  NO_EXT NO_DELAY /*è¦æ³¨æ„ï¼ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰ä¸å¯ï¼*/ \
   R(inst.rd) = (unsigned char)R(inst.rs); \
   PC += 2; \
   CLK += 1; \
 }
-#define exec_ld_h_rd_rs(inst) {  NO_EXT NO_DELAY /*—v’ˆÓIƒfƒBƒŒƒCƒh•s‰ÂI*/ \
+#define exec_ld_h_rd_rs(inst) {  NO_EXT NO_DELAY /*è¦æ³¨æ„ï¼ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰ä¸å¯ï¼*/ \
   R(inst.rd) = (short)R(inst.rs); \
   PC += 2; \
   CLK += 1; \
 }
-#define exec_ld_uh_rd_rs(inst) {  NO_EXT NO_DELAY /*—v’ˆÓIƒfƒBƒŒƒCƒh•s‰ÂI*/ \
+#define exec_ld_uh_rd_rs(inst) {  NO_EXT NO_DELAY /*è¦æ³¨æ„ï¼ãƒ‡ã‚£ãƒ¬ã‚¤ãƒ‰ä¸å¯ï¼*/ \
   R(inst.rd) = (unsigned short)R(inst.rs); \
   PC += 2; \
   CLK += 1; \
@@ -1096,7 +1096,7 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   //  b = (short)mem_read(R(inst.rs + 1), 2) * (short)mem_read(R(inst.rs + 2), 2);
   //  c = a + b;
   //  AR = a;
-  //  if(!PSR.mo) { /* 1¨0‚É‚Í•Ï‰»‚µ‚È‚¢ */
+  //  if(!PSR.mo) { /* 1â†’0ã«ã¯å¤‰åŒ–ã—ãªã„ */
   //    PSR.mo = (a < 0  && b <  0 && c >= 0) ||
   //             (a >= 0 && b >= 0 && c <  0);
   //  }
@@ -1108,8 +1108,8 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   //PC += 2;
   //CLK += 4;
   //
-  //ª–{“–‚Í‚±‚¤‚Å‚·‚ªAmac–½—ßÀs’†‚ÉŠ„‚è‚İ‚ğó‚¯•t‚¯‚é‚½‚ß‚ÉAŸ‚Ì‚æ‚¤‚É•ÏX‚µ‚Ü‚µ‚½B
-  //«À‹@‚Æˆá‚¢–ˆ‰ñmac–½—ß‚ğƒtƒFƒbƒ`‚µ‚Ä‚µ‚Ü‚¤‚½‚ßAÀ‹@‚æ‚è‚àÀsƒTƒCƒNƒ‹‚ª‘‚¦‚Ä‚¢‚Ü‚·B
+  //â†‘æœ¬å½“ã¯ã“ã†ã§ã™ãŒã€macå‘½ä»¤å®Ÿè¡Œä¸­ã«å‰²ã‚Šè¾¼ã¿ã‚’å—ã‘ä»˜ã‘ã‚‹ãŸã‚ã«ã€æ¬¡ã®ã‚ˆã†ã«å¤‰æ›´ã—ã¾ã—ãŸã€‚
+  //â†“å®Ÿæ©Ÿã¨é•ã„æ¯å›macå‘½ä»¤ã‚’ãƒ•ã‚§ãƒƒãƒã—ã¦ã—ã¾ã†ãŸã‚ã€å®Ÿæ©Ÿã‚ˆã‚Šã‚‚å®Ÿè¡Œã‚µã‚¤ã‚¯ãƒ«ãŒå¢—ãˆã¦ã„ã¾ã™ã€‚
   //
 
 #define exec_mac_rs(inst) { NO_EXT NO_DELAY \
@@ -1118,14 +1118,14 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
     b64 = mem_readH(context, R(inst.rs + 1)) * mem_readH(context, R(inst.rs + 2)); \
     c64 = a64 + b64; \
     AR = a64; \
-    if(!PSR.mo) { /* 1¨0‚É‚Í•Ï‰»‚µ‚È‚¢ */ \
+    if(!PSR.mo) { /* 1â†’0ã«ã¯å¤‰åŒ–ã—ãªã„ */ \
       PSR.mo = (a64 < 0  && b64 <  0 && c64 >= 0) || \
                (a64 >= 0 && b64 >= 0 && c64 <  0); \
     } \
     R(inst.rs)--; \
     R(inst.rs + 1) += 2; \
     R(inst.rs + 2) += 2; \
-    /* PC‚Í‚»‚Ì‚Ü‚ÜBŸ‰ñ‚à‚±‚Ìmac–½—ß‚ğÀs‚µ‚Ü‚·B */ \
+    /* PCã¯ãã®ã¾ã¾ã€‚æ¬¡å›ã‚‚ã“ã®macå‘½ä»¤ã‚’å®Ÿè¡Œã—ã¾ã™ã€‚ */ \
     CLK += 2; \
   } else { \
     PC += 2; \
@@ -1149,14 +1149,14 @@ ext_PCxSIGN8(PIEMU_CONTEXT* context, int sign8)
   PC += 2; \
   CLK += 1; \
  \
-  /* Šg’£‚³‚ê‚é–½—ß‚ğÀsBi‚±‚ÌŠÔ‚ÌŠ„‚è‚İ‚ğ‹Ö~‚·‚é‚½‚ßj */ \
+  /* æ‹¡å¼µã•ã‚Œã‚‹å‘½ä»¤ã‚’å®Ÿè¡Œã€‚ï¼ˆã“ã®é–“ã®å‰²ã‚Šè¾¼ã¿ã‚’ç¦æ­¢ã™ã‚‹ãŸã‚ï¼‰ */ \
   inst2.s = mem_readH(context, PC); \
   core_inst(context, inst2); \
-  if(EXT1.s) DIE(); /* ŠmÀ‚Éext‚ªÁ”ï‚³‚ê‚Ä‚¢‚é‚±‚Æ */ \
+  if(EXT1.s) DIE(); /* ç¢ºå®Ÿã«extãŒæ¶ˆè²»ã•ã‚Œã¦ã„ã‚‹ã“ã¨ */ \
 }
 
 /****************************************************************************
- *  ƒOƒ[ƒoƒ‹ŠÖ”
+ *  ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
  ****************************************************************************/
 
 void
@@ -1194,7 +1194,7 @@ core_workex(PIEMU_CONTEXT* context, unsigned mils_org, unsigned nClocksDivBy1k)
 //    inst.s = mem_readH(context, PC); core_inst(context, inst);
 //    inst.s = mem_readH(context, PC); core_inst(context, inst);
     insts++;
-  } while(!context->bEndFlag && (CLK - mils_org) < nClocksDivBy1k); /* 1ƒ~ƒŠ•b•ª‚Ìˆ— */
+  } while(!context->bEndFlag && (CLK - mils_org) < nClocksDivBy1k); /* 1ãƒŸãƒªç§’åˆ†ã®å‡¦ç† */
   return insts;
 }
 
@@ -1203,7 +1203,7 @@ core_trap(PIEMU_CONTEXT* context,int no, int level)
 {
   unsigned addr;
 
-  /* ƒ}ƒXƒN‰Â”\‚ÈŠ„‚è‚İ‚Ìê‡‚Ì‚İAŠ„‚è‚İ‰Â”\ğŒ‚ğŒŸ¸‚µ‚Ü‚·B */
+  /* ãƒã‚¹ã‚¯å¯èƒ½ãªå‰²ã‚Šè¾¼ã¿ã®å ´åˆã®ã¿ã€å‰²ã‚Šè¾¼ã¿å¯èƒ½æ¡ä»¶ã‚’æ¤œæŸ»ã—ã¾ã™ã€‚ */
   if(no >= 16) {
     if(!PSR.ie) return;
     if((unsigned)level <= PSR.il) return;
@@ -1212,15 +1212,15 @@ core_trap(PIEMU_CONTEXT* context,int no, int level)
   if(context->core.in_halt)
     context->core.in_halt = 0;
 
-  addr = mem_readW(context, pTTBR_REG + no * 4);  /* ¦—vŒŸ“¢:ƒgƒ‰ƒbƒvƒe[ƒuƒ‹’¼“Ç‚İ‚µ‚Ä‚Ü‚· */
+  addr = mem_readW(context, pTTBR_REG + no * 4);  /* â€»è¦æ¤œè¨:ãƒˆãƒ©ãƒƒãƒ—ãƒ†ãƒ¼ãƒ–ãƒ«ç›´èª­ã¿ã—ã¦ã¾ã™ */
   SP -= 4;
-  mem_writeW(context, SP, PC); /* —v’ˆÓIPC+2‚¶‚á‚È‚¢‚æI */
+  mem_writeW(context, SP, PC); /* è¦æ³¨æ„ï¼PC+2ã˜ã‚ƒãªã„ã‚ˆï¼ */
   SP -= 4;
   mem_writeW(context, SP, S(0));
   PC = addr;
   PSR.ie = 0;
 
-  /* ƒ}ƒXƒN‰Â”\‚ÈŠ„‚è‚İ‚Ìê‡‚Ì‚İAŠ„‚è‚İƒŒƒxƒ‹‚ğ•Ï‰»‚³‚¹‚Ü‚·B */
+  /* ãƒã‚¹ã‚¯å¯èƒ½ãªå‰²ã‚Šè¾¼ã¿ã®å ´åˆã®ã¿ã€å‰²ã‚Šè¾¼ã¿ãƒ¬ãƒ™ãƒ«ã‚’å¤‰åŒ–ã•ã›ã¾ã™ã€‚ */
   if(no >= 16) {
     PSR.il = level;
   }
@@ -1235,11 +1235,11 @@ core_trap(PIEMU_CONTEXT* context,int no, int level)
 void
 core_inst(PIEMU_CONTEXT* context, INST inst)
 {
-  // Å“K‰»‚É‚æ‚Á‚ÄƒŒƒWƒXƒ^‚Åg‚¢‰ñ‚µ‚Ä‚­‚ê‚é
-  int ACC; // ƒAƒLƒ…ƒ€ƒŒ[ƒ^
+  // æœ€é©åŒ–ã«ã‚ˆã£ã¦ãƒ¬ã‚¸ã‚¹ã‚¿ã§ä½¿ã„å›ã—ã¦ãã‚Œã‚‹
+  int ACC; // ã‚¢ã‚­ãƒ¥ãƒ ãƒ¬ãƒ¼ã‚¿
   INST d_inst; // delayed inst.
   INST inst2; // extended inst.
-  unsigned addr = 0; // ƒAƒhƒŒƒX
+  unsigned addr = 0; // ã‚¢ãƒ‰ãƒ¬ã‚¹
   int c = 0, d = 0;
   int cc = 0;
   unsigned ua = 0, ub = 0;
@@ -1248,7 +1248,7 @@ core_inst(PIEMU_CONTEXT* context, INST inst)
   unsigned un;
   int sn;
 
-  // ‚¢‚¢‹ï‡‚ÉƒŒƒWƒXƒ^‚ğg‚Á‚½ƒWƒƒƒ“ƒvƒe[ƒuƒ‹‚É‚È‚Á‚Ä‚­‚ê‚é
+  // ã„ã„å…·åˆã«ãƒ¬ã‚¸ã‚¹ã‚¿ã‚’ä½¿ã£ãŸã‚¸ãƒ£ãƒ³ãƒ—ãƒ†ãƒ¼ãƒ–ãƒ«ã«ãªã£ã¦ãã‚Œã‚‹
   switch(MASK(inst.c0a.cls, 0, 3))
   {
     case 0:

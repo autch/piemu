@@ -1,44 +1,21 @@
+
 #ifndef PFFS_H
 #define PFFS_H
 
-// from /usr/piece/include/piece.h
+#include "pfi.h"
+#include "pffs_types.h"
 
-// piece flash file system
+void PFFSLoadMasterBlock(PFI* pfi);
+c33word PFFSDirCount(PFI* pfi);
+DIRECTORY* PFFSDir(PFI* pfi, int nIndex);
+DIRECTORY* PFFSFindFile(PFI* pfi, char* szFileName);
+c33byte* PFFSGetFilesNthSector(PFI* pfi, DIRECTORY* pDir, int nSector);
+c33byte* PFFSSectorToPointer(PFI* pfi, int nSector);
+c33word PFFSFree(PFI* pfi);
+void PFFSDumpDirEntries(PFI* pfi);
+int PFFSExtractFile(PFI* pfi, char* pPFFSFileName, char* pDiskFileName);
+int PFFSDeleteFile(PFI* pfi, char* pPFFSFileName);
+int PFFSAddFile(PFI* pfi, char* pFileName);
 
-#define MAXDIR 96
-#define MAXFAT 496
 
-typedef struct tagpffsMARK
-{
-  unsigned long ptr;
-  unsigned long resv;
-  char signature[24];
-}pffsMARK;
-
-typedef struct tagDIRECTORY
-{
-  char name[24];
-  unsigned char attr;
-  unsigned char resv;
-  unsigned short chain;
-  unsigned long size;
-}DIRECTORY;
-
-typedef struct tagFAT
-{
-  unsigned short chain;
-} FAT;
-
-typedef struct tagpffsMASTERBLOCK
-{
-  pffsMARK mark;
-  DIRECTORY dir[MAXDIR];
-  FAT fat[MAXFAT];
-} pffsMASTERBLOCK;
-
-#define FAT_FREE    0xffff
-#define FAT_END     0xeeee
-#define FAT_INVALID 0xdddd
-#define FAT_SYSTEM  0xcccc
-
-#endif // !PFFS_H
+#endif

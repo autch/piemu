@@ -16,26 +16,26 @@
 //
 // Comments:
 //
-//  �x�N�^�[�ԍ��̒�`�ł��B
+//  ベクター番号の定義です。
 //
 //  v1.00 2001.11.09 MIO.H
-//  v1.05 2001.11.21 MIO.H  TPMAX �� 72��
+//  v1.05 2001.11.21 MIO.H  TPMAX を 72個に
 //
 
 
 
-// 0x400 �Ԓn����g���b�v�e�[�u����u���܂��B
-// 72 �� �I���� 0x51f
+// 0x400 番地からトラップテーブルを置きます。
+// 72 個 終わりは 0x51f
 //
-// 0x20 �Ԓn����Piece�J�[�l���T�[�r�X�e�[�u����u���܂��B
-// 248 �� �I���� 0x3ff
+// 0x20 番地からPieceカーネルサービステーブルを置きます。
+// 248 個 終わりは 0x3ff
 //
 
-#define TPVECTORTOP		0x400	// �g���b�v�e�[�u���̐擪�A�h���X(1KB���E)
-#define TPMAX   	  	72		// �V�X�e�����g�p����x�N�^�̍ő吔
+#define TPVECTORTOP		0x400	// トラップテーブルの先頭アドレス(1KB境界)
+#define TPMAX   	  	72		// システムが使用するベクタの最大数
 
-#define KSVECTORTOP		0x20	// �J�[�l���T�[�r�X�e�[�u���̐擪�A�h���X
-#define KSMAX     		248		// �J�[�l���T�[�r�X���g�p����x�N�^�̍ő吔
+#define KSVECTORTOP		0x20	// カーネルサービステーブルの先頭アドレス
+#define KSMAX     		248		// カーネルサービスが使用するベクタの最大数
 
 
 #define TPNO_INT0 12
@@ -152,7 +152,7 @@
 #define KSNO_FileSetBufferMode 122
 
 
-// 192�`223 �͓����p����T�[�r�X
+// 192〜223 は同期用特殊サービス
 
 #define KSNO2_SyncEnterCriticalSection 192
 #define KSNO2_SyncLeaveCriticalSection 193
@@ -160,5 +160,5 @@
 #define KSNO2_SyncSafetySetIL          195
 #define KSNO2_TimerGetPrecisionCount   196
 
-// 224�`247 �̓��[�U�g���p
+// 224〜247 はユーザ拡張用
 

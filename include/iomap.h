@@ -3,7 +3,7 @@
  * a part of p/emu - p/ece emulator
  * (c) 2003, Naoyuki Sawa, re-written by Yui N.
  *
- * yui: 2005.08.24: ���̃t�@�C���͂��͂�s�v�B
+ * yui: 2005.08.24: このファイルはもはや不要。
  */
 
 /*	
@@ -13,10 +13,10 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- �쐬�J�n�B
+ *	- 作成開始。
  */
 
-/* ������C���N���[�h���Ďg���̂ŁA�K�[�h�Ȃ��ł��B */
+/* 複数回インクルードして使うので、ガードなしです。 */
 
 struct tagPIEMU_CONTEXT;
 

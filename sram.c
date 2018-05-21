@@ -5,24 +5,24 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- ì¬ŠJnB
+ *	- ä½œæˆé–‹å§‹ã€‚
  */
 #include "app.h"
 
 /****************************************************************************
- *	ƒOƒ[ƒoƒ‹•Ï”
+ *	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
  ****************************************************************************/
 
 //SRAM sram;
 
 /****************************************************************************
- *	ƒOƒ[ƒoƒ‹ŠÖ”
+ *	ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
  ****************************************************************************/
 
 void
 sram_init(PIEMU_CONTEXT* context)
 {
-	/* ƒƒ‚ƒŠŠ„‚è“–‚ÄB */
+	/* ãƒ¡ãƒ¢ãƒªå‰²ã‚Šå½“ã¦ã€‚ */
 	memset(&context->sram, 0, sizeof context->sram);
 	context->sram.mem_size = context->emu.sysinfo.sram_end - context->emu.sysinfo.sram_top;
 	context->sram.mem = (unsigned char*)calloc(context->sram.mem_size, 1);
@@ -38,7 +38,7 @@ sram_read(PIEMU_CONTEXT* context, unsigned ofs, int size)
 	case 4: return READ_MEM_W(context->sram.mem + ofs);
 	}
 	DIE();
-	return -1; /* Œx—}§ */
+	return -1; /* è­¦å‘ŠæŠ‘åˆ¶ */
 }
 
 void

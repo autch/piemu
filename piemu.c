@@ -8,11 +8,14 @@ int SetEmuParameters(struct tagPIEMU_CONTEXT* context, EMU* pEmuInfo, void* pUse
   PFIHEADER pfi;
 
   fp = fopen("piece.pfi", "rb");
-  if(!fp) DIE();
+  if(fp == NULL) DIE();
   if(!fread(&pfi, sizeof(PFIHEADER), 1, fp))
     DIE();
-  if(pfi.dwSignature != 'PFI1') DIE();
+  if(memcmp(&pfi.dwSignature,  "1IFP", 4) != 0) DIE();
   fclose(fp);
+
+  if(pfi.siSysInfo.size != sizeof(SYSTEMINFO))
+    DIE();
 
   pEmuInfo->sysinfo = pfi.siSysInfo;
 
@@ -31,8 +34,10 @@ int LoadFlashImage(struct tagPIEMU_CONTEXT* context, FLASH* pFlashInfo, void* pU
   fp = fopen("piece.pfi", "rb");
   if(!fp) DIE();
   if(!fread(&pfi, sizeof(PFIHEADER), 1, fp)) DIE();
-  if(pfi.dwSignature != 'PFI1') DIE();
+  if(memcmp(&pfi.dwSignature,  "1IFP", 4) != 0) DIE();
   if(!pfi.dwOffsetToFlash) DIE();
+  if(pfi.siSysInfo.size != sizeof(SYSTEMINFO))
+    DIE();
 
   fseek(fp, pfi.dwOffsetToFlash, SEEK_SET);
 
@@ -56,27 +61,17 @@ int UpdateScreen(PIEMU_CONTEXT* context, void* pUser)
   surface = context->screen;
   if(SDL_MUSTLOCK(surface))
     SDL_LockSurface(surface);
-#ifndef PSP
+
   pp = *context->vbuff;
-  for(py = (unsigned int*)surface->pixels; py != (unsigned int*)surface->pixels + DISP_X * DISP_Y;
+  for(py = (unsigned int*)surface->pixels;
+      py != (unsigned int*)surface->pixels + DISP_X * DISP_Y;
       py += DISP_X)
   {
     for(px = py; px != py + DISP_X; px++)
     {
-      *px = palette[*pp++];
+      *px = palette[*pp++ & 0x03];
     }
   }
-#else
-  pp = *context->vbuff;
-  for(py = (unsigned int*)surface->pixels; py != (unsigned int*)surface->pixels + (context->screen->w * 4) * DISP_Y;
-      py += context->screen->w * 4)
-  {
-    for(px = py; px != py + DISP_X; px++)
-    {
-      *px = palette[*pp++];
-    }
-  }
-#endif // !PSP
   if(SDL_MUSTLOCK(surface))
     SDL_UnlockSurface(surface);
 

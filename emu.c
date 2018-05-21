@@ -5,24 +5,24 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - ì¬ŠJŽnB
+ *  - ä½œæˆé–‹å§‹ã€‚
  */
 #include "app.h"
 
 /****************************************************************************
- *  ƒOƒ[ƒoƒ‹•Ï”
+ *  ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
  ****************************************************************************/
 
 //EMU emu;
 
 /****************************************************************************
- *  ƒ‚ƒWƒ…[ƒ‹’è‹`
+ *  ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å®šç¾©
  ****************************************************************************/
 
 #define MOD(n) { mod.init = n##_init; mod.work = n##_work; }
 
 /****************************************************************************
- *  ƒOƒ[ƒoƒ‹ŠÖ”
+ *  ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
  ****************************************************************************/
 
 void
@@ -46,21 +46,21 @@ emu_init(PIEMU_CONTEXT* context)
   context->pfnSetEmuParameters(context, &context->emu, context->pUser);
   printf("BIOS version = %d.%02d\n", context->emu.sysinfo.bios_ver >> 8, context->emu.sysinfo.bios_ver & 255);
   printf("BIOS date    = %d.%02d.%02d\n", 2000+(context->emu.sysinfo.bios_date>>9), (context->emu.sysinfo.bios_date>>5)&15, context->emu.sysinfo.bios_date&31);
-  printf("SRAM top adr = 0x%p\n", context->emu.sysinfo.sram_top);
-  printf("SRAM end adr = 0x%p\n", context->emu.sysinfo.sram_end-1);
+  printf("SRAM top adr = 0x%08x\n", context->emu.sysinfo.sram_top);
+  printf("SRAM end adr = 0x%08x\n", context->emu.sysinfo.sram_end-1);
   printf("SRAM size    = %d KB\n", (context->emu.sysinfo.sram_end - context->emu.sysinfo.sram_top)>>10);
   printf("HW version   = %d.%02d\n", context->emu.sysinfo.hard_ver>>8, context->emu.sysinfo.hard_ver&255);
   printf("SYSTEM clock = %5.3f MHz\n", context->emu.sysinfo.sys_clock / 1e6);
   printf("VDDE voltage = %5.3f V\n", context->emu.sysinfo.vdde_voltage / 1e3);
-  printf("PFFS top adr = 0x%p\n", context->emu.sysinfo.pffs_top);
-  printf("PFFS end adr = 0x%p\n", context->emu.sysinfo.pffs_end-1);
+  printf("PFFS top adr = 0x%08x\n", context->emu.sysinfo.pffs_top);
+  printf("PFFS end adr = 0x%08x\n", context->emu.sysinfo.pffs_end-1);
 
-  /* Šeƒ‚ƒWƒ…[ƒ‹‚Ì‰Šú‰»B */
+  /* å„ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®åˆæœŸåŒ–ã€‚ */
   for(module = context->emu.module_tbl; module->init || module->work; module++)
   {
     if(module->init) module->init(context);
   }
-  core_init(context); /* ‚±‚Ì’†‚©‚ç‘¼‚Ìƒ‚ƒWƒ…[ƒ‹‚ðŽg‚¤‚Ì‚ÅAÅŒã‚É‰Šú‰» */
+  core_init(context); /* ã“ã®ä¸­ã‹ã‚‰ä»–ã®ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã‚’ä½¿ã†ã®ã§ã€æœ€å¾Œã«åˆæœŸåŒ– */
 
 }
 
@@ -74,84 +74,57 @@ int emu_work(void* ctx)
   unsigned nIPF = 0;
   unsigned nFrames = 0;
 
-  // ‚«‚Â‚¢ƒ‹[ƒv“à‚ÅŒvŽZ‚È‚Ç‚³‚¹‚È‚¢
+  // ãã¤ã„ãƒ«ãƒ¼ãƒ—å†…ã§è¨ˆç®—ãªã©ã•ã›ãªã„
   unsigned nSystemClock = context->emu.sysinfo.sys_clock;
   unsigned nClocksDivBy1k = nSystemClock / 1000;
   unsigned nMSecPerFrame = 1000 / context->o_fps;
   unsigned nClocksPerFrame = nSystemClock / context->o_fps * context->o_oc / 100;
   unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
   unsigned nHalfFPS = context->o_fps >> 1;
-#ifdef PSP
-  SceKernelThreadInfo info = { sizeof(SceKernelThreadInfo) };
-  if(sceKernelReferThreadStatus(sceKernelGetThreadId(), &info) == 0)
-  {
-    // —Dæ“x sage.  ”’l‚ª¬‚³‚¢‚Ù‚Ç—DæB
-    sceKernelChangeThreadPriority(sceKernelGetThreadId(), info.currentPriority + 8);
-  }
-#endif
-#ifdef WINDOWS
-  // —Dæ“x sage.  ”’l‚ª¬‚³‚¢‚Ù‚Ç—DæB
-  SetThreadPriority(GetCurrentThread(), THREAD_PRIORITY_LOWEST);
-#endif
+
   do
   {
-#ifdef PSP
-    scePowerSetCpuClockFrequency(333);
-#endif
     real_org = SDL_GetTicks();
-#ifdef WINDOWS
-    if(nFrames == 0)
-    {
-//      fprintf(stderr, "ipf(%d frames avg.)\t%d\n", nHalfFPS, nIPF / nHalfFPS);
-      nIPF = 0;
-    }
-    nFrames = (nFrames + 1) % nHalfFPS;
-#else
     nIPF = 0;
-#endif
     frame_org = CLK;
     do
     {
       mils_org = CLK;
-      /* –½—ßŽÀsB */
+      /* å‘½ä»¤å®Ÿè¡Œã€‚ */
       nIPF += core_workex(context, mils_org, nClocksDivBy1k);
 
-      /*{{‰¼*/
+      /*{{ä»®*/
       pCLK_TCD += 1;
       //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
-      pT16_TC0 += nClocksShr14; /* GetSysClock()‚É24MHz‚ÉŒ©‚¹‚©‚¯‚é‚½‚ß‚Ì‚Â‚¶‚Â‚Ü‡‚í‚¹ */
-      /*}}‰¼*/
+      pT16_TC0 += nClocksShr14; /* GetSysClock()ã«24MHzã«è¦‹ã›ã‹ã‘ã‚‹ãŸã‚ã®ã¤ã˜ã¤ã¾åˆã‚ã› */
+      /*}}ä»®*/
 
-      /* ¦—v’ˆÓI
-       * •K‚¸Aƒ‚ƒWƒ…[ƒ‹ˆ—¨NMI¶¬‚Ì‡‚Ås‚Á‚Ä‚­‚¾‚³‚¢I
-       * ‚»‚¤‚µ‚È‚¢‚ÆAƒ‚ƒWƒ…[ƒ‹ˆ—‚©‚ç‚ÌŠ„‚èž‚Ý”­s‚ªí‚ÉNMI‚ÉƒuƒƒbƒN‚³‚ê‚Ä‚µ‚Ü‚¢‚Ü‚·B
+      /* â€»è¦æ³¨æ„ï¼
+       * å¿…ãšã€ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å‡¦ç†â†’NMIç”Ÿæˆã®é †ã§è¡Œã£ã¦ãã ã•ã„ï¼
+       * ãã†ã—ãªã„ã¨ã€ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«å‡¦ç†ã‹ã‚‰ã®å‰²ã‚Šè¾¼ã¿ç™ºè¡ŒãŒå¸¸ã«NMIã«ãƒ–ãƒ­ãƒƒã‚¯ã•ã‚Œã¦ã—ã¾ã„ã¾ã™ã€‚
        */
-      /* Šeƒ‚ƒWƒ…[ƒ‹‚Ìˆ—B */
+      /* å„ãƒ¢ã‚¸ãƒ¥ãƒ¼ãƒ«ã®å‡¦ç†ã€‚ */
       for(module = context->emu.module_tbl; module->init || module->work; module++)
       {
         if(module->work) module->work(context);
       }
-      /* ƒRƒ“ƒeƒLƒXƒgƒXƒCƒbƒ`—p‚Ì16bitƒ^ƒCƒ}0ƒRƒ“ƒyƒABŠ„‚èž‚Ý¶¬ */
+      /* ã‚³ãƒ³ãƒ†ã‚­ã‚¹ãƒˆã‚¹ã‚¤ãƒƒãƒç”¨ã®16bitã‚¿ã‚¤ãƒž0ã‚³ãƒ³ãƒšã‚¢Bå‰²ã‚Šè¾¼ã¿ç”Ÿæˆ */
       if(bINT_E16T01_E16TU0) core_trap(context, TRAP_16TU0, bINT_P16T01_P16T0);
-      /* P/ECEƒVƒXƒeƒ€ƒ^ƒCƒ}—p‚ÌNMI¶¬B */
+      /* P/ECEã‚·ã‚¹ãƒ†ãƒ ã‚¿ã‚¤ãƒžç”¨ã®NMIç”Ÿæˆã€‚ */
       if(bWD_EN_EWD) core_trap(context, TRAP_NMI, 0);
 
       if(context->bEndFlag)
         return 0;
-    } while((CLK - frame_org) < nClocksPerFrame); /* 1ƒtƒŒ[ƒ€•ª‚Ìˆ— */
+    } while((CLK - frame_org) < nClocksPerFrame); /* 1ãƒ•ãƒ¬ãƒ¼ãƒ åˆ†ã®å‡¦ç† */
 
-    /* ‰æ–ÊXVB */
+    /* ç”»é¢æ›´æ–°ã€‚ */
     lcdc_conv(context, context->vbuff);
     context->pfnUpdateScreen(context, context->pUser);
 
-    /* ŽÀŽžŠÔ‚Æ‚Ì“¯Šú */
+    /* å®Ÿæ™‚é–“ã¨ã®åŒæœŸ */
     if(!context->o_nowait)
     {
       int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
-//      fprintf(stderr, "wait: %d\n", nExpectedWait);
-//#ifdef PSP
-//      scePowerSetCpuClockFrequency(222);
-//#endif
       if(nExpectedWait > 0)
         SDL_Delay(nExpectedWait);
       else

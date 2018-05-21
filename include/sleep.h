@@ -2,23 +2,10 @@
 #ifndef SLEEP_H
 #define SLEEP_H
 
-// Œ»İ‚Ìƒ^ƒCƒ€ƒXƒ‰ƒCƒX‚ğ•úŠü‚·‚éƒ}ƒNƒ OS_YIELD() ‚ğ’è‹`‚·‚éB
-// ƒ~ƒŠ•b’PˆÊ‚Å‚ÌƒfƒBƒŒƒC‚É‚Í SDL_Delay() ‚ğg‚¤B
+// ç¾åœ¨ã®ã‚¿ã‚¤ãƒ ã‚¹ãƒ©ã‚¤ã‚¹ã‚’æ”¾æ£„ã™ã‚‹ãƒã‚¯ãƒ­ OS_YIELD() ã‚’å®šç¾©ã™ã‚‹ã€‚
+// ãƒŸãƒªç§’å˜ä½ã§ã®ãƒ‡ã‚£ãƒ¬ã‚¤ã«ã¯ SDL_Delay() ã‚’ä½¿ã†ã€‚
 
-#ifdef WINDOWS
-#define WIN32_LEAN_AND_MEAN
-#include <windows.h>
-#define OS_YIELD() Sleep(0)
-#endif
-
-#ifdef LINUX
 #include <sched.h>
 #define OS_YIELD() sched_yield()
-#endif
-
-#ifdef PSP
-#include <pspthreadman.h>
-#define OS_YIELD() sceKernelDelayThreadCB(0)
-#endif
 
 #endif // !SLEEP_H

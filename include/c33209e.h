@@ -9,20 +9,20 @@
 //		1999.07.29	T.Mineshima start c33208 structure and define
 //		1999.08.04	T.Mineshima change define name.
 //
-//	‚±‚êˆÈ~‚ÌC³‚ÍANaoyuki Sawa<nsawa@north.hokkai.net>‚É‚æ‚é‚à‚Ì‚Å‚·B
-//		2002.07.04	u`33208`v‚Æ‚¢‚¤–¼Ì‚ğu`33209`v‚É•ÏXB
-//		2002.07.04	IDMA_ST‚ÌbBLK‚ÆbSIN‚Ì“à—e‚ª‹t‚¾‚Á‚½‚Ì‚ğC³B
-//		2002.07.05	pINT_PSIO1_PAD‚ÌƒRƒƒ“ƒg—“‚ÌƒAƒhƒŒƒXŠÔˆá‚¢‚ğC³B
-//		2002.07.05	plc_IO‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	8ƒrƒbƒgƒ^ƒCƒ}Ch.4-5‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	ƒVƒŠƒAƒ‹I/F  Ch.2-3‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.20	ƒ|[ƒgSIO‹@”\Šg’£ƒŒƒWƒXƒ^‚Ì’è‹`‚ğ’Ç‰ÁB
-//		2002.10.24	CLKDIV_8T1_32`4096‚ÌƒRƒƒ“ƒg‚ª"8-bit timer 2"
-//				‚Æ‚È‚Á‚Ä‚¢‚½‚Ì‚ğ"8-bit timer 1"‚ÉC³‚µ‚Ü‚µ‚½B
-//		2002.10.24	Š„‚è‚İƒxƒNƒ^”Ô†‚Ì’è‹`‚ğ’Ç‰Á‚µ‚Ü‚µ‚½B
+//	ã“ã‚Œä»¥é™ã®ä¿®æ­£ã¯ã€Naoyuki Sawa<nsawa@north.hokkai.net>ã«ã‚ˆã‚‹ã‚‚ã®ã§ã™ã€‚
+//		2002.07.04	ã€Œã€œ33208ã€œã€ã¨ã„ã†åç§°ã‚’ã€Œã€œ33209ã€œã€ã«å¤‰æ›´ã€‚
+//		2002.07.04	IDMA_STã®bBLKã¨bSINã®å†…å®¹ãŒé€†ã ã£ãŸã®ã‚’ä¿®æ­£ã€‚
+//		2002.07.05	pINT_PSIO1_PADã®ã‚³ãƒ¡ãƒ³ãƒˆæ¬„ã®ã‚¢ãƒ‰ãƒ¬ã‚¹é–“é•ã„ã‚’ä¿®æ­£ã€‚
+//		2002.07.05	plc_IOã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	8ãƒ“ãƒƒãƒˆã‚¿ã‚¤ãƒCh.4-5ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	ã‚·ãƒªã‚¢ãƒ«I/F  Ch.2-3ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.20	ãƒãƒ¼ãƒˆSIOæ©Ÿèƒ½æ‹¡å¼µãƒ¬ã‚¸ã‚¹ã‚¿ã®å®šç¾©ã‚’è¿½åŠ ã€‚
+//		2002.10.24	CLKDIV_8T1_32ã€œ4096ã®ã‚³ãƒ¡ãƒ³ãƒˆãŒ"8-bit timer 2"
+//				ã¨ãªã£ã¦ã„ãŸã®ã‚’"8-bit timer 1"ã«ä¿®æ­£ã—ã¾ã—ãŸã€‚
+//		2002.10.24	å‰²ã‚Šè¾¼ã¿ãƒ™ã‚¯ã‚¿ç•ªå·ã®å®šç¾©ã‚’è¿½åŠ ã—ã¾ã—ãŸã€‚
 //
 //	NOTE:
-//		* struct c_IOtag‚ÌDummy*‚ÍAƒRƒƒ“ƒg‚ÌƒAƒhƒŒƒX”ÍˆÍ‚ª¶‰E‹t‚Å‚·B
+//		* struct c_IOtagã®Dummy*ã¯ã€ã‚³ãƒ¡ãƒ³ãƒˆã®ã‚¢ãƒ‰ãƒ¬ã‚¹ç¯„å›²ãŒå·¦å³é€†ã§ã™ã€‚
 //
 //****************************************************************************
 
@@ -34,7 +34,7 @@
 /****************************************************************/
 
 //#define plc_IO ((volatile struct c_IOtag*)0x40000)
-//«2003/04/12:ƒGƒ~ƒ…ƒŒ[ƒ^—p‚É•ÏX
+//â†“2003/04/12:ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿ç”¨ã«å¤‰æ›´
 #define plc_IO ((volatile struct c_IOtag*)context->iomem.mem)
 
 /****************************************************************/
@@ -42,12 +42,12 @@
 /****************************************************************/
 union c_CLKSELtag {
 	volatile struct {
-		unsigned char	P8TPCK0	: 1;		/* 8-bit timer0 clock division ratio selection */
-		unsigned char	P8TPCK1	: 1;		/* 8-bit timer1 clock division ratio selection */
-		unsigned char	P8TPCK2	: 1;		/* 8-bit timer2 clock division ratio selection */
-		unsigned char	P8TPCK3	: 1;		/* 8-bit timer3 clock division ratio selection */
+		uint8_t	P8TPCK0	: 1;		/* 8-bit timer0 clock division ratio selection */
+		uint8_t	P8TPCK1	: 1;		/* 8-bit timer1 clock division ratio selection */
+		uint8_t	P8TPCK2	: 1;		/* 8-bit timer2 clock division ratio selection */
+		uint8_t	P8TPCK3	: 1;		/* 8-bit timer3 clock division ratio selection */
 	} bCTL;
-	volatile unsigned char	ucCTL;
+	volatile uint8_t	ucCTL;
 };
 
 /****************************************************************/
@@ -55,12 +55,12 @@ union c_CLKSELtag {
 /****************************************************************/
 union c_CLKCTLtag {
 	volatile struct {
-		unsigned char	TSA	: 3;		/* Clock A clock division ratio selection */
-		unsigned char	TONA	: 1;		/* Clock A clock control */
-		unsigned char	TSB	: 3;		/* Clock B clock division ratio selection */
-		unsigned char	TONB	: 1;		/* Clock B clock control */
+		uint8_t	TSA	: 3;		/* Clock A clock division ratio selection */
+		uint8_t	TONA	: 1;		/* Clock A clock control */
+		uint8_t	TSB	: 3;		/* Clock B clock division ratio selection */
+		uint8_t	TONB	: 1;		/* Clock B clock control */
 	} bCTL;
-	volatile unsigned char	ucCTL;
+	volatile uint8_t	ucCTL;
 };
 
 /****************************************************************/
@@ -69,31 +69,31 @@ union c_CLKCTLtag {
 struct c_TIMERtag {
 	union {						/* Clock timer Run/Stop register */
 		volatile struct {
-			unsigned char	TCRUN	: 1;	/* Clock timer Run/Stop control */
-			unsigned char	TCRST	: 1;	/* Clock timer Reset */
+			uint8_t	TCRUN	: 1;	/* Clock timer Run/Stop control */
+			uint8_t	TCRST	: 1;	/* Clock timer Reset */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rTCR;
 
 	union {						/* Clock timer interrupt control register */
 		volatile struct {
-			unsigned char	TCAF	: 1;	/* Alarm factor generation flag */
-			unsigned char	TCIF	: 1;	/* Interrupt factor generation flag */
-			unsigned char	TCASE	: 3;	/* Clock timer alarm factor selection */
-			unsigned char	TCISE	: 3;	/* Clock timer interrupt factor selection */
+			uint8_t	TCAF	: 1;	/* Alarm factor generation flag */
+			uint8_t	TCIF	: 1;	/* Interrupt factor generation flag */
+			uint8_t	TCASE	: 3;	/* Clock timer alarm factor selection */
+			uint8_t	TCISE	: 3;	/* Clock timer interrupt factor selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rTCI;
 
-	volatile unsigned char	rTCD;			/* Clock timer data */
-	volatile unsigned char	rTCMD;			/* Clock timer second counter data */
-	volatile unsigned char	rTCHD;			/* Clock timer minute counter data */
-	volatile unsigned char	rTCDD;			/* Clock timer hour counter data */
-	volatile unsigned char	rTCNDL;			/* Clock timer day counter data (low-order 8-bits) */
-	volatile unsigned char	rTCNDH;			/* Clock timer day counter data (high-order 8-bits) */
-	volatile unsigned char	rTCCH;			/* Clock timer minute comparison data */
-	volatile unsigned char	rTCCD;			/* Clock timer hour comparison data */
-	volatile unsigned char	rTCCN;			/* Clock timer day comparison data */
+	volatile uint8_t	rTCD;			/* Clock timer data */
+	volatile uint8_t	rTCMD;			/* Clock timer second counter data */
+	volatile uint8_t	rTCHD;			/* Clock timer minute counter data */
+	volatile uint8_t	rTCDD;			/* Clock timer hour counter data */
+	volatile uint8_t	rTCNDL;			/* Clock timer day counter data (low-order 8-bits) */
+	volatile uint8_t	rTCNDH;			/* Clock timer day counter data (high-order 8-bits) */
+	volatile uint8_t	rTCCH;			/* Clock timer minute comparison data */
+	volatile uint8_t	rTCCD;			/* Clock timer hour comparison data */
+	volatile uint8_t	rTCCN;			/* Clock timer day comparison data */
 };
 
 /****************************************************************/
@@ -102,15 +102,15 @@ struct c_TIMERtag {
 struct c_T8tag {
 	union {						/* 8-bit timer control register */
 		volatile struct {
-			unsigned char	PTRUN	: 1;	/* 8-bit timer Run/Stop control */
-			unsigned char	PSET	: 1;	/* 8-bit timer preset */
-			unsigned char	PTOUT	: 1;	/* 8-bit timer clock output control */
+			uint8_t	PTRUN	: 1;	/* 8-bit timer Run/Stop control */
+			uint8_t	PSET	: 1;	/* 8-bit timer preset */
+			uint8_t	PTOUT	: 1;	/* 8-bit timer clock output control */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rT8CTL;
-	volatile unsigned char	rRLD;			/* 8-bit timer reload data register */
-	volatile unsigned char	rPTD;			/* 8-bit timer counter data register */
-	unsigned char	Dummy;
+	volatile uint8_t	rRLD;			/* 8-bit timer reload data register */
+	volatile uint8_t	rPTD;			/* 8-bit timer counter data register */
+	uint8_t	Dummy;
 };
 
 /****************************************************************/
@@ -119,18 +119,18 @@ struct c_T8tag {
 struct c_WDTtag {
 	union {						/* Watchdog timer write protect register */
 		volatile struct {
-			unsigned char	Dummy	: 7;
-			unsigned char	WRWD	: 1;	/* EWD write protection */
+			uint8_t	Dummy	: 7;
+			uint8_t	WRWD	: 1;	/* EWD write protection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rWRWD;
 
 	union {
 		volatile struct {			/* Watchdog timer enable register */
-			unsigned char	Dummy	: 1;
-			unsigned char	EWD	: 1;	/* Watchdog timer enable */
+			uint8_t	Dummy	: 1;
+			uint8_t	EWD	: 1;	/* Watchdog timer enable */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rEWD;
 };
 
@@ -140,80 +140,80 @@ struct c_WDTtag {
 struct c_PWRCTLtag {
 	union {						/* Power control register */
 		volatile struct {
-			unsigned char	SOSC1	: 1;	/* Low-speed (OSC1) oscillation On/Off */
-			unsigned char	SOSC3	: 1;	/* High-speed (OSC3) oscillation On/Off */
-			unsigned char	CLKCHG	: 1;	/* CPU operating clock switch */
-			unsigned char	Dummy	: 2;	/* D4-3 reserved */
-			unsigned char	PSCON	: 1;	/* Prescaler On/Off control */
-			unsigned char	CLKDT	: 2;	/* System clock division ratio selection */
+			uint8_t	SOSC1	: 1;	/* Low-speed (OSC1) oscillation On/Off */
+			uint8_t	SOSC3	: 1;	/* High-speed (OSC3) oscillation On/Off */
+			uint8_t	CLKCHG	: 1;	/* CPU operating clock switch */
+			uint8_t	Dummy	: 2;	/* D4-3 reserved */
+			uint8_t	PSCON	: 1;	/* Prescaler On/Off control */
+			uint8_t	CLKDT	: 2;	/* System clock division ratio selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rPWRCTL;
 
 	union {						/* Prescaler clock select control register */
 		volatile struct {
-			unsigned char	PSCDT0	: 1;	/* Prescaler clock selection */
+			uint8_t	PSCDT0	: 1;	/* Prescaler clock selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rCLKSEL;
 
-	unsigned char	Dummy1[14];			/* 0x4018f - 0x40182 */
+	uint8_t	Dummy1[14];			/* 0x4018f - 0x40182 */
 
 	union {						/* Clock option register */
 		volatile struct {
-			unsigned char	PF1ON	: 1;	/* OSC1 external output control */
-			unsigned char	Dummy	: 1;	/* D1 reserved */
-			unsigned char	P8T1ON	: 1;	/* OSC3-stabilize waiting function */
-			unsigned char	HLT2OP	: 1;	/* HALT clock option */
+			uint8_t	PF1ON	: 1;	/* OSC1 external output control */
+			uint8_t	Dummy	: 1;	/* D1 reserved */
+			uint8_t	P8T1ON	: 1;	/* OSC3-stabilize waiting function */
+			uint8_t	HLT2OP	: 1;	/* HALT clock option */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rCLKOPT;
 
-	unsigned char	Dummy2[13];			/* 0x4019d - 0x40191 */
+	uint8_t	Dummy2[13];			/* 0x4019d - 0x40191 */
 
-	volatile unsigned char	rPWRPRT;		/* Power control protect register */
+	volatile uint8_t	rPWRPRT;		/* Power control protect register */
 };
 
 /****************************************************************/
 /* [Serial I/F] c_SIF						*/
 /****************************************************************/
 struct c_SIFtag {
-	volatile unsigned char	rTXD;			/* Serial I/F transmit data register */
-	volatile unsigned char	rRXD;			/* Serial I/F receive data register */
+	volatile uint8_t	rTXD;			/* Serial I/F transmit data register */
+	volatile uint8_t	rRXD;			/* Serial I/F receive data register */
 
 	union {						/* Serial I/F status register */
 		volatile struct {
-			unsigned char	RDBF	: 1;	/* Receive data buffer full */
-			unsigned char	TDBE	: 1;	/* Transmit data buffer empty */
-			unsigned char	OER	: 1;	/* Overrun error flag */
-			unsigned char	PER	: 1;	/* Parity error flag */
-			unsigned char	FER	: 1;	/* Flaming error flag */
-			unsigned char	TEND	: 1;	/* Transmit end flag */
+			uint8_t	RDBF	: 1;	/* Receive data buffer full */
+			uint8_t	TDBE	: 1;	/* Transmit data buffer empty */
+			uint8_t	OER	: 1;	/* Overrun error flag */
+			uint8_t	PER	: 1;	/* Parity error flag */
+			uint8_t	FER	: 1;	/* Flaming error flag */
+			uint8_t	TEND	: 1;	/* Transmit end flag */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rSTATUS;
 
 	union {						/* Serial I/F control register */
 		volatile struct {
-			unsigned char	SMD	: 2;	/* Transmit mode selection */
-			unsigned char	SSCK	: 1;	/* Input clock selection */
-			unsigned char	STPB	: 1;	/* Stop bit selection */
-			unsigned char	PMD	: 1;	/* Parity mode selection */
-			unsigned char	EPR	: 1;	/* Parity enable */
-			unsigned char	RXEN	: 1;	/* Receive enable */
-			unsigned char	TXEN	: 1;	/* Transmit enable */
+			uint8_t	SMD	: 2;	/* Transmit mode selection */
+			uint8_t	SSCK	: 1;	/* Input clock selection */
+			uint8_t	STPB	: 1;	/* Stop bit selection */
+			uint8_t	PMD	: 1;	/* Parity mode selection */
+			uint8_t	EPR	: 1;	/* Parity enable */
+			uint8_t	RXEN	: 1;	/* Receive enable */
+			uint8_t	TXEN	: 1;	/* Transmit enable */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rCONTROL;
 
 	union {						/* Serial I/F IrDA register */
 		volatile struct {
-			unsigned char	IRMD	: 2;	/* Interface mode selection */
-			unsigned char	IRRL	: 1;	/* I/F input logic inversion */
-			unsigned char	IRTL	: 1;	/* I/F output logic inversion */
-			unsigned char	DIVMD	: 1;	/* Async. clock division ratio */
+			uint8_t	IRMD	: 2;	/* Interface mode selection */
+			uint8_t	IRRL	: 1;	/* I/F input logic inversion */
+			uint8_t	IRTL	: 1;	/* I/F output logic inversion */
+			uint8_t	DIVMD	: 1;	/* Async. clock division ratio */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rIRDA;
 };
 
@@ -221,40 +221,40 @@ struct c_SIFtag {
 /* [A/D converter] c_AD						*/
 /****************************************************************/
 struct c_ADtag {
-	volatile unsigned short	rADD;			/* A/D conversion result register */
+	volatile uint16_t	rADD;			/* A/D conversion result register */
 
 	union {						/* A/D trigger register */
 		volatile struct {
-			unsigned char	CH	: 3;	/* A/D conversion channel status */
-			unsigned char	TS	: 2;	/* A/D conversion trigger selection */
-			unsigned char	MS	: 1;	/* A/D conversion mode selection */
+			uint8_t	CH	: 3;	/* A/D conversion channel status */
+			uint8_t	TS	: 2;	/* A/D conversion trigger selection */
+			uint8_t	MS	: 1;	/* A/D conversion mode selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rTRIG;
 
 	union {						/* A/D channel register */
 		volatile struct {
-			unsigned char	CS	: 3;	/* A/D converter start channel selection */
-			unsigned char	CE	: 3;	/* A/D converter end channel selection */
+			uint8_t	CS	: 3;	/* A/D converter start channel selection */
+			uint8_t	CE	: 3;	/* A/D converter end channel selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rCHNL;
 
 	union {						/* A/D enable register */
 		volatile struct {
-			unsigned char	OWE	: 1;	/* Overwrite error flag */
-			unsigned char	ADST	: 1;	/* A/D conversion control/status */
-			unsigned char	ADE	: 1;	/* A/D enable */
-			unsigned char	ADF	: 1;	/* Conversion-complete flag */
+			uint8_t	OWE	: 1;	/* Overwrite error flag */
+			uint8_t	ADST	: 1;	/* A/D conversion control/status */
+			uint8_t	ADE	: 1;	/* A/D enable */
+			uint8_t	ADF	: 1;	/* Conversion-complete flag */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rENBL;
 
 	union {						/* A/D sampling register */
 		volatile struct {
-			unsigned char	ST	: 2;	/* Input sampling time setup */
+			uint8_t	ST	: 2;	/* Input sampling time setup */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rSMPL;
 };
 
@@ -264,455 +264,455 @@ struct c_ADtag {
 struct c_INTCtag {
 	union {						/* Port input 0/1 interrupt priority register */
 		volatile struct {
-			unsigned char	PP0L	: 3;	/* Port input 0 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PP1L	: 3;	/* Port input 1 interrupt priority level */
+			uint8_t	PP0L	: 3;	/* Port input 0 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PP1L	: 3;	/* Port input 1 interrupt priority level */
 		} bPP01L;
-		volatile unsigned char	ucPP01L;
+		volatile uint8_t	ucPP01L;
 	} rPP01L;
 
 	union {						/* Port input 2/3 interrupt priority register */
 		volatile struct {
-			unsigned char	PP2L	: 3;	/* Port input 2 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PP3L	: 3;	/* Port input 3 interrupt priority level */
+			uint8_t	PP2L	: 3;	/* Port input 2 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PP3L	: 3;	/* Port input 3 interrupt priority level */
 		} bPP23L;
-		volatile unsigned char	ucPP23L;
+		volatile uint8_t	ucPP23L;
 	} rPP23L;
 
 	union {						/* Key input 0/1 interrupt priority register */
 		volatile struct {
-			unsigned char	PK0L	: 3;	/* Key input 0 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PK1L	: 3;	/* Key input 1 interrupt priority level */
+			uint8_t	PK0L	: 3;	/* Key input 0 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PK1L	: 3;	/* Key input 1 interrupt priority level */
 		} bPK01L;
-		volatile unsigned char	ucPK01L;
+		volatile uint8_t	ucPK01L;
 	} rPK01L;
 
 	union {						/* High-speed DMA Ch.0/1 interrupt priority register */
 		volatile struct {
-			unsigned char	PHSD0L	: 3;	/* High-speed DMA Ch.0 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PHSD1L	: 3;	/* High-speed DMA Ch.1 interrupt priority level */
+			uint8_t	PHSD0L	: 3;	/* High-speed DMA Ch.0 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PHSD1L	: 3;	/* High-speed DMA Ch.1 interrupt priority level */
 		} bPHSD01L;
-		volatile unsigned char	ucPHSD01L;
+		volatile uint8_t	ucPHSD01L;
 	} rPHSD01L;
 
 	union {						/* High-speed DMA Ch.2/3 interrupt priority register */
 		volatile struct {
-			unsigned char	PHSD2L	: 3;	/* High-speed DMA Ch.2 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PHSD3L	: 3;	/* High-speed DMA Ch.3 interrupt priority level */
+			uint8_t	PHSD2L	: 3;	/* High-speed DMA Ch.2 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PHSD3L	: 3;	/* High-speed DMA Ch.3 interrupt priority level */
 		} bPHSD23L;
-		volatile unsigned char	ucPHSD23L;
+		volatile uint8_t	ucPHSD23L;
 	} rPHSD23L;
 
-	volatile unsigned char	rPDM;			/* IDMA interrupt priority register */
+	volatile uint8_t	rPDM;			/* IDMA interrupt priority register */
 
 	union {						/* 16-bit timer 0/1 interrupt priority register */
 		volatile struct {
-			unsigned char	P16T0	: 3;	/* 16-bit timer 0 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	P16T1	: 3;	/* 16-bit timer 1 interrupt priority level */
+			uint8_t	P16T0	: 3;	/* 16-bit timer 0 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	P16T1	: 3;	/* 16-bit timer 1 interrupt priority level */
 		} bP16T01;
-		volatile unsigned char	ucP16T01;
+		volatile uint8_t	ucP16T01;
 	} rP16T01;
 
 	union {						/* 16-bit timer 2/3 interrupt priority register */
 		volatile struct {
-			unsigned char	P16T2	: 3;	/* 16-bit timer 2 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	P16T3	: 3;	/* 16-bit timer 3 interrupt priority level */
+			uint8_t	P16T2	: 3;	/* 16-bit timer 2 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	P16T3	: 3;	/* 16-bit timer 3 interrupt priority level */
 		} bP16T23;
-		volatile unsigned char	ucP16T23;
+		volatile uint8_t	ucP16T23;
 	} rP16T23;
 
 	union {						/* 16-bit timer 4/5 interrupt priority register */
 		volatile struct {
-			unsigned char	P16T4	: 3;	/* 16-bit timer 4 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	P16T5	: 3;	/* 16-bit timer 5 interrupt priority level */
+			uint8_t	P16T4	: 3;	/* 16-bit timer 4 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	P16T5	: 3;	/* 16-bit timer 5 interrupt priority level */
 		} bP16T45;
-		volatile unsigned char	ucP16T45;
+		volatile uint8_t	ucP16T45;
 	} rP16T45;
 
 	union {						/* 8-bit timer 0-3, serial I/F Ch.0 interrupt priority register */
 		volatile struct {
-			unsigned char	P8TM	: 3;	/* 8-bit timer 0-3 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PSIO0	: 3;	/* Serial I/F Ch.0 interrupt priority level */
+			uint8_t	P8TM	: 3;	/* 8-bit timer 0-3 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PSIO0	: 3;	/* Serial I/F Ch.0 interrupt priority level */
 		} bP8TM_PSIO0;
-		volatile unsigned char	ucP8TM_PSIO0;
+		volatile uint8_t	ucP8TM_PSIO0;
 	} rP8TM_PSIO0;
 
 	union {						/* Serial I/F Ch.1 and A/D converter interrupt priority register */
 		volatile struct {
-			unsigned char	PSIO1	: 3;	/* Serial I/F Ch.1 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PAD	: 3;	/* A/D converter interrupt priority level */
+			uint8_t	PSIO1	: 3;	/* Serial I/F Ch.1 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PAD	: 3;	/* A/D converter interrupt priority level */
 		} bPSIO1_PAD;
-		volatile unsigned char	ucPSIO1_PAD;
+		volatile uint8_t	ucPSIO1_PAD;
 	} rPSIO1_PAD;
 
-	volatile unsigned char	rPCTM;			/* Clock timer interrupt priority register */
+	volatile uint8_t	rPCTM;			/* Clock timer interrupt priority register */
 
 	union {						/* Port input 4/5 interrupt priority register */
 		volatile struct {
-			unsigned char	PP4L	: 3;	/* Port input 4 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PP5L	: 3;	/* Port input 5 interrupt priority level */
+			uint8_t	PP4L	: 3;	/* Port input 4 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PP5L	: 3;	/* Port input 5 interrupt priority level */
 		} bPP45L;
-		volatile unsigned char	ucPP45L;
+		volatile uint8_t	ucPP45L;
 	} rPP45L;
 
 	union {						/* Port input 6/7 interrupt priority register */
 		volatile struct {
-			unsigned char	PP6L	: 3;	/* Port input 6 interrupt priority level */
-			unsigned char	Dummy	: 1;
-			unsigned char	PP7L	: 3;	/* Port input 7 interrupt priority level */
+			uint8_t	PP6L	: 3;	/* Port input 6 interrupt priority level */
+			uint8_t	Dummy	: 1;
+			uint8_t	PP7L	: 3;	/* Port input 7 interrupt priority level */
 		} bPP67L;
-		volatile unsigned char	ucPP67L;
+		volatile uint8_t	ucPP67L;
 	} rPP67L;
 
-	unsigned char	Dummy0[2];
+	uint8_t	Dummy0[2];
 
 	union {						/* Key input, port input 0-3 interrupt request flag register */
 		volatile struct {
-			unsigned char	EP0	: 1;	/* Port input 0 */
-			unsigned char	EP1	: 1;	/* Port input 1 */
-			unsigned char	EP2	: 1;	/* Port input 2 */
-			unsigned char	EP3	: 1;	/* Port input 3 */
-			unsigned char	EK0	: 1;	/* Key input 0 */
-			unsigned char	EK1	: 1;	/* Key input 1 */
+			uint8_t	EP0	: 1;	/* Port input 0 */
+			uint8_t	EP1	: 1;	/* Port input 1 */
+			uint8_t	EP2	: 1;	/* Port input 2 */
+			uint8_t	EP3	: 1;	/* Port input 3 */
+			uint8_t	EK0	: 1;	/* Key input 0 */
+			uint8_t	EK1	: 1;	/* Key input 1 */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN1;
 
 	union {						/* DMA interrupt enable register */
 		volatile struct {
-			unsigned char	EHDM0	: 1;	/* High-speed DMA Ch.0 */
-			unsigned char	EHDM1	: 1;	/* High-speed DMA Ch.1 */
-			unsigned char	EHDM2	: 1;	/* High-speed DMA Ch.2 */
-			unsigned char	EHDM3	: 1;	/* High-speed DMA Ch.3 */
-			unsigned char	EIDMA	: 1;	/* IDMA */
+			uint8_t	EHDM0	: 1;	/* High-speed DMA Ch.0 */
+			uint8_t	EHDM1	: 1;	/* High-speed DMA Ch.1 */
+			uint8_t	EHDM2	: 1;	/* High-speed DMA Ch.2 */
+			uint8_t	EHDM3	: 1;	/* High-speed DMA Ch.3 */
+			uint8_t	EIDMA	: 1;	/* IDMA */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN2;
 
 	union {						/* 16-bit timer 0/1 interrupt enable register */
 		volatile struct {
-			unsigned char	Dummy0	: 2;	/* D1-0 reserved */
-			unsigned char	E16TU0	: 1;	/* 16-bit timer 0 comparison B */
-			unsigned char	E16TC0	: 1;	/* 16-bit timer 0 comparison A */
-			unsigned char	Dummy1	: 2;	/* D5-4 reserved */
-			unsigned char	E16TU1	: 1;	/* 16-bit timer 1 comparison B */
-			unsigned char	E16TC1	: 1;	/* 16-bit timer 1 comparison A */
+			uint8_t	Dummy0	: 2;	/* D1-0 reserved */
+			uint8_t	E16TU0	: 1;	/* 16-bit timer 0 comparison B */
+			uint8_t	E16TC0	: 1;	/* 16-bit timer 0 comparison A */
+			uint8_t	Dummy1	: 2;	/* D5-4 reserved */
+			uint8_t	E16TU1	: 1;	/* 16-bit timer 1 comparison B */
+			uint8_t	E16TC1	: 1;	/* 16-bit timer 1 comparison A */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN3;
 
 	union {						/* 16-bit timer 2/3 interrupt enable register */
 		volatile struct {
-			unsigned char	Dummy0	: 2;	/* D1-0 reserved */
-			unsigned char	E16TU2	: 1;	/* 16-bit timer 2 comparison B */
-			unsigned char	E16TC2	: 1;	/* 16-bit timer 2 comparison A */
-			unsigned char	Dummy1	: 2;	/* D5-4 reserved */
-			unsigned char	E16TU3	: 1;	/* 16-bit timer 3 comparison B */
-			unsigned char	E16TC3	: 1;	/* 16-bit timer 3 comparison A */
+			uint8_t	Dummy0	: 2;	/* D1-0 reserved */
+			uint8_t	E16TU2	: 1;	/* 16-bit timer 2 comparison B */
+			uint8_t	E16TC2	: 1;	/* 16-bit timer 2 comparison A */
+			uint8_t	Dummy1	: 2;	/* D5-4 reserved */
+			uint8_t	E16TU3	: 1;	/* 16-bit timer 3 comparison B */
+			uint8_t	E16TC3	: 1;	/* 16-bit timer 3 comparison A */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN4;
 
 	union {						/* 16-bit timer 4/5 interrupt enable register */
 		volatile struct {
-			unsigned char	Dummy0	: 2;	/* D1-0 reserved */
-			unsigned char	E16TU4	: 1;	/* 16-bit timer 4 comparison B */
-			unsigned char	E16TC4	: 1;	/* 16-bit timer 4 comparison A */
-			unsigned char	Dummy1	: 2;	/* D5-4 reserved */
-			unsigned char	E16TU5	: 1;	/* 16-bit timer 5 comparison B */
-			unsigned char	E16TC5	: 1;	/* 16-bit timer 5 comparison A */
+			uint8_t	Dummy0	: 2;	/* D1-0 reserved */
+			uint8_t	E16TU4	: 1;	/* 16-bit timer 4 comparison B */
+			uint8_t	E16TC4	: 1;	/* 16-bit timer 4 comparison A */
+			uint8_t	Dummy1	: 2;	/* D5-4 reserved */
+			uint8_t	E16TU5	: 1;	/* 16-bit timer 5 comparison B */
+			uint8_t	E16TC5	: 1;	/* 16-bit timer 5 comparison A */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN5;
 
 	union {						/* 8-bit timer interrupt enable register */
 		volatile struct {
-			unsigned char	E8TU0	: 1;	/* 8-bit timer 0 underflow */
-			unsigned char	E8TU1	: 1;	/* 8-bit timer 1 underflow */
-			unsigned char	E8TU2	: 1;	/* 8-bit timer 2 underflow */
-			unsigned char	E8TU3	: 1;	/* 8-bit timer 3 underflow */
+			uint8_t	E8TU0	: 1;	/* 8-bit timer 0 underflow */
+			uint8_t	E8TU1	: 1;	/* 8-bit timer 1 underflow */
+			uint8_t	E8TU2	: 1;	/* 8-bit timer 2 underflow */
+			uint8_t	E8TU3	: 1;	/* 8-bit timer 3 underflow */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN6;
 
 	union {						/* Serial I/F interrupt enable register */
 		volatile struct {
-			unsigned char	ESERR0	: 1;	/* Serial I/F Ch.0 receive error */
-			unsigned char	ESRX0	: 1;	/* Serial I/F Ch.0 receive buffer full */
-			unsigned char	ESTX0	: 1;	/* Serial I/F Ch.0 transmit buffer empty */
-			unsigned char	ESERR1	: 1;	/* Serial I/F Ch.1 receive error */
-			unsigned char	ESRX1	: 1;	/* Serial I/F Ch.1 receive buffer full */
-			unsigned char	ESTX1	: 1;	/* Serial I/F Ch.1 transmit buffer empty */
+			uint8_t	ESERR0	: 1;	/* Serial I/F Ch.0 receive error */
+			uint8_t	ESRX0	: 1;	/* Serial I/F Ch.0 receive buffer full */
+			uint8_t	ESTX0	: 1;	/* Serial I/F Ch.0 transmit buffer empty */
+			uint8_t	ESERR1	: 1;	/* Serial I/F Ch.1 receive error */
+			uint8_t	ESRX1	: 1;	/* Serial I/F Ch.1 receive buffer full */
+			uint8_t	ESTX1	: 1;	/* Serial I/F Ch.1 transmit buffer empty */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN7;
 
 	union {						/* Port input 4-7, clock timer, A/D interrupt enable register */
 		volatile struct {
-			unsigned char	EADE	: 1;	/* A/D converter */
-			unsigned char	ECTM	: 1;	/* Clock timer */
-			unsigned char	EP4	: 1;	/* Port input 4 */
-			unsigned char	EP5	: 1;	/* Port input 5 */
-			unsigned char	EP6	: 1;	/* Port input 6 */
-			unsigned char	EP7	: 1;	/* Port input 7 */
+			uint8_t	EADE	: 1;	/* A/D converter */
+			uint8_t	ECTM	: 1;	/* Clock timer */
+			uint8_t	EP4	: 1;	/* Port input 4 */
+			uint8_t	EP5	: 1;	/* Port input 5 */
+			uint8_t	EP6	: 1;	/* Port input 6 */
+			uint8_t	EP7	: 1;	/* Port input 7 */
 		} bIEN;
-		volatile unsigned char	ucIEN;
+		volatile uint8_t	ucIEN;
 	} rIEN8;
 
-	unsigned char	Dummy1[8];
+	uint8_t	Dummy1[8];
 
 	union {						/* Key input, port input 0-3 interrupt request flag register */
 		volatile struct {
-			unsigned char	FP0	: 1;	/* Port input 0 */
-			unsigned char	FP1	: 1;	/* Port input 1 */
-			unsigned char	FP2	: 1;	/* Port input 2 */
-			unsigned char	FP3	: 1;	/* Port input 3 */
-			unsigned char	FK0	: 1;	/* Key input 0 */
-			unsigned char	FK1	: 1;	/* Key input 1 */
+			uint8_t	FP0	: 1;	/* Port input 0 */
+			uint8_t	FP1	: 1;	/* Port input 1 */
+			uint8_t	FP2	: 1;	/* Port input 2 */
+			uint8_t	FP3	: 1;	/* Port input 3 */
+			uint8_t	FK0	: 1;	/* Key input 0 */
+			uint8_t	FK1	: 1;	/* Key input 1 */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR1;
 
 	union {						/* DMA interrupt request flag register */
 		volatile struct {
-			unsigned char	FHDM0	: 1;	/* High-speed DMA Ch.0 */
-			unsigned char	FHDM1	: 1;	/* High-speed DMA Ch.1 */
-			unsigned char	FHDM2	: 1;	/* High-speed DMA Ch.2 */
-			unsigned char	FHDM3	: 1;	/* High-speed DMA Ch.3 */
-			unsigned char	FIDMA	: 1;	/* IDMA */
+			uint8_t	FHDM0	: 1;	/* High-speed DMA Ch.0 */
+			uint8_t	FHDM1	: 1;	/* High-speed DMA Ch.1 */
+			uint8_t	FHDM2	: 1;	/* High-speed DMA Ch.2 */
+			uint8_t	FHDM3	: 1;	/* High-speed DMA Ch.3 */
+			uint8_t	FIDMA	: 1;	/* IDMA */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR2;
 
 	union {						/* 16-bit timer 0/1 interrupt request flag register */
 		volatile struct {
-			unsigned char	Dummy0	: 2;	/* D1-0 reserved */
-			unsigned char	F16TU0	: 1;	/* 16-bit timer 0 comparison B */
-			unsigned char	F16TC0	: 1;	/* 16-bit timer 0 comparison A */
-			unsigned char	Dummy1	: 2;	/* D5-4 reserved */
-			unsigned char	F16TU1	: 1;	/* 16-bit timer 1 comparison B */
-			unsigned char	F16TC1	: 1;	/* 16-bit timer 1 comparison A */
+			uint8_t	Dummy0	: 2;	/* D1-0 reserved */
+			uint8_t	F16TU0	: 1;	/* 16-bit timer 0 comparison B */
+			uint8_t	F16TC0	: 1;	/* 16-bit timer 0 comparison A */
+			uint8_t	Dummy1	: 2;	/* D5-4 reserved */
+			uint8_t	F16TU1	: 1;	/* 16-bit timer 1 comparison B */
+			uint8_t	F16TC1	: 1;	/* 16-bit timer 1 comparison A */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR3;
 
 	union {						/* 16-bit timer 2/3 interrupt request flag register */
 		volatile struct {
-			unsigned char	Dummy2	: 2;	/* D1-0 reserved */
-			unsigned char	F16TU2	: 1;	/* 16-bit timer 2 comparison B */
-			unsigned char	F16TC2	: 1;	/* 16-bit timer 2 comparison A */
-			unsigned char	Dummy3	: 2;	/* D5-4 reserved */
-			unsigned char	F16TU3	: 1;	/* 16-bit timer 3 comparison B */
-			unsigned char	F16TC3	: 1;	/* 16-bit timer 3 comparison A */
+			uint8_t	Dummy2	: 2;	/* D1-0 reserved */
+			uint8_t	F16TU2	: 1;	/* 16-bit timer 2 comparison B */
+			uint8_t	F16TC2	: 1;	/* 16-bit timer 2 comparison A */
+			uint8_t	Dummy3	: 2;	/* D5-4 reserved */
+			uint8_t	F16TU3	: 1;	/* 16-bit timer 3 comparison B */
+			uint8_t	F16TC3	: 1;	/* 16-bit timer 3 comparison A */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR4;
 
 	union {						/* 16-bit timer 4/5 interrupt request flag register */
 		volatile struct {
-			unsigned char	Dummy4	: 2;	/* D1-0 reserved */
-			unsigned char	F16TU4	: 1;	/* 16-bit timer 4 comparison B */
-			unsigned char	F16TC4	: 1;	/* 16-bit timer 4 comparison A */
-			unsigned char	Dummy5	: 2;	/* D5-4 reserved */
-			unsigned char	F16TU5	: 1;	/* 16-bit timer 5 comparison B */
-			unsigned char	F16TC5	: 1;	/* 16-bit timer 5 comparison A */
+			uint8_t	Dummy4	: 2;	/* D1-0 reserved */
+			uint8_t	F16TU4	: 1;	/* 16-bit timer 4 comparison B */
+			uint8_t	F16TC4	: 1;	/* 16-bit timer 4 comparison A */
+			uint8_t	Dummy5	: 2;	/* D5-4 reserved */
+			uint8_t	F16TU5	: 1;	/* 16-bit timer 5 comparison B */
+			uint8_t	F16TC5	: 1;	/* 16-bit timer 5 comparison A */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR5;
 
 	union {						/* 8-bit timer interrupt request flag register */
 		volatile struct {
-			unsigned char	F8TU0	: 1;	/* 8-bit timer 0 underflow */
-			unsigned char	F8TU1	: 1;	/* 8-bit timer 1 underflow */
-			unsigned char	F8TU2	: 1;	/* 8-bit timer 2 underflow */
-			unsigned char	F8TU3	: 1;	/* 8-bit timer 3 underflow */
+			uint8_t	F8TU0	: 1;	/* 8-bit timer 0 underflow */
+			uint8_t	F8TU1	: 1;	/* 8-bit timer 1 underflow */
+			uint8_t	F8TU2	: 1;	/* 8-bit timer 2 underflow */
+			uint8_t	F8TU3	: 1;	/* 8-bit timer 3 underflow */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR6;
 
 	union {						/* Serial I/F interrupt request flag register */
 		volatile struct {
-			unsigned char	FSERR0	: 1;	/* Serial I/F Ch.0 receive error */
-			unsigned char	FSRX0	: 1;	/* Serial I/F Ch.0 receive buffer full */
-			unsigned char	FSTX0	: 1;	/* Serial I/F Ch.0 transmit buffer empty */
-			unsigned char	FSERR1	: 1;	/* Serial I/F Ch.1 receive error */
-			unsigned char	FSRX1	: 1;	/* Serial I/F Ch.1 receive buffer full */
-			unsigned char	FSTX1	: 1;	/* Serial I/F Ch.1 transmit buffer empty */
+			uint8_t	FSERR0	: 1;	/* Serial I/F Ch.0 receive error */
+			uint8_t	FSRX0	: 1;	/* Serial I/F Ch.0 receive buffer full */
+			uint8_t	FSTX0	: 1;	/* Serial I/F Ch.0 transmit buffer empty */
+			uint8_t	FSERR1	: 1;	/* Serial I/F Ch.1 receive error */
+			uint8_t	FSRX1	: 1;	/* Serial I/F Ch.1 receive buffer full */
+			uint8_t	FSTX1	: 1;	/* Serial I/F Ch.1 transmit buffer empty */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR7;
 
 	union {						/* Port input 4-7, clock timer, A/D interrupt request flag enable */
 		volatile struct {
-			unsigned char	FADE	: 1;	/* A/D converter */
-			unsigned char	FCTM	: 1;	/* Clock timer */
-			unsigned char	FP4	: 1;	/* Port input 4 */
-			unsigned char	FP5	: 1;	/* Port input 5 */
-			unsigned char	FP6	: 1;	/* Port input 6 */
-			unsigned char	FP7	: 1;	/* Port input 7 */
+			uint8_t	FADE	: 1;	/* A/D converter */
+			uint8_t	FCTM	: 1;	/* Clock timer */
+			uint8_t	FP4	: 1;	/* Port input 4 */
+			uint8_t	FP5	: 1;	/* Port input 5 */
+			uint8_t	FP6	: 1;	/* Port input 6 */
+			uint8_t	FP7	: 1;	/* Port input 7 */
 		} bISR;
-		volatile unsigned char	ucISR;
+		volatile uint8_t	ucISR;
 	} rISR8;
 
-	unsigned char	Dummy2[8];
+	uint8_t	Dummy2[8];
 
 	union {						/* Port input 0-3, high-speed DMA, 16-bit timer 0 IDMA request register */
 		volatile struct {
-			unsigned char	RP0	: 1;	/* Port input 0 IDMA request */
-			unsigned char	RP1	: 1;	/* Port input 1 IDMA request */
-			unsigned char	RP2	: 1;	/* Port input 2 IDMA request */
-			unsigned char	RP3	: 1;	/* Port input 3 IDMA request */
-			unsigned char	RHDM0	: 1;	/* High-speed DMA Ch.0 IDMA request */
-			unsigned char	RHDM1	: 1;	/* High-speed DMA Ch.1 IDMA request */
-			unsigned char	R16TU0	: 1;	/* 16-bit timer 0 comparison B IDMA request */
-			unsigned char	R16TC0	: 1;	/* 16-bit timer 0 comparison A IDMA request */
+			uint8_t	RP0	: 1;	/* Port input 0 IDMA request */
+			uint8_t	RP1	: 1;	/* Port input 1 IDMA request */
+			uint8_t	RP2	: 1;	/* Port input 2 IDMA request */
+			uint8_t	RP3	: 1;	/* Port input 3 IDMA request */
+			uint8_t	RHDM0	: 1;	/* High-speed DMA Ch.0 IDMA request */
+			uint8_t	RHDM1	: 1;	/* High-speed DMA Ch.1 IDMA request */
+			uint8_t	R16TU0	: 1;	/* 16-bit timer 0 comparison B IDMA request */
+			uint8_t	R16TC0	: 1;	/* 16-bit timer 0 comparison A IDMA request */
 		} bIDMAREQ;
-		volatile unsigned char	ucIDMAREQ;
+		volatile uint8_t	ucIDMAREQ;
 	} rIDMAREQ1;
 
 	union {						/* 16-bit timer 1-4 IDMA request register */
 		volatile struct {
-			unsigned char	R16TU1	: 1;	/* 16-bit timer 1 comparison B IDMA request */
-			unsigned char	R16TC1	: 1;	/* 16-bit timer 1 comparison A IDMA request */
-			unsigned char	R16TU2	: 1;	/* 16-bit timer 2 comparison B IDMA request */
-			unsigned char	R16TC2	: 1;	/* 16-bit timer 2 comparison A IDMA request */
-			unsigned char	R16TU3	: 1;	/* 16-bit timer 3 comparison B IDMA request */
-			unsigned char	R16TC3	: 1;	/* 16-bit timer 3 comparison A IDMA request */
-			unsigned char	R16TU4	: 1;	/* 16-bit timer 4 comparison B IDMA request */
-			unsigned char	R16TC4	: 1;	/* 16-bit timer 4 comparison A IDMA request */
+			uint8_t	R16TU1	: 1;	/* 16-bit timer 1 comparison B IDMA request */
+			uint8_t	R16TC1	: 1;	/* 16-bit timer 1 comparison A IDMA request */
+			uint8_t	R16TU2	: 1;	/* 16-bit timer 2 comparison B IDMA request */
+			uint8_t	R16TC2	: 1;	/* 16-bit timer 2 comparison A IDMA request */
+			uint8_t	R16TU3	: 1;	/* 16-bit timer 3 comparison B IDMA request */
+			uint8_t	R16TC3	: 1;	/* 16-bit timer 3 comparison A IDMA request */
+			uint8_t	R16TU4	: 1;	/* 16-bit timer 4 comparison B IDMA request */
+			uint8_t	R16TC4	: 1;	/* 16-bit timer 4 comparison A IDMA request */
 		} bIDMAREQ;
-		volatile unsigned char	ucIDMAREQ;
+		volatile uint8_t	ucIDMAREQ;
 	} rIDMAREQ2;
 
 	union {						/* 16-bit timer 5, 8-bit timer, serial I/F Ch.0 IDMA request register */
 		volatile struct {
-			unsigned char	R16TU5	: 1;	/* 16-bit timer 5 comparison B IDMA request */
-			unsigned char	R16TC5	: 1;	/* 16-bit timer 5 comparison A IDMA request */
-			unsigned char	R8TU0	: 1;	/* 8-bit timer 0 underflow IDMA request */
-			unsigned char	R8TU1	: 1;	/* 8-bit timer 1 underflow IDMA request */
-			unsigned char	R8TU2	: 1;	/* 8-bit timer 2 underflow IDMA request */
-			unsigned char	R8TU3	: 1;	/* 8-bit timer 3 underflow IDMA request */
-			unsigned char	RSRX0	: 1;	/* Serial I/F Ch.0 receive buffer full IDMA request */
-			unsigned char	RSTX0	: 1;	/* Serial I/F Ch.0 receive buffer empty IDMA request */
+			uint8_t	R16TU5	: 1;	/* 16-bit timer 5 comparison B IDMA request */
+			uint8_t	R16TC5	: 1;	/* 16-bit timer 5 comparison A IDMA request */
+			uint8_t	R8TU0	: 1;	/* 8-bit timer 0 underflow IDMA request */
+			uint8_t	R8TU1	: 1;	/* 8-bit timer 1 underflow IDMA request */
+			uint8_t	R8TU2	: 1;	/* 8-bit timer 2 underflow IDMA request */
+			uint8_t	R8TU3	: 1;	/* 8-bit timer 3 underflow IDMA request */
+			uint8_t	RSRX0	: 1;	/* Serial I/F Ch.0 receive buffer full IDMA request */
+			uint8_t	RSTX0	: 1;	/* Serial I/F Ch.0 receive buffer empty IDMA request */
 		} bIDMAREQ;
-		volatile unsigned char	ucIDMAREQ;
+		volatile uint8_t	ucIDMAREQ;
 	} rIDMAREQ3;
 
 	union {						/* Serial I/F Ch.1, A/D, port input 4-7 IDMA request register */
 		volatile struct {
-			unsigned char	RSRX1	: 1;	/* Serial I/F Ch.1 receive buffer full IDMA request */
-			unsigned char	RSTX1	: 1;	/* Serial I/F Ch.1 receive buffer empty IDMA request */
-			unsigned char	RADE	: 1;	/* A/D converter conversion end IDMA request */
-			unsigned char	Dummy	: 1;	/* D3 reserved */
-			unsigned char	RP4	: 1;	/* Port input 4 IDMA request */
-			unsigned char	RP5	: 1;	/* Port input 5 IDMA request */
-			unsigned char	RP6	: 1;	/* Port input 6 IDMA request */
-			unsigned char	RP7	: 1;	/* Port input 7 IDMA request */
+			uint8_t	RSRX1	: 1;	/* Serial I/F Ch.1 receive buffer full IDMA request */
+			uint8_t	RSTX1	: 1;	/* Serial I/F Ch.1 receive buffer empty IDMA request */
+			uint8_t	RADE	: 1;	/* A/D converter conversion end IDMA request */
+			uint8_t	Dummy	: 1;	/* D3 reserved */
+			uint8_t	RP4	: 1;	/* Port input 4 IDMA request */
+			uint8_t	RP5	: 1;	/* Port input 5 IDMA request */
+			uint8_t	RP6	: 1;	/* Port input 6 IDMA request */
+			uint8_t	RP7	: 1;	/* Port input 7 IDMA request */
 		} bIDMAREQ;
-		volatile unsigned char	ucIDMAREQ;
+		volatile uint8_t	ucIDMAREQ;
 	} rIDMAREQ4;
 
 	union {						/* Port input 0-3, high-speed DMA, 16-bit timer 0 IDMA enable register */
 		volatile struct {
-			unsigned char	DEP0	: 1;	/* Port input 0 IDMA enable */
-			unsigned char	DEP1	: 1;	/* Port input 1 IDMA enable */
-			unsigned char	DEP2	: 1;	/* Port input 2 IDMA enable */
-			unsigned char	DEP3	: 1;	/* Port input 3 IDMA enable */
-			unsigned char	DEHDM0	: 1;	/* High-speed DMA Ch.0 IDMA enable */
-			unsigned char	DEHDM1	: 1;	/* High-speed DMA Ch.1 IDMA enable */
-			unsigned char	DE16TU0	: 1;	/* 16-bit timer 0 comparison B IDMA enable */
-			unsigned char	DE16TC0	: 1;	/* 16-bit timer 0 comparison A IDMA enable */
+			uint8_t	DEP0	: 1;	/* Port input 0 IDMA enable */
+			uint8_t	DEP1	: 1;	/* Port input 1 IDMA enable */
+			uint8_t	DEP2	: 1;	/* Port input 2 IDMA enable */
+			uint8_t	DEP3	: 1;	/* Port input 3 IDMA enable */
+			uint8_t	DEHDM0	: 1;	/* High-speed DMA Ch.0 IDMA enable */
+			uint8_t	DEHDM1	: 1;	/* High-speed DMA Ch.1 IDMA enable */
+			uint8_t	DE16TU0	: 1;	/* 16-bit timer 0 comparison B IDMA enable */
+			uint8_t	DE16TC0	: 1;	/* 16-bit timer 0 comparison A IDMA enable */
 		} bIDMA_EN;
-		volatile unsigned char	ucIDMA_EN;
+		volatile uint8_t	ucIDMA_EN;
 	} rIDMA_EN1;
 
 	union {						/* 16-bit timer 1-4 IDMA enable register */
 		volatile struct {
-			unsigned char	DE16TU1	: 1;	/* 16-bit timer 1 comparison B IDMA enable */
-			unsigned char	DE16TC1	: 1;	/* 16-bit timer 1 comparison A IDMA enable */
-			unsigned char	DE16TU2	: 1;	/* 16-bit timer 2 comparison B IDMA enable */
-			unsigned char	DE16TC2	: 1;	/* 16-bit timer 2 comparison A IDMA enable */
-			unsigned char	DE16TU3	: 1;	/* 16-bit timer 3 comparison B IDMA enable */
-			unsigned char	DE16TC3	: 1;	/* 16-bit timer 3 comparison A IDMA enable */
-			unsigned char	DE16TU4	: 1;	/* 16-bit timer 4 comparison B IDMA enable */
-			unsigned char	DE16TC4	: 1;	/* 16-bit timer 4 comparison A IDMA enable */
+			uint8_t	DE16TU1	: 1;	/* 16-bit timer 1 comparison B IDMA enable */
+			uint8_t	DE16TC1	: 1;	/* 16-bit timer 1 comparison A IDMA enable */
+			uint8_t	DE16TU2	: 1;	/* 16-bit timer 2 comparison B IDMA enable */
+			uint8_t	DE16TC2	: 1;	/* 16-bit timer 2 comparison A IDMA enable */
+			uint8_t	DE16TU3	: 1;	/* 16-bit timer 3 comparison B IDMA enable */
+			uint8_t	DE16TC3	: 1;	/* 16-bit timer 3 comparison A IDMA enable */
+			uint8_t	DE16TU4	: 1;	/* 16-bit timer 4 comparison B IDMA enable */
+			uint8_t	DE16TC4	: 1;	/* 16-bit timer 4 comparison A IDMA enable */
 		} bIDMA_EN;
-		volatile unsigned char	ucIDMA_EN;
+		volatile uint8_t	ucIDMA_EN;
 	} rIDMA_EN2;
 
 	union {						/* 16-bit timer 5, 8-bit timer, serial I/F Ch.0 IDMA enable register */
 		volatile struct {
-			unsigned char	DE16TU5	: 1;	/* 16-bit timer 5 comparison B IDMA enable */
-			unsigned char	DE16TC5	: 1;	/* 16-bit timer 5 comparison A IDMA enable */
-			unsigned char	DE8TU0	: 1;	/* 8-bit timer 0 underflow IDMA enable */
-			unsigned char	DE8TU1	: 1;	/* 8-bit timer 1 underflow IDMA enable */
-			unsigned char	DE8TU2	: 1;	/* 8-bit timer 2 underflow IDMA enable */
-			unsigned char	DE8TU3	: 1;	/* 8-bit timer 3 underflow IDMA enable */
-			unsigned char	DESRX0	: 1;	/* Serial I/F Ch.0 receive buffer full IDMA enable */
-			unsigned char	DESTX0	: 1;	/* Serial I/F Ch.0 receive buffer empty IDMA enable */
+			uint8_t	DE16TU5	: 1;	/* 16-bit timer 5 comparison B IDMA enable */
+			uint8_t	DE16TC5	: 1;	/* 16-bit timer 5 comparison A IDMA enable */
+			uint8_t	DE8TU0	: 1;	/* 8-bit timer 0 underflow IDMA enable */
+			uint8_t	DE8TU1	: 1;	/* 8-bit timer 1 underflow IDMA enable */
+			uint8_t	DE8TU2	: 1;	/* 8-bit timer 2 underflow IDMA enable */
+			uint8_t	DE8TU3	: 1;	/* 8-bit timer 3 underflow IDMA enable */
+			uint8_t	DESRX0	: 1;	/* Serial I/F Ch.0 receive buffer full IDMA enable */
+			uint8_t	DESTX0	: 1;	/* Serial I/F Ch.0 receive buffer empty IDMA enable */
 		} bIDMA_EN;
-		volatile unsigned char	ucIDMA_EN;
+		volatile uint8_t	ucIDMA_EN;
 	} rIDMA_EN3;
 
 	union {						/* Serial I/F Ch.1, A/D, port input 4-7 IDMA enable register */
 		volatile struct {
-			unsigned char	DESRX1	: 1;	/* Serial I/F Ch.1 receive buffer full IDMA enable */
-			unsigned char	DESTX1	: 1;	/* Serial I/F Ch.1 receive buffer empty IDMA enable */
-			unsigned char	DEADE	: 1;	/* A/D converter IDMA enable */
-			unsigned char	Dummy	: 1;	/* D3 reserved */
-			unsigned char	DEP4	: 1;	/* Port input4 IDMA enable */
-			unsigned char	DEP5	: 1;	/* Port input5 IDMA enable */
-			unsigned char	DEP6	: 1;	/* Port input6 IDMA enable */
-			unsigned char	DEP7	: 1;	/* Port input7 IDMA enable */
+			uint8_t	DESRX1	: 1;	/* Serial I/F Ch.1 receive buffer full IDMA enable */
+			uint8_t	DESTX1	: 1;	/* Serial I/F Ch.1 receive buffer empty IDMA enable */
+			uint8_t	DEADE	: 1;	/* A/D converter IDMA enable */
+			uint8_t	Dummy	: 1;	/* D3 reserved */
+			uint8_t	DEP4	: 1;	/* Port input4 IDMA enable */
+			uint8_t	DEP5	: 1;	/* Port input5 IDMA enable */
+			uint8_t	DEP6	: 1;	/* Port input6 IDMA enable */
+			uint8_t	DEP7	: 1;	/* Port input7 IDMA enable */
 		} bIDMA_EN;
-		volatile unsigned char	ucIDMA_EN;
+		volatile uint8_t	ucIDMA_EN;
 	} rIDMA_EN4;
 
 	union {						/* High-speed DMA Ch.0/1 trigger select register */
 		volatile struct {
-			unsigned char	HSD0S	: 4;	/* High-speed DMA Ch.0 trigger selection */
-			unsigned char	HSD1S	: 4;	/* High-speed DMA Ch.1 trigger selection */
+			uint8_t	HSD0S	: 4;	/* High-speed DMA Ch.0 trigger selection */
+			uint8_t	HSD1S	: 4;	/* High-speed DMA Ch.1 trigger selection */
 		} bHTGR;
-		volatile unsigned char	ucHTGR;
+		volatile uint8_t	ucHTGR;
 	} rHTGR1;
 
 	union {						/* High-speed DMA Ch.2/3 trigger select register */
 		volatile struct {
-			unsigned char	HSD2S	: 4;	/* High-speed DMA Ch.2 trigger selection */
-			unsigned char	HSD3S	: 4;	/* High-speed DMA Ch.3 trigger selection */
+			uint8_t	HSD2S	: 4;	/* High-speed DMA Ch.2 trigger selection */
+			uint8_t	HSD3S	: 4;	/* High-speed DMA Ch.3 trigger selection */
 		} bHTGR;
-		volatile unsigned char	ucHTGR;
+		volatile uint8_t	ucHTGR;
 	} rHTGR2;
 
 	union {						/* High-speed DMA software trigger select register */
 		volatile struct {
-			unsigned char	HST0	: 1;	/* High-speed DMA Ch.0 software trigger */
-			unsigned char	HST1	: 1;	/* High-speed DMA Ch.1 software trigger */
-			unsigned char	HST2	: 1;	/* High-speed DMA Ch.2 software trigger */
-			unsigned char	HST3	: 1;	/* High-speed DMA Ch.3 software trigger */
+			uint8_t	HST0	: 1;	/* High-speed DMA Ch.0 software trigger */
+			uint8_t	HST1	: 1;	/* High-speed DMA Ch.1 software trigger */
+			uint8_t	HST2	: 1;	/* High-speed DMA Ch.2 software trigger */
+			uint8_t	HST3	: 1;	/* High-speed DMA Ch.3 software trigger */
 		} bHSOFTTGR;
-		volatile unsigned char	ucHSOFTTGR;
+		volatile uint8_t	ucHSOFTTGR;
 	} rHSOFTTGR;
 
-	unsigned char	Dummy4[4];
+	uint8_t	Dummy4[4];
 
 	union {						/* Flag set/reset method select register */
 		volatile struct {
-			unsigned char	RSTONLY	: 1;	/* Interrupt factor flag reset method selection */
-			unsigned char	IDMAONLY	: 1;	/* IDMA factor register set method selection */
-			unsigned char	DENONLY	: 1;	/* IDMA enable register set method selection */
+			uint8_t	RSTONLY	: 1;	/* Interrupt factor flag reset method selection */
+			uint8_t	IDMAONLY	: 1;	/* IDMA factor register set method selection */
+			uint8_t	DENONLY	: 1;	/* IDMA enable register set method selection */
 		} bRESET;
-		volatile unsigned char	ucRESET;
+		volatile uint8_t	ucRESET;
 	} rRESET;
 };
 
@@ -722,54 +722,54 @@ struct c_INTCtag {
 struct c_KPORTtag {
 	union {						/* K5 function select register */
 		volatile struct {
-			unsigned char	CFK50	: 1;	/* K50 function selection */
-			unsigned char	CFK51	: 1;	/* K51 function selection */
-			unsigned char	CFK52	: 1;	/* K52 function selection */
-			unsigned char	CFK53	: 1;	/* K53 function selection */
-			unsigned char	CFK54	: 1;	/* K54 function selection */
+			uint8_t	CFK50	: 1;	/* K50 function selection */
+			uint8_t	CFK51	: 1;	/* K51 function selection */
+			uint8_t	CFK52	: 1;	/* K52 function selection */
+			uint8_t	CFK53	: 1;	/* K53 function selection */
+			uint8_t	CFK54	: 1;	/* K54 function selection */
 		} bCFK5;
-		volatile unsigned char	ucCFK5;
+		volatile uint8_t	ucCFK5;
 	} rCFK5;
 
 	union {						/* K5 input port register */
 		volatile struct {
-			unsigned char	K50D	: 1;	/* K50 input port data */
-			unsigned char	K51D	: 1;	/* K51 input port data */
-			unsigned char	K52D	: 1;	/* K52 input port data */
-			unsigned char	K53D	: 1;	/* K53 input port data */
-			unsigned char	K54D	: 1;	/* K54 input port data */
+			uint8_t	K50D	: 1;	/* K50 input port data */
+			uint8_t	K51D	: 1;	/* K51 input port data */
+			uint8_t	K52D	: 1;	/* K52 input port data */
+			uint8_t	K53D	: 1;	/* K53 input port data */
+			uint8_t	K54D	: 1;	/* K54 input port data */
 		} bK5D;
-		volatile unsigned char	ucK5D;
+		volatile uint8_t	ucK5D;
 	} rK5D;
 
-	unsigned char	Dummy;
+	uint8_t	Dummy;
 
 	union {						/* K6 function select register */
 		volatile struct {
-			unsigned char	CFK60	: 1;	/* K60 function selection */
-			unsigned char	CFK61	: 1;	/* K61 function selection */
-			unsigned char	CFK62	: 1;	/* K62 function selection */
-			unsigned char	CFK63	: 1;	/* K63 function selection */
-			unsigned char	CFK64	: 1;	/* K64 function selection */
-			unsigned char	CFK65	: 1;	/* K65 function selection */
-			unsigned char	CFK66	: 1;	/* K66 function selection */
-			unsigned char	CFK67	: 1;	/* K67 function selection */
+			uint8_t	CFK60	: 1;	/* K60 function selection */
+			uint8_t	CFK61	: 1;	/* K61 function selection */
+			uint8_t	CFK62	: 1;	/* K62 function selection */
+			uint8_t	CFK63	: 1;	/* K63 function selection */
+			uint8_t	CFK64	: 1;	/* K64 function selection */
+			uint8_t	CFK65	: 1;	/* K65 function selection */
+			uint8_t	CFK66	: 1;	/* K66 function selection */
+			uint8_t	CFK67	: 1;	/* K67 function selection */
 		} bCFK6;
-		volatile unsigned char	ucCFK6;
+		volatile uint8_t	ucCFK6;
 	} rCFK6;
 
 	union {						/* K6 input port register */
 		volatile struct {
-			unsigned char	K60D	: 1;	/* K60 input port data */
-			unsigned char	K61D	: 1;	/* K61 input port data */
-			unsigned char	K62D	: 1;	/* K62 input port data */
-			unsigned char	K63D	: 1;	/* K63 input port data */
-			unsigned char	K64D	: 1;	/* K64 input port data */
-			unsigned char	K65D	: 1;	/* K65 input port data */
-			unsigned char	K66D	: 1;	/* K66 input port data */
-			unsigned char	K67D	: 1;	/* K67 input port data */
+			uint8_t	K60D	: 1;	/* K60 input port data */
+			uint8_t	K61D	: 1;	/* K61 input port data */
+			uint8_t	K62D	: 1;	/* K62 input port data */
+			uint8_t	K63D	: 1;	/* K63 input port data */
+			uint8_t	K64D	: 1;	/* K64 input port data */
+			uint8_t	K65D	: 1;	/* K65 input port data */
+			uint8_t	K66D	: 1;	/* K66 input port data */
+			uint8_t	K67D	: 1;	/* K67 input port data */
 		} bK6D;
-		volatile unsigned char	ucK6D;
+		volatile uint8_t	ucK6D;
 	} rK6D;
 };
 
@@ -779,102 +779,102 @@ struct c_KPORTtag {
 struct c_PINTtag {
 	union {						/* Port input interrupt select register1 */
 		volatile struct {
-			unsigned char SPT0	: 2;	/* FPT0 interrupt input port selection */
-			unsigned char SPT1	: 2;	/* FPT1 interrupt input port selection */
-			unsigned char SPT2	: 2;	/* FPT2 interrupt input port selection */
-			unsigned char SPT3	: 2;	/* FPT3 interrupt input port selection */
+			uint8_t SPT0	: 2;	/* FPT0 interrupt input port selection */
+			uint8_t SPT1	: 2;	/* FPT1 interrupt input port selection */
+			uint8_t SPT2	: 2;	/* FPT2 interrupt input port selection */
+			uint8_t SPT3	: 2;	/* FPT3 interrupt input port selection */
 		} bSPT03;
-		volatile unsigned char	ucSPT03;
+		volatile uint8_t	ucSPT03;
 	} rSPT1;
 
 	union {						/* Port input interrupt select register2 */
 		volatile struct {
-			unsigned char SPT4	: 2;	/* FPT4 interrupt input port selection */
-			unsigned char SPT5	: 2;	/* FPT5 interrupt input port selection */
-			unsigned char SPT6	: 2;	/* FPT6 interrupt input port selection */
-			unsigned char SPT7	: 2;	/* FPT7 interrupt input port selection */
+			uint8_t SPT4	: 2;	/* FPT4 interrupt input port selection */
+			uint8_t SPT5	: 2;	/* FPT5 interrupt input port selection */
+			uint8_t SPT6	: 2;	/* FPT6 interrupt input port selection */
+			uint8_t SPT7	: 2;	/* FPT7 interrupt input port selection */
 		} bSPT47;
-		volatile unsigned char	ucSPT47;
+		volatile uint8_t	ucSPT47;
 	} rSPT2;
 
 	union {						/* Port input interrupt input polarity select register */
 		volatile struct {
-			unsigned char SPPT0	: 1;	/* FPT0 input polarity selection */
-			unsigned char SPPT1	: 1;	/* FPT1 input polarity selection */
-			unsigned char SPPT2	: 1;	/* FPT2 input polarity selection */
-			unsigned char SPPT3	: 1;	/* FPT3 input polarity selection */
-			unsigned char SPPT4	: 1;	/* FPT4 input polarity selection */
-			unsigned char SPPT5	: 1;	/* FPT5 input polarity selection */
-			unsigned char SPPT6	: 1;	/* FPT6 input polarity selection */
-			unsigned char SPPT7	: 1;	/* FPT7 input polarity selection */
+			uint8_t SPPT0	: 1;	/* FPT0 input polarity selection */
+			uint8_t SPPT1	: 1;	/* FPT1 input polarity selection */
+			uint8_t SPPT2	: 1;	/* FPT2 input polarity selection */
+			uint8_t SPPT3	: 1;	/* FPT3 input polarity selection */
+			uint8_t SPPT4	: 1;	/* FPT4 input polarity selection */
+			uint8_t SPPT5	: 1;	/* FPT5 input polarity selection */
+			uint8_t SPPT6	: 1;	/* FPT6 input polarity selection */
+			uint8_t SPPT7	: 1;	/* FPT7 input polarity selection */
 		} bSPPT;
-		volatile unsigned char	ucSPPT;
+		volatile uint8_t	ucSPPT;
 	} rSPPT;
 
 	union {						/* Port input interrupt edge/level select register */
 		volatile struct {
-			unsigned char SEPT0	: 1;	/* FPT0 edge/level selection */
-			unsigned char SEPT1	: 1;	/* FPT1 edge/level selection */
-			unsigned char SEPT2	: 1;	/* FPT2 edge/level selection */
-			unsigned char SEPT3	: 1;	/* FPT3 edge/level selection */
-			unsigned char SEPT4	: 1;	/* FPT4 edge/level selection */
-			unsigned char SEPT5	: 1;	/* FPT5 edge/level selection */
-			unsigned char SEPT6	: 1;	/* FPT6 edge/level selection */
-			unsigned char SEPT7	: 1;	/* FPT7 edge/level selection */
+			uint8_t SEPT0	: 1;	/* FPT0 edge/level selection */
+			uint8_t SEPT1	: 1;	/* FPT1 edge/level selection */
+			uint8_t SEPT2	: 1;	/* FPT2 edge/level selection */
+			uint8_t SEPT3	: 1;	/* FPT3 edge/level selection */
+			uint8_t SEPT4	: 1;	/* FPT4 edge/level selection */
+			uint8_t SEPT5	: 1;	/* FPT5 edge/level selection */
+			uint8_t SEPT6	: 1;	/* FPT6 edge/level selection */
+			uint8_t SEPT7	: 1;	/* FPT7 edge/level selection */
 		} bSEPT;
-		volatile unsigned char	ucSEPT;
+		volatile uint8_t	ucSEPT;
 	} rSEPT;
 
 	union {						/* Key input interrupt select register */
 		volatile struct {
-			unsigned char SPPK0	: 2;	/* FPK0 interrupt input port selection */
-			unsigned char SPPK1	: 2;	/* FPK1 interrupt input port selection */
+			uint8_t SPPK0	: 2;	/* FPK0 interrupt input port selection */
+			uint8_t SPPK1	: 2;	/* FPK1 interrupt input port selection */
 		} bSPPK;
-		volatile unsigned char	ucSPPK;
+		volatile uint8_t	ucSPPK;
 	} rSPPK;
 
-	unsigned char	Dummy;
+	uint8_t	Dummy;
 
 	union {						/* Key input interrupt (FPK0) input comparison register */
 		volatile struct {
-			unsigned char SCPK00	: 1;	/* FPK00 input comparison */
-			unsigned char SCPK01	: 1;	/* FPK01 input comparison */
-			unsigned char SCPK02	: 1;	/* FPK02 input comparison */
-			unsigned char SCPK03	: 1;	/* FPK03 input comparison */
-			unsigned char SCPK04	: 1;	/* FPK04 input comparison */
+			uint8_t SCPK00	: 1;	/* FPK00 input comparison */
+			uint8_t SCPK01	: 1;	/* FPK01 input comparison */
+			uint8_t SCPK02	: 1;	/* FPK02 input comparison */
+			uint8_t SCPK03	: 1;	/* FPK03 input comparison */
+			uint8_t SCPK04	: 1;	/* FPK04 input comparison */
 		} bSCPK0;
-		volatile unsigned char	ucSCPK0;
+		volatile uint8_t	ucSCPK0;
 	} rSCPK0;
 
 	union {						/* Key input interrupt (FPK1) input comparison register */
 		volatile struct {
-			unsigned char SCPK10	: 1;	/* FPK10 input comparison */
-			unsigned char SCPK11	: 1;	/* FPK11 input comparison */
-			unsigned char SCPK12	: 1;	/* FPK12 input comparison */
-			unsigned char SCPK13	: 1;	/* FPK13 input comparison */
+			uint8_t SCPK10	: 1;	/* FPK10 input comparison */
+			uint8_t SCPK11	: 1;	/* FPK11 input comparison */
+			uint8_t SCPK12	: 1;	/* FPK12 input comparison */
+			uint8_t SCPK13	: 1;	/* FPK13 input comparison */
 		} bSCPK1;
-		volatile unsigned char	ucSCPK1;
+		volatile uint8_t	ucSCPK1;
 	} rSCPK1;
 
 	union {						/* Key input interrupt (FPK0) input mask register */
 		volatile struct {
-			unsigned char SMPK00	: 1;	/* FPK00 input mask */
-			unsigned char SMPK01	: 1;	/* FPK01 input mask */
-			unsigned char SMPK02	: 1;	/* FPK02 input mask */
-			unsigned char SMPK03	: 1;	/* FPK03 input mask */
-			unsigned char SMPK04	: 1;	/* FPK04 input mask */
+			uint8_t SMPK00	: 1;	/* FPK00 input mask */
+			uint8_t SMPK01	: 1;	/* FPK01 input mask */
+			uint8_t SMPK02	: 1;	/* FPK02 input mask */
+			uint8_t SMPK03	: 1;	/* FPK03 input mask */
+			uint8_t SMPK04	: 1;	/* FPK04 input mask */
 		} bSMPK0;
-		volatile unsigned char	ucSMPK0;
+		volatile uint8_t	ucSMPK0;
 	} rSMPK0;
 
 	union {						/* Key input interrupt (FPK1) input mask register */
 		volatile struct {
-			unsigned char SMPK10	: 1;	/* FPK10 input mask */
-			unsigned char SMPK11	: 1;	/* FPK11 input mask */
-			unsigned char SMPK12	: 1;	/* FPK12 input mask */
-			unsigned char SMPK13	: 1;	/* FPK13 input mask */
+			uint8_t SMPK10	: 1;	/* FPK10 input mask */
+			uint8_t SMPK11	: 1;	/* FPK11 input mask */
+			uint8_t SMPK12	: 1;	/* FPK12 input mask */
+			uint8_t SMPK13	: 1;	/* FPK13 input mask */
 		} bSMPK1;
-		volatile unsigned char	ucSMPK1;
+		volatile uint8_t	ucSMPK1;
 	} rSMPK1;
 };
 
@@ -884,58 +884,58 @@ struct c_PINTtag {
 struct c_PCTLtag {
 	union {						/* Function select register */
 		volatile struct {
-			unsigned char	CFP0	: 1;	/* PX0 */
-			unsigned char	CFP1	: 1;	/* PX1 */
-			unsigned char	CFP2	: 1;	/* PX2 */
-			unsigned char	CFP3	: 1;	/* PX3 */
-			unsigned char	CFP4	: 1;	/* PX4 */
-			unsigned char	CFP5	: 1;	/* PX5 */
-			unsigned char	CFP6	: 1;	/* PX6 */
-			unsigned char	CFP7	: 1;	/* PX7 */
+			uint8_t	CFP0	: 1;	/* PX0 */
+			uint8_t	CFP1	: 1;	/* PX1 */
+			uint8_t	CFP2	: 1;	/* PX2 */
+			uint8_t	CFP3	: 1;	/* PX3 */
+			uint8_t	CFP4	: 1;	/* PX4 */
+			uint8_t	CFP5	: 1;	/* PX5 */
+			uint8_t	CFP6	: 1;	/* PX6 */
+			uint8_t	CFP7	: 1;	/* PX7 */
 		} bCFP;
-		volatile unsigned char	ucCFP;
+		volatile uint8_t	ucCFP;
 	} rCFP;
 
 	union {						/* Input/output port data register */
 		volatile struct {
-			unsigned char	P0D	: 1;	/* Bit0 */
-			unsigned char	P1D	: 1;	/* Bit1 */
-			unsigned char	P2D	: 1;	/* Bit2 */
-			unsigned char	P3D	: 1;	/* Bit3 */
-			unsigned char	P4D	: 1;	/* Bit4 */
-			unsigned char	P5D	: 1;	/* Bit5 */
-			unsigned char	P6D	: 1;	/* Bit6 */
-			unsigned char	P7D	: 1;	/* Bit7 */
+			uint8_t	P0D	: 1;	/* Bit0 */
+			uint8_t	P1D	: 1;	/* Bit1 */
+			uint8_t	P2D	: 1;	/* Bit2 */
+			uint8_t	P3D	: 1;	/* Bit3 */
+			uint8_t	P4D	: 1;	/* Bit4 */
+			uint8_t	P5D	: 1;	/* Bit5 */
+			uint8_t	P6D	: 1;	/* Bit6 */
+			uint8_t	P7D	: 1;	/* Bit7 */
 		} bPD;
-		volatile unsigned char	ucPD;
+		volatile uint8_t	ucPD;
 	} rPD;
 
 	union {						/* I/O control register */
 		volatile struct {
-			unsigned char	IOC0	: 1;	/* PX0 1:output 0:input */
-			unsigned char	IOC1	: 1;	/* PX1 1:output 0:input */
-			unsigned char	IOC2	: 1;	/* PX2 1:output 0:input */
-			unsigned char	IOC3	: 1;	/* PX3 1:output 0:input */
-			unsigned char	IOC4	: 1;	/* PX4 1:output 0:input */
-			unsigned char	IOC5	: 1;	/* PX5 1:output 0:input */
-			unsigned char	IOC6	: 1;	/* PX6 1:output 0:input */
-			unsigned char	IOC7	: 1;	/* PX7 1:output 0:input */
+			uint8_t	IOC0	: 1;	/* PX0 1:output 0:input */
+			uint8_t	IOC1	: 1;	/* PX1 1:output 0:input */
+			uint8_t	IOC2	: 1;	/* PX2 1:output 0:input */
+			uint8_t	IOC3	: 1;	/* PX3 1:output 0:input */
+			uint8_t	IOC4	: 1;	/* PX4 1:output 0:input */
+			uint8_t	IOC5	: 1;	/* PX5 1:output 0:input */
+			uint8_t	IOC6	: 1;	/* PX6 1:output 0:input */
+			uint8_t	IOC7	: 1;	/* PX7 1:output 0:input */
 		} bIOC;
-		volatile unsigned char	ucIOC;
+		volatile uint8_t	ucIOC;
 	} rIOC;
 
 	union {						/* Port function extension register */
 		volatile struct {
-			unsigned char	CFEX0	: 1;	/* CFEX0 P12, P14 port extended function */
-			unsigned char	CFEX1	: 1;	/* CFEX1 P10, P11, P13 port extended function */
-			unsigned char	CFEX2	: 1;	/* CFEX2 P21 port extended function */
-			unsigned char	CFEX3	: 1;	/* CFEX3 P31 port extended function */
-			unsigned char	CFEX4	: 1;	/* CFEX4 P04 port extended function */
-			unsigned char	CFEX5	: 1;	/* CFEX5 P05 port extended function */
-			unsigned char	CFEX6	: 1;	/* CFEX6 P06 port extended function */
-			unsigned char	CFEX7	: 1;	/* CFEX7 P07 port extended function */
+			uint8_t	CFEX0	: 1;	/* CFEX0 P12, P14 port extended function */
+			uint8_t	CFEX1	: 1;	/* CFEX1 P10, P11, P13 port extended function */
+			uint8_t	CFEX2	: 1;	/* CFEX2 P21 port extended function */
+			uint8_t	CFEX3	: 1;	/* CFEX3 P31 port extended function */
+			uint8_t	CFEX4	: 1;	/* CFEX4 P04 port extended function */
+			uint8_t	CFEX5	: 1;	/* CFEX5 P05 port extended function */
+			uint8_t	CFEX6	: 1;	/* CFEX6 P06 port extended function */
+			uint8_t	CFEX7	: 1;	/* CFEX7 P07 port extended function */
 		} bCFEX;
-		volatile unsigned char	ucCFEX;
+		volatile uint8_t	ucCFEX;
 	} rCFEX;
 
 };
@@ -947,216 +947,216 @@ struct c_PCTLtag {
 struct c_BCUAREAtag {
 	union {						/* [Areas 18-15 set-up register]  rA18_15 */
 		volatile struct {
-			unsigned short	A16WT	: 3;	/* Areas 16-15 wait control */
-			unsigned short	Dummy0	: 1;	/* D3 reserve */
-			unsigned short	A16DF	: 2;	/* Areas 16-15 output disable delay time */
-			unsigned short	A16SZ	: 1;	/* Areas 16-15 device size selection */
-			unsigned short	Dummy1	: 1;	/* D7 reserve */
-			unsigned short	A18WT	: 3;	/* Areas 18-17 wait control */
-			unsigned short	Dummy2	: 1;	/* DB reserve */
-			unsigned short	A18DF	: 2;	/* Areas 18-17 output disable delay time */
-			unsigned short	A18SZ	: 1;	/* Areas 18-17 device size selection */
+			uint16_t	A16WT	: 3;	/* Areas 16-15 wait control */
+			uint16_t	Dummy0	: 1;	/* D3 reserve */
+			uint16_t	A16DF	: 2;	/* Areas 16-15 output disable delay time */
+			uint16_t	A16SZ	: 1;	/* Areas 16-15 device size selection */
+			uint16_t	Dummy1	: 1;	/* D7 reserve */
+			uint16_t	A18WT	: 3;	/* Areas 18-17 wait control */
+			uint16_t	Dummy2	: 1;	/* DB reserve */
+			uint16_t	A18DF	: 2;	/* Areas 18-17 output disable delay time */
+			uint16_t	A18SZ	: 1;	/* Areas 18-17 device size selection */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA18_15;
 
 	union {						/* [Areas 14-13 set-up register] rA14_13 */
 		volatile struct {
-			unsigned short	A14WT	: 3;	/* Areas 14-13 wait control */
-			unsigned short	Dummy	: 1;	/* D3 reserve */
-			unsigned short	A14DF	: 2;	/* Areas 14-13 output disable delay time */
-			unsigned short	A14SZ	: 1;	/* Areas 14-13 device size selection */
-			unsigned short	A13DRA	: 1;	/* Area 13 DRAM selection */
-			unsigned short	A14DRA	: 1;	/* Area 14 DRAM selection */
+			uint16_t	A14WT	: 3;	/* Areas 14-13 wait control */
+			uint16_t	Dummy	: 1;	/* D3 reserve */
+			uint16_t	A14DF	: 2;	/* Areas 14-13 output disable delay time */
+			uint16_t	A14SZ	: 1;	/* Areas 14-13 device size selection */
+			uint16_t	A13DRA	: 1;	/* Area 13 DRAM selection */
+			uint16_t	A14DRA	: 1;	/* Area 14 DRAM selection */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA14_13;
 
 	union {						/* [Areas 12-11 set-up register] rA12_11 */
 		volatile struct {
-			unsigned short	A12WT	: 3;	/* Areas 12-11 wait control */
-			unsigned short	Dummy	: 1;	/* D3 reserve */
-			unsigned short	A12DF	: 2;	/* Areas 12-11 output disable delay time */
-			unsigned short	A12SZ	: 1;	/* Areas 12-11 device size selection */
+			uint16_t	A12WT	: 3;	/* Areas 12-11 wait control */
+			uint16_t	Dummy	: 1;	/* D3 reserve */
+			uint16_t	A12DF	: 2;	/* Areas 12-11 output disable delay time */
+			uint16_t	A12SZ	: 1;	/* Areas 12-11 device size selection */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA12_11;
 
 	union {						/* [Areas 10-9 set-up register] rA10_9 */
 		volatile struct {
-			unsigned short	A10WT	: 3;	/* Areas 10-9 wait control */
-			unsigned short	Dummy0	: 1;	/* D3 reserve */
-			unsigned short	A10DF	: 2;	/* Areas 10-9 output disable delay time */
-			unsigned short	A10SZ	: 1;	/* Areas 10-9 device size selection */
-			unsigned short	A9DRA	: 1;	/* Area 9 burst ROM selection */
-			unsigned short	A10DRA	: 1;	/* Area 10 burst ROM selection */
-			unsigned short	A10BW	: 2;	/* Areas 10-9 burst ROM burst read cycle wait control */
-			unsigned short	Dummy1	: 1;	/* D7 reserve */
-			unsigned short	A10IR	: 3;	/* Area 10 internal ROM capacity selection */
+			uint16_t	A10WT	: 3;	/* Areas 10-9 wait control */
+			uint16_t	Dummy0	: 1;	/* D3 reserve */
+			uint16_t	A10DF	: 2;	/* Areas 10-9 output disable delay time */
+			uint16_t	A10SZ	: 1;	/* Areas 10-9 device size selection */
+			uint16_t	A9DRA	: 1;	/* Area 9 burst ROM selection */
+			uint16_t	A10DRA	: 1;	/* Area 10 burst ROM selection */
+			uint16_t	A10BW	: 2;	/* Areas 10-9 burst ROM burst read cycle wait control */
+			uint16_t	Dummy1	: 1;	/* D7 reserve */
+			uint16_t	A10IR	: 3;	/* Area 10 internal ROM capacity selection */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA10_9;
 
 	union {						/* [Areas 8-7 set-up register] rA8_7 */
 		volatile struct {
-			unsigned short	A8WT	: 3;	/* Areas 8-7 wait control */
-			unsigned short	Dummy	: 1;	/* D3 reserve */
-			unsigned short	A8DF	: 2;	/* Areas 8-7 output disable delay time */
-			unsigned short	A8SZ	: 1;	/* Areas 8-7 device size selection */
-			unsigned short	A7DRA	: 1;	/* Area 7 DRAM selection */
-			unsigned short	A8DRA	: 1;	/* Area 8 DRAM selection */
+			uint16_t	A8WT	: 3;	/* Areas 8-7 wait control */
+			uint16_t	Dummy	: 1;	/* D3 reserve */
+			uint16_t	A8DF	: 2;	/* Areas 8-7 output disable delay time */
+			uint16_t	A8SZ	: 1;	/* Areas 8-7 device size selection */
+			uint16_t	A7DRA	: 1;	/* Area 7 DRAM selection */
+			uint16_t	A8DRA	: 1;	/* Area 8 DRAM selection */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA8_7;
 
 	union {						/* [Areas 6-4 set-up register] rA6_4 */
 		volatile struct {
-			unsigned short	A5WT	: 3;	/* Areas 5-4 wait control */
-			unsigned short	Dummy0	: 1;	/* D3 reserve */
-			unsigned short	A5DF	: 2;	/* Areas 5-4 output disable delay time */
-			unsigned short	A5SZ	: 1;	/* Areas 5-4 device size selection */
-			unsigned short	Dummy1	: 1;	/* D7 reserve */
-			unsigned short	A6WT	: 3;	/* Area 6 wait control */
-			unsigned short	Dummy2	: 1;	/* DB reserve */
-			unsigned short	A6DF	: 2;	/* Area 6 output disable delay time */
+			uint16_t	A5WT	: 3;	/* Areas 5-4 wait control */
+			uint16_t	Dummy0	: 1;	/* D3 reserve */
+			uint16_t	A5DF	: 2;	/* Areas 5-4 output disable delay time */
+			uint16_t	A5SZ	: 1;	/* Areas 5-4 device size selection */
+			uint16_t	Dummy1	: 1;	/* D7 reserve */
+			uint16_t	A6WT	: 3;	/* Area 6 wait control */
+			uint16_t	Dummy2	: 1;	/* DB reserve */
+			uint16_t	A6DF	: 2;	/* Area 6 output disable delay time */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rA6_4;
 
-	unsigned char	Dummy0;
+	uint8_t	Dummy0;
 
-	volatile unsigned char	rTBRP;			/* TTBR write protection register */
+	volatile uint8_t	rTBRP;			/* TTBR write protection register */
 
 	union {						/* [Bus control register] rBUS */
 		volatile struct {
-			unsigned short	SWAITE	: 1;	/* #WAIT enable */
-			unsigned short	SEPD	: 1;	/* External power-down control */
-			unsigned short	SEMAS	: 1;	/* External bus master set-up */
-			unsigned short	SBUSST	: 1;	/* External interface method selection */
-			unsigned short	S2WE	: 1;	/* DRAM interface method selection */
-			unsigned short	RRA	: 2;	/* Refresh RAS pulse width selection */
-			unsigned short	RPC0	: 1;	/* Refresh RPC delay set-up */
-			unsigned short	RPC1	: 1;	/* Refresh method selection */
-			unsigned short	RPC2	: 1;	/* Refresh enable */
-			unsigned short	RCA	: 2;	/* Column address size selection */
-			unsigned short	REDO	: 1;	/* DRAM page mode selection */
-			unsigned short	RBST8	: 1;	/* Burst ROM burst mode selection */
-			unsigned short	Dummy	: 1;	/* DE reserve */
-			unsigned short	RBCLK	: 1;	/* BCLK output control */
+			uint16_t	SWAITE	: 1;	/* #WAIT enable */
+			uint16_t	SEPD	: 1;	/* External power-down control */
+			uint16_t	SEMAS	: 1;	/* External bus master set-up */
+			uint16_t	SBUSST	: 1;	/* External interface method selection */
+			uint16_t	S2WE	: 1;	/* DRAM interface method selection */
+			uint16_t	RRA	: 2;	/* Refresh RAS pulse width selection */
+			uint16_t	RPC0	: 1;	/* Refresh RPC delay set-up */
+			uint16_t	RPC1	: 1;	/* Refresh method selection */
+			uint16_t	RPC2	: 1;	/* Refresh enable */
+			uint16_t	RCA	: 2;	/* Column address size selection */
+			uint16_t	REDO	: 1;	/* DRAM page mode selection */
+			uint16_t	RBST8	: 1;	/* Burst ROM burst mode selection */
+			uint16_t	Dummy	: 1;	/* DE reserve */
+			uint16_t	RBCLK	: 1;	/* BCLK output control */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rBUS;
 
 	union {						/* [DRAM timing set-up register] rDRAM */
 		volatile struct {
-			unsigned short	RASC	: 2;	/* DRAM RAS cycle selection */
-			unsigned short	Dummy0	: 1;	/* Reserve */
-			unsigned short	CASC	: 2;	/* DRAM CAS cycle selection */
-			unsigned short	Dummy1	: 1;	/* Reserve */
-			unsigned short	RPRC	: 2;	/* DRAM RAS precharge cycle selection */
-			unsigned short	CRAS	: 1;	/* Successive RAS mode */
-			unsigned short	CEFUNC	: 2;	/* #CE pin function selection */
-			unsigned short	A3EEN	: 1;	/* Area 3 emulation */
+			uint16_t	RASC	: 2;	/* DRAM RAS cycle selection */
+			uint16_t	Dummy0	: 1;	/* Reserve */
+			uint16_t	CASC	: 2;	/* DRAM CAS cycle selection */
+			uint16_t	Dummy1	: 1;	/* Reserve */
+			uint16_t	RPRC	: 2;	/* DRAM RAS precharge cycle selection */
+			uint16_t	CRAS	: 1;	/* Successive RAS mode */
+			uint16_t	CEFUNC	: 2;	/* #CE pin function selection */
+			uint16_t	A3EEN	: 1;	/* Area 3 emulation */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rDRAM;
 
 	union {						/* [Access control register] rACCESS */
 		volatile struct {
-			unsigned short	A5EC	: 1;	/* Area 5,4 endian control */
-			unsigned short	A6EC	: 1;	/* Area 6 endian control */
-			unsigned short	A8EC	: 1;	/* Area 8,7 endian control */
-			unsigned short	A10EC	: 1;	/* Area 10,9 endian control */
-			unsigned short	A12EC	: 1;	/* Area 12,11 endian control */
-			unsigned short	A14EC	: 1;	/* Area 14,13 endian control */
-			unsigned short	A16EC	: 1;	/* Area 16,15 endian control */
-			unsigned short	A18EC	: 1;	/* Area 18,17 endian control */
-			unsigned short	A5IO	: 1;	/* Area 5,4 external/internal access */
-			unsigned short	A6IO	: 1;	/* Area 6 external/internal access */
-			unsigned short	A8IO	: 1;	/* Area 8,7 external/internal access */
-			unsigned short	Dummy	: 1;	/* DB reserve */
-			unsigned short	A12IO	: 1;	/* Area 12.11 external/internal access */
-			unsigned short	A14IO	: 1;	/* Area 14,13 external/internal access */
-			unsigned short	A16IO	: 1;	/* Area 16,15 external/internal access */
-			unsigned short	A18IO	: 1;	/* Area 18,17 external/internal access */
+			uint16_t	A5EC	: 1;	/* Area 5,4 endian control */
+			uint16_t	A6EC	: 1;	/* Area 6 endian control */
+			uint16_t	A8EC	: 1;	/* Area 8,7 endian control */
+			uint16_t	A10EC	: 1;	/* Area 10,9 endian control */
+			uint16_t	A12EC	: 1;	/* Area 12,11 endian control */
+			uint16_t	A14EC	: 1;	/* Area 14,13 endian control */
+			uint16_t	A16EC	: 1;	/* Area 16,15 endian control */
+			uint16_t	A18EC	: 1;	/* Area 18,17 endian control */
+			uint16_t	A5IO	: 1;	/* Area 5,4 external/internal access */
+			uint16_t	A6IO	: 1;	/* Area 6 external/internal access */
+			uint16_t	A8IO	: 1;	/* Area 8,7 external/internal access */
+			uint16_t	Dummy	: 1;	/* DB reserve */
+			uint16_t	A12IO	: 1;	/* Area 12.11 external/internal access */
+			uint16_t	A14IO	: 1;	/* Area 14,13 external/internal access */
+			uint16_t	A16IO	: 1;	/* Area 16,15 external/internal access */
+			uint16_t	A18IO	: 1;	/* Area 18,17 external/internal access */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rACCESS;
 
-	volatile unsigned int	rTTBR;			/* Trap table base address register */
+	volatile uint32_t	rTTBR;			/* Trap table base address register */
 
 	union {						/* [G/A read signal control register] rGA */
 		volatile struct {
-			unsigned short	A5RD	: 1;	/* Area 5,4 read signal */
-			unsigned short	A6RD	: 1;	/* Area 6 read signal */
-			unsigned short	A8RD	: 1;	/* Area 8,7 read signal */
-			unsigned short	Dummy0	: 1;	/* D3 reserve */
-			unsigned short	A12RD	: 1;	/* Area 12,11 read signal */
-			unsigned short	A14RD	: 1;	/* Area 14,13 read signal */
-			unsigned short	A16RD	: 1;	/* Area 16,15 read signal */
-			unsigned short	A18RD	: 1;	/* Area 18,17 read signal */
-			unsigned short	A5AS	: 1;	/* Area 5,4 address strobe signal */
-			unsigned short	A6AS	: 1;	/* Area 6 address strobe signal */
-			unsigned short	A8AS	: 1;	/* Area 8,7 address strobe signal */
-			unsigned short	Dummy1	: 1;	/* DB reserve */
-			unsigned short	A12AS	: 1;	/* Area 12,11 address strobe signal */
-			unsigned short	A14AS	: 1;	/* Area 14,13 address strobe signal */
-			unsigned short	A16AS	: 1;	/* Area 16,15 address strobe signal */
-			unsigned short	A18AS	: 1;	/* Area 18,17 address strobe signal */
+			uint16_t	A5RD	: 1;	/* Area 5,4 read signal */
+			uint16_t	A6RD	: 1;	/* Area 6 read signal */
+			uint16_t	A8RD	: 1;	/* Area 8,7 read signal */
+			uint16_t	Dummy0	: 1;	/* D3 reserve */
+			uint16_t	A12RD	: 1;	/* Area 12,11 read signal */
+			uint16_t	A14RD	: 1;	/* Area 14,13 read signal */
+			uint16_t	A16RD	: 1;	/* Area 16,15 read signal */
+			uint16_t	A18RD	: 1;	/* Area 18,17 read signal */
+			uint16_t	A5AS	: 1;	/* Area 5,4 address strobe signal */
+			uint16_t	A6AS	: 1;	/* Area 6 address strobe signal */
+			uint16_t	A8AS	: 1;	/* Area 8,7 address strobe signal */
+			uint16_t	Dummy1	: 1;	/* DB reserve */
+			uint16_t	A12AS	: 1;	/* Area 12,11 address strobe signal */
+			uint16_t	A14AS	: 1;	/* Area 14,13 address strobe signal */
+			uint16_t	A16AS	: 1;	/* Area 16,15 address strobe signal */
+			uint16_t	A18AS	: 1;	/* Area 18,17 address strobe signal */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rGA;
 
-	volatile unsigned char	rBCLKSEL;		/* BCLK select register */
+	volatile uint8_t	rBCLKSEL;		/* BCLK select register */
 
-	unsigned char	Dummy1;
+	uint8_t	Dummy1;
 };
 
 /****************************************************************/
 /* [16-bit timer] c_T16						*/
 /****************************************************************/
 struct c_T16tag {
-	volatile unsigned short	rCRA;			/* 16-bit timer comparison data A set-up register */
-	volatile unsigned short	rCRB;			/* 16-bit timer comparison data B set-up register */
-	volatile unsigned short	rTC;			/* 16-bit timer counter data register */
+	volatile uint16_t	rCRA;			/* 16-bit timer comparison data A set-up register */
+	volatile uint16_t	rCRB;			/* 16-bit timer comparison data B set-up register */
+	volatile uint16_t	rTC;			/* 16-bit timer counter data register */
 
 	union {						/* 16-bit timer control register */
 		volatile struct {
-			unsigned char	PRUN	: 1;	/* 16-bit timer Run/Stop control */
-			unsigned char	PRESET	: 1;	/* 16-bit timer Reset */
-			unsigned char	PTM	: 1;	/* 16-bit timer clock output control */
-			unsigned char	CKSL	: 1;	/* 16-bit timer input clock selection */
-			unsigned char	OUTINV	: 1;	/* 16-bit timer output inversion */
-			unsigned char	SELCRB	: 1;	/* 16-bit timer comparison buffer */
-			unsigned char	SELFM	: 1;	/* 16-bit timer fine mode selection */
+			uint8_t	PRUN	: 1;	/* 16-bit timer Run/Stop control */
+			uint8_t	PRESET	: 1;	/* 16-bit timer Reset */
+			uint8_t	PTM	: 1;	/* 16-bit timer clock output control */
+			uint8_t	CKSL	: 1;	/* 16-bit timer input clock selection */
+			uint8_t	OUTINV	: 1;	/* 16-bit timer output inversion */
+			uint8_t	SELCRB	: 1;	/* 16-bit timer comparison buffer */
+			uint8_t	SELFM	: 1;	/* 16-bit timer fine mode selection */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rT16CTL;
-	unsigned char	Dummy;
+	uint8_t	Dummy;
 };
 
 /****************************************************************/
 /* [IDMA control register] c_IDMA				*/
 /****************************************************************/
 struct c_IDMAtag {
-	volatile unsigned int	rDBASE;			/* IDMA base address */
+	volatile uint32_t	rDBASE;			/* IDMA base address */
 
 	union {						/* IDMA start register */
 		volatile struct {
-			unsigned char	DCHN	: 7;	/* IDMA channel number */
-			unsigned char	DSTART	: 1;	/* IDMA start */
+			uint8_t	DCHN	: 7;	/* IDMA channel number */
+			uint8_t	DSTART	: 1;	/* IDMA start */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rSTART;
 
 	union {						/* IDMA enable register */
 		volatile struct {
-			unsigned char	IDMAEN	: 1;	/* IDMA enable */
+			uint8_t	IDMAEN	: 1;	/* IDMA enable */
 		} bCTL;
-		volatile unsigned char	ucCTL;
+		volatile uint8_t	ucCTL;
 	} rIDMAEN;
 
-	unsigned char	Dummy[2];
+	uint8_t	Dummy[2];
 };
 
 /****************************************************************/
@@ -1166,55 +1166,55 @@ struct c_HSDMAtag {
 	union {						/* High-speed DMA transfer counter/control register */
 		/* Block transfer mode */
 		volatile struct {
-			unsigned int	BLKLEN	: 8;	/* Block length */
-			unsigned int	TC	: 16;	/* Transfer counter[15:0] */
-			unsigned int	Dummy	: 6;	/* DD-8 reserve */
-			unsigned int	DIR	: 1;	/* Transfer direction control (dual address mode) */
-			unsigned int	DUALM	: 1;	/* Address mode selection */
+			uint32_t	BLKLEN	: 8;	/* Block length */
+			uint32_t	TC	: 16;	/* Transfer counter[15:0] */
+			uint32_t	Dummy	: 6;	/* DD-8 reserve */
+			uint32_t	DIR	: 1;	/* Transfer direction control (dual address mode) */
+			uint32_t	DUALM	: 1;	/* Address mode selection */
 		} bBLOCK;
 
 		/* Single/successive transfer mode */
 		volatile struct {
-			unsigned int	TC	: 24;	/* Transfer counter[23:0] */
-			unsigned int	Dummy	: 6;	/* DD-8 reserve */
-			unsigned int	DIR	: 1;	/* Transfer direction control (single address mode) */
-			unsigned int	DUALM	: 1;	/* Address mode selection */
+			uint32_t	TC	: 24;	/* Transfer counter[23:0] */
+			uint32_t	Dummy	: 6;	/* DD-8 reserve */
+			uint32_t	DIR	: 1;	/* Transfer direction control (single address mode) */
+			uint32_t	DUALM	: 1;	/* Address mode selection */
 		} bSINGLE;
 
-		volatile unsigned int	uiCTL;
+		volatile uint32_t	uiCTL;
 	} rCNT;
 
 	union {						/* High-speed DMA source address set-up register */
 		volatile struct {			/* (D):dual address mode, (S):single address mode */
-			unsigned int	SADR	: 28;	/* Source address control(D)/memory address control(S) [27:0] */
-			unsigned int	SIN	: 2;	/* Source address control(D)/memory address control(S) */
-			unsigned int	DATSIZE	: 1;	/* Transfer data size */
-			unsigned int	DINTEN	: 1;	/* Interrupt enable */
+			uint32_t	SADR	: 28;	/* Source address control(D)/memory address control(S) [27:0] */
+			uint32_t	SIN	: 2;	/* Source address control(D)/memory address control(S) */
+			uint32_t	DATSIZE	: 1;	/* Transfer data size */
+			uint32_t	DINTEN	: 1;	/* Interrupt enable */
 		} bCTL;
-		volatile unsigned int	uiCTL;
+		volatile uint32_t	uiCTL;
 	} rSADR;
 
 	union {						/* High-speed DMA destination set-up register */
 		volatile struct {
-			unsigned int	DADR	: 28;	/* Destination address(D) address control [27:0] */
-			unsigned int	DIN	: 2;	/* Destination address(D) address control */
-			unsigned int	DMOD	: 2;	/* Transfer mode */
+			uint32_t	DADR	: 28;	/* Destination address(D) address control [27:0] */
+			uint32_t	DIN	: 2;	/* Destination address(D) address control */
+			uint32_t	DMOD	: 2;	/* Transfer mode */
 		} bCTL;
-		volatile unsigned int	uiCTL;
+		volatile uint32_t	uiCTL;
 	} rDADR;
 
 	union {						/* High-speed DMA enable register */
 		volatile struct {
-			unsigned short	HS_EN	: 1;	/* High-speed DMA enable */
+			uint16_t	HS_EN	: 1;	/* High-speed DMA enable */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rHS_EN;
 
 	union {						/* High-speed DMA trigger flag register */
 		volatile struct {
-			unsigned short	HS_TF	: 1;	/* Trigger flag clear(WR)/trigger flag status(RD) */
+			uint16_t	HS_TF	: 1;	/* Trigger flag clear(WR)/trigger flag status(RD) */
 		} bCTL;
-		volatile unsigned short	usCTL;
+		volatile uint16_t	usCTL;
 	} rTF;
 };
 
@@ -1224,11 +1224,11 @@ struct c_HSDMAtag {
 /****************************************************************/
 struct c_IOtag {
 	/*** 40000H *********************************************/
-	unsigned char		Dummy0a[320];		/* 0x4013f - 0x40000 */
+	uint8_t		Dummy0a[320];		/* 0x4013f - 0x40000 */
 
 	union c_CLKSELtag	c_CLKSEL_T8_45;		/* 8-bit timer4/5 clock selection register */
 
-	unsigned char		Dummy0b[4];		/* 0x40144 - 0x40141 */
+	uint8_t		Dummy0b[4];		/* 0x40144 - 0x40141 */
 
 	union c_CLKCTLtag	c_CLKCTL_T8_45;		/* 8-bit timer4/5 clock control register */
 
@@ -1246,11 +1246,11 @@ struct c_IOtag {
 
 	union c_CLKCTLtag	c_CLKCTL_AD;		/* A/D converter clock control register	*/
 
-	unsigned char		Dummy1[1];		/* 0x40150 */
+	uint8_t		Dummy1[1];		/* 0x40150 */
 
 	struct c_TIMERtag	c_TIMER;		/* Clock timer */
 
-	unsigned char		Dummy2[4];		/* 0x4015f - 0x4015c */
+	uint8_t		Dummy2[4];		/* 0x4015f - 0x4015c */
 
 	struct c_T8tag		c_T8_0;			/* 8-bit timer 0 */
 	struct c_T8tag		c_T8_1;			/* 8-bit timer 1 */
@@ -1259,33 +1259,33 @@ struct c_IOtag {
 
 	struct c_WDTtag		c_WDT;			/* Watchdog timer */
 
-	unsigned char		Dummy3[14];		/* 0x4017f - 0x40172 */
+	uint8_t		Dummy3[14];		/* 0x4017f - 0x40172 */
 
 	struct c_PWRCTLtag	c_PWRCTL;		/* Power control */
 
-	unsigned char		Dummy4[65];		/* 0x401df - 0x4019f */
+	uint8_t		Dummy4[65];		/* 0x401df - 0x4019f */
 
 	struct c_SIFtag		c_SIF0;			/* Serial I/F Ch.0 */
 	struct c_SIFtag		c_SIF1;			/* Serial I/F Ch.1 */
 
-	unsigned char		Dummy5a[6];		/* 0x401ef - 0x401ea */
+	uint8_t		Dummy5a[6];		/* 0x401ef - 0x401ea */
 
 	struct c_SIFtag		c_SIF2;			/* Serial I/F Ch.2 */
 	struct c_SIFtag		c_SIF3;			/* Serial I/F Ch.3 */
 
-	unsigned char		Dummy5b[70];		/* 0x4023f - 0x401fa */
+	uint8_t		Dummy5b[70];		/* 0x4023f - 0x401fa */
 
 	struct c_ADtag		c_AD;			/* A/D converter */
 
-	unsigned char		Dummy6[26];		/* 0x4025f - 0x40246 */
+	uint8_t		Dummy6[26];		/* 0x4025f - 0x40246 */
 
 	struct c_INTCtag	c_INTC;			/* Interrupt controller */
 
-	unsigned char		Dummy7[32];		/* 0x402bf - 0x402a0 */
+	uint8_t		Dummy7[32];		/* 0x402bf - 0x402a0 */
 
 	struct c_KPORTtag	c_KPORT;		/* Input port (K port) */
 
-	unsigned char		Dummy8[1];		/* 0x402c5 */
+	uint8_t		Dummy8[1];		/* 0x402c5 */
 
 	struct c_PINTtag	c_PINT;			/* Port input interrupt */
 
@@ -1294,13 +1294,13 @@ struct c_IOtag {
 	struct c_PCTLtag	c_PCTL_P2;		/* Input/output port (P2 port) */
 	struct c_PCTLtag	c_PCTL_P3;		/* Input/output port (P3 port) */
 
-	unsigned char		Dummy9[32320];		/* 0x4811f - 0x402e0 */
+	uint8_t		Dummy9[32320];		/* 0x4811f - 0x402e0 */
 
 	/*** 48000H *********************************************/
 
 	struct c_BCUAREAtag	c_BCUAREA;		/* BCU Area set-up */
 
-	unsigned char		Dummy10[68];		/* 0x4817f - 0x4813c */
+	uint8_t		Dummy10[68];		/* 0x4817f - 0x4813c */
 
 	struct c_T16tag		c_T16_0;		/* 16-bit timer 0 */
 	struct c_T16tag		c_T16_1;		/* 16-bit timer 1 */
@@ -1309,11 +1309,11 @@ struct c_IOtag {
 	struct c_T16tag		c_T16_4;		/* 16-bit timer 4 */
 	struct c_T16tag		c_T16_5;		/* 16-bit timer 5 */
 
-	unsigned char		Dummy11[80];		/* 0x481ff - 0x481b0 */
+	uint8_t		Dummy11[80];		/* 0x481ff - 0x481b0 */
 
 	struct c_IDMAtag	c_IDMA;			/* IDMA control register */
 
-	unsigned char		Dummy12[24];		/* 0x4821f - 0x48208 */	/* Dummy (2byte) in c_IDMA */
+	uint8_t		Dummy12[24];		/* 0x4821f - 0x48208 */	/* Dummy (2byte) in c_IDMA */
 
 	struct c_HSDMAtag	c_HSDMA0;		/* High-speed DMA Ch.0 */
 	struct c_HSDMAtag	c_HSDMA1;		/* High-speed DMA Ch.1 */
@@ -1328,40 +1328,40 @@ struct c_IOtag {
 typedef struct {
 	union {
 		volatile struct {
-			unsigned int	BLKLEN	: 8;	/* Block size */
-			unsigned int	TC	: 16;	/* Data transfer counter */
-			unsigned int	LINKCHN	: 7;	/* IDMA link field */
-			unsigned int	LINKEN	: 1;	/* IDMA link enable */
+			uint32_t	BLKLEN	: 8;	/* Block size */
+			uint32_t	TC	: 16;	/* Data transfer counter */
+			uint32_t	LINKCHN	: 7;	/* IDMA link field */
+			uint32_t	LINKEN	: 1;	/* IDMA link enable */
 		} bBLK;
 
 		volatile struct {
-			unsigned int	TC	: 24;	/* Data transfer counter */
-			unsigned int	LINKCHN	: 7;	/* IDMA link field */
-			unsigned int	LINKEN	: 1;	/* IDAM link enable */
+			uint32_t	TC	: 24;	/* Data transfer counter */
+			uint32_t	LINKCHN	: 7;	/* IDMA link field */
+			uint32_t	LINKEN	: 1;	/* IDAM link enable */
 		} bSIN;
 
-		volatile unsigned int	uiTC;
+		volatile uint32_t	uiTC;
 	} rTC;
 
 	union {
 		volatile struct {
-			unsigned int	SRADR	: 28;	/* Source address */
-			unsigned int	SRINC	: 2;	/* Source address control */
-			unsigned int	DATSIZ	: 1;	/* Data size control */
-			unsigned int	DINTEN	: 1;	/* Interrupt enable */
+			uint32_t	SRADR	: 28;	/* Source address */
+			uint32_t	SRINC	: 2;	/* Source address control */
+			uint32_t	DATSIZ	: 1;	/* Data size control */
+			uint32_t	DINTEN	: 1;	/* Interrupt enable */
 		} bSRC;
 
-		volatile unsigned int	uiSRC;
+		volatile uint32_t	uiSRC;
 	} rSRC;
 
 	union {
 		volatile struct {
-			unsigned int	DSADR	: 28;	/* Destination address */
-			unsigned int	DSINC	: 2;	/* Destination control */
-			unsigned int	DMOD	: 2;	/* Transfer mode */
+			uint32_t	DSADR	: 28;	/* Destination address */
+			uint32_t	DSINC	: 2;	/* Destination control */
+			uint32_t	DMOD	: 2;	/* Transfer mode */
 		} bDST;
 
-		volatile unsigned int	uiDST;
+		volatile uint32_t	uiDST;
 	} rDST;
 } IDMA_ST;
 
@@ -2472,10 +2472,10 @@ struct IDMA_ST_tag {
 // Port SIO function extension register
 #define pPSIO3_CFEX		plc_IO->c_PCTL_P1.rCFEX.ucCFEX	/* Port SIO function extension register (0x402d7) */
 #define fPSIO3_CFEX		plc_IO->c_PCTL_P1.rCFEX.bCFEX	/* Port SIO function extension register bit field */
-#define bPSIO3_CFEX_SSIN3	fPSIO3_CFEX.CFEX0		/* SSIN3  P33 function selection  SIN3 /      #DMAACK1¥P33 */
-#define bPSIO3_CFEX_SSOUT3	fPSIO3_CFEX.CFEX1		/* SSOUT3 P16 function selection  SOUT3/EXCL5¥#DMAEND1¥P16 */
-#define bPSIO3_CFEX_SSCLK3	fPSIO3_CFEX.CFEX2		/* SSCLK3 P15 function selection #SCLK3/EXCL4¥#DMAEND0¥P15 */
-#define bPSIO3_CFEX_SSRDY3	fPSIO3_CFEX.CFEX3		/* SSRDY3 P32 function selection #SRDY3/      #DMAACK0¥P32 */
+#define bPSIO3_CFEX_SSIN3	fPSIO3_CFEX.CFEX0		/* SSIN3  P33 function selection  SIN3 /      #DMAACK1ãƒ»P33 */
+#define bPSIO3_CFEX_SSOUT3	fPSIO3_CFEX.CFEX1		/* SSOUT3 P16 function selection  SOUT3/EXCL5ãƒ»#DMAEND1ãƒ»P16 */
+#define bPSIO3_CFEX_SSCLK3	fPSIO3_CFEX.CFEX2		/* SSCLK3 P15 function selection #SCLK3/EXCL4ãƒ»#DMAEND0ãƒ»P15 */
+#define bPSIO3_CFEX_SSRDY3	fPSIO3_CFEX.CFEX3		/* SSRDY3 P32 function selection #SRDY3/      #DMAACK0ãƒ»P32 */
 
 ////////////////////////////////////////////////////////////////
 // P2X port register
@@ -2516,10 +2516,10 @@ struct IDMA_ST_tag {
 // Port SIO function extension register
 #define pPSIO2_CFEX		plc_IO->c_PCTL_P2.rCFEX.ucCFEX	/* Port SIO function extension register (0x402db) */
 #define fPSIO2_CFEX		plc_IO->c_PCTL_P2.rCFEX.bCFEX	/* Port SIO function extension register bit field */
-#define bPSIO2_CFEX_SSIN2	fPSIO2_CFEX.CFEX0		/* SSIN2  P27 function selection  SIN2 /TM5¥P27 */
-#define bPSIO2_CFEX_SSOUT2	fPSIO2_CFEX.CFEX1		/* SSOUT2 P26 function selection  SOUT2/TM4¥P26 */
-#define bPSIO2_CFEX_SSCLK2	fPSIO2_CFEX.CFEX2		/* SSCLK2 P25 function selection #SCLK2/TM3¥P25 */
-#define bPSIO2_CFEX_SSRDY2	fPSIO2_CFEX.CFEX3		/* SSRDY2 P24 function selection #SRDY2/TM2¥P24 */
+#define bPSIO2_CFEX_SSIN2	fPSIO2_CFEX.CFEX0		/* SSIN2  P27 function selection  SIN2 /TM5ãƒ»P27 */
+#define bPSIO2_CFEX_SSOUT2	fPSIO2_CFEX.CFEX1		/* SSOUT2 P26 function selection  SOUT2/TM4ãƒ»P26 */
+#define bPSIO2_CFEX_SSCLK2	fPSIO2_CFEX.CFEX2		/* SSCLK2 P25 function selection #SCLK2/TM3ãƒ»P25 */
+#define bPSIO2_CFEX_SSRDY2	fPSIO2_CFEX.CFEX3		/* SSRDY2 P24 function selection #SRDY2/TM2ãƒ»P24 */
 
 ////////////////////////////////////////////////////////////////
 // P3X port register
@@ -2988,18 +2988,18 @@ struct IDMA_ST_tag {
 #define HS3_DISABLE	bHS3_EN_HS3EN = 0
 
 /****************************************************************/
-/*	Š„‚è‚İƒxƒNƒ^”Ô†					*/
+/*	å‰²ã‚Šè¾¼ã¿ãƒ™ã‚¯ã‚¿ç•ªå·					*/
 /****************************************************************/
 
-/*  0`15F—áŠO—vˆö“™‚Ì“à•”Š„‚è‚İ
- *         ƒVƒ“ƒ{ƒ‹‚Ì–¼Ì‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/drv33A104/ad/vector.s ‚É]‚¢‚Ü‚µ‚½B
- *         Š„‚è‚İ‚Ìà–¾‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/inclink/prog1/table.s ‚ğg‚¢‚Ü‚µ‚½B
- * 16`71Fƒ}ƒXƒN‰Â”\‚ÈŠO•”Š„‚è‚İ
- *         ƒVƒ“ƒ{ƒ‹‚Ì–¼Ì‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/hdr33208/c33208.h ‚É]‚¢‚Ü‚µ‚½B
- *         Š„‚è‚İ‚Ìà–¾‚ÍA/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ‚Ì’†‚Ì SAMPLE/hdr33208/c33208.h ‚ğg‚¢‚Ü‚µ‚½B
+/*  0ã€œ15ï¼šä¾‹å¤–è¦å› ç­‰ã®å†…éƒ¨å‰²ã‚Šè¾¼ã¿
+ *         ã‚·ãƒ³ãƒœãƒ«ã®åç§°ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/drv33A104/ad/vector.s ã«å¾“ã„ã¾ã—ãŸã€‚
+ *         å‰²ã‚Šè¾¼ã¿ã®èª¬æ˜ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/inclink/prog1/table.s ã‚’ä½¿ã„ã¾ã—ãŸã€‚
+ * 16ã€œ71ï¼šãƒã‚¹ã‚¯å¯èƒ½ãªå¤–éƒ¨å‰²ã‚Šè¾¼ã¿
+ *         ã‚·ãƒ³ãƒœãƒ«ã®åç§°ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/hdr33208/c33208.h ã«å¾“ã„ã¾ã—ãŸã€‚
+ *         å‰²ã‚Šè¾¼ã¿ã®èª¬æ˜ã¯ã€/usr/PIECE/docs/datasheet/EPSON/cc33eva.zip ã®ä¸­ã® SAMPLE/hdr33208/c33208.h ã‚’ä½¿ã„ã¾ã—ãŸã€‚
  */
 
-/* —áŠO—vˆö“™‚Ì“à•”Š„‚è‚İ */
+/* ä¾‹å¤–è¦å› ç­‰ã®å†…éƒ¨å‰²ã‚Šè¾¼ã¿ */
 #define TRAP_RESET	0	/* Reset */
 				/* 1-3: reserved */
 #define TRAP_ZERODIV	4	/* Zero Div. */
@@ -3011,7 +3011,7 @@ struct IDMA_ST_tag {
 #define TRAP_SOFTINT1	13	/* Software Exception 1 */
 #define TRAP_SOFTINT2	14	/* Software Exception 2 */
 #define TRAP_SOFTINT3	15	/* Software Exception 3 */
-/* ƒ}ƒXƒN‰Â”\‚ÈŠO•”Š„‚è‚İ */
+/* ãƒã‚¹ã‚¯å¯èƒ½ãªå¤–éƒ¨å‰²ã‚Šè¾¼ã¿ */
 #define TRAP_P0		16	/* Port input 0 */
 #define TRAP_P1		17	/* Port input 1 */
 #define TRAP_P2		18	/* Port input 2 */

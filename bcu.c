@@ -5,15 +5,15 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - �쐬�J�n�B
+ *  - 作成開始。
  *  * Wed Apr 22 05:21:00 JST 2003 Naoyuki Sawa
- *  - DMA����̃������A�N�Z�X�p�ɁAmem_read_nowait()/mem_write_nowait()�ǉ��B
- *    ����܂ŁADMA����̃������A�N�Z�X��CLK�����Z����Ă����̂��C�����܂����B
+ *  - DMAからのメモリアクセス用に、mem_read_nowait()/mem_write_nowait()追加。
+ *    これまで、DMAからのメモリアクセスでCLKが加算されていたのを修正しました。
  */
 #include "app.h"
 
 /****************************************************************************
- *  �G���A��`
+ *  エリア定義
  ****************************************************************************/
 
 #define STUB_READB(name, ctx, ofs) name##_read(ctx, ofs, 1)
@@ -73,14 +73,14 @@ static AREA area_tbl[] = {
 };
 
 static AREA*
-area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:����RDWR/1:�O��RD/2:�O��WR*/)
+area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:内部RDWR/1:外部RD/2:外部WR*/)
 {
   int no, sz, wt;
 
-  // �x���΍�
+  // 警告対策
   no = sz = wt = 0;
 
-  /* ����`�F�b�N�B */
+  /* 整列チェック。 */
   switch(size) {
   case 1:                     break;
   case 2: if(addr & 1) DIE(); break;
@@ -88,10 +88,10 @@ area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:����RDWR/1
   default: DIE();
   }
 
-  /* �G���A�I���B */
-  addr &= (1 << 28) - 1; /* S1C33�̃A�h���X��Ԃ�28�r�b�g */
+  /* エリア選択。 */
+  addr &= (1 << 28) - 1; /* S1C33のアドレス空間は28ビット */
 
-  // ����͂��܂��W�����v�e�[�u���ɂȂ邩�炱��ł���
+  // これはうまくジャンプテーブルになるからこれでいい
   switch(addr >> 24)
   {
     case 0x0:
@@ -177,10 +177,10 @@ area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:����RDWR/1
   }
   DIE();
 
-  /* �E�F�C�g���Z�B */
+  /* ウェイト加算。 */
 WAIT:
   if(!mode) goto NO_WAIT;
-  if(sz) { /*  8�r�b�g�f�o�C�X */
+  if(sz) { /*  8ビットデバイス */
     CLK += wt * size;
 //    switch(size) {
 //    case 1:  CLK += wt * 1; break;
@@ -188,7 +188,7 @@ WAIT:
 //    case 4:  CLK += wt * 4; break;
 //    default: DIE();
 //    }
-  } else { /* 16�r�b�g�f�o�C�X */
+  } else { /* 16ビットデバイス */
     CLK += wt << (size >> 2);
 //    switch(size) {
 //    case 1:  CLK += wt * 1; break;
@@ -197,11 +197,11 @@ WAIT:
 //    default: DIE();
 //    }
   }
-  /* * ����RAM�ȊO�ւ̃A�N�Z�X�́A���̗̈�̃E�F�C�g�T�C�N���ɉ����āA�����1�T�C�N���K�v�ł��B
-   *   �iS1C33000�R�ACPU�}�j���A�� 33000Core-J.pdf p.34�u3.2.2 ���߂̎��s�T�C�N���� (2)�v�Q�Ɓj
-   * * 2003/04/26�ǋL
-   *   S1C33000�R�ACPU�}�j���A�� 33000Core-J.pdf B-II-4-20�u�O���V�X�e���C���^�[�t�F�C�X�̃o�X�T�C�N���v������ƁA
-   *   �O����������READ�͑O�q�̒ʂ�{�P�T�C�N���ł����AWRITE�́{�Q�T�C�N���݂����Ȃ̂ŁA���̂悤�ɏC�����܂����B
+  /* * 内蔵RAM以外へのアクセスは、その領域のウェイトサイクルに加えて、さらに1サイクル必要です。
+   *   （S1C33000コアCPUマニュアル 33000Core-J.pdf p.34「3.2.2 命令の実行サイクル数 (2)」参照）
+   * * 2003/04/26追記
+   *   S1C33000コアCPUマニュアル 33000Core-J.pdf B-II-4-20「外部システムインターフェイスのバスサイクル」を見ると、
+   *   外部メモリのREADは前述の通り＋１サイクルですが、WRITEは＋２サイクルみたいなので、そのように修正しました。
    */
   CLK += mode;
 NO_WAIT:
@@ -210,7 +210,7 @@ NO_WAIT:
 }
 
 /****************************************************************************
- *  �O���[�o���֐�
+ *  グローバル関数
  ****************************************************************************/
 
 void

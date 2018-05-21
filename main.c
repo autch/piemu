@@ -5,7 +5,7 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - ì¬ŠJŽnB
+ *  - ä½œæˆé–‹å§‹ã€‚
  */
 #include "app.h"
 //#ifndef PSP
@@ -26,28 +26,24 @@
 #define KEY_OC    "oc"
 #define KEY_FPS   "fps"
 #define KEY_NOWAIT  "nowait"
-//#define KEY_DBG "dbg" //ƒfƒoƒbƒOƒƒbƒZ[ƒWó‘Ô‚Í•Û‘¶‚µ‚È‚¢
+//#define KEY_DBG "dbg" //ãƒ‡ãƒãƒƒã‚°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸çŠ¶æ…‹ã¯ä¿å­˜ã—ãªã„
 
 /****************************************************************************
- *  ƒOƒ[ƒoƒ‹•Ï”
+ *  ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
  ****************************************************************************/
 
 /****************************************************************************
- *  ƒ[ƒJƒ‹•Ï”
+ *  ãƒ­ãƒ¼ã‚«ãƒ«å¤‰æ•°
  ****************************************************************************/
 
-int fullscreen = 0; /* 0:ƒEƒCƒ“ƒhƒEƒ‚[ƒh/1:ƒtƒ‹ƒXƒNƒŠ[ƒ“ƒ‚[ƒh */
-unsigned char fsbuff[DISP_Y * 5][DISP_X * 5]; /* ƒtƒ‹ƒXƒNƒŠ[ƒ““WŠJ—p */
-
-#ifdef PSP
-int nCpuFreq, nBusFreq;
-#endif
+int fullscreen = 0; /* 0:ã‚¦ã‚¤ãƒ³ãƒ‰ã‚¦ãƒ¢ãƒ¼ãƒ‰/1:ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³ãƒ¢ãƒ¼ãƒ‰ */
+unsigned char fsbuff[DISP_Y * 5][DISP_X * 5]; /* ãƒ•ãƒ«ã‚¹ã‚¯ãƒªãƒ¼ãƒ³å±•é–‹ç”¨ */
 
 /****************************************************************************
  *
  ****************************************************************************/
 
-// /* ƒfƒoƒbƒOƒƒbƒZ[ƒW‚Ìo—Í */
+// /* ãƒ‡ãƒãƒƒã‚°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡ºåŠ› */
 // void
 // dbg(const char* fmt, ...)
 // {
@@ -58,10 +54,10 @@ int nCpuFreq, nBusFreq;
 //    va_end(ap);
 //    fprintf(stderr, "\n");
 //  }
-//  /* Œp‘± */
+//  /* ç¶™ç¶š */
 // }
 //
-// /* ˆÙíI—¹ */
+// /* ç•°å¸¸çµ‚äº† */
 // void
 // die(const char* fmt, ...)
 // {
@@ -88,20 +84,11 @@ void ui_init(PIEMU_CONTEXT* context)
   SDL_EnableKeyRepeat(0, 0);
 }
 
-#ifdef LINUX
 int main(int argc, char *argv[])
-#else
-int SDL_main(int argc, char *argv[])
-#endif
 {
   PIEMU_CONTEXT context;
   SDL_Event event;
   SDL_Thread* thEmuThread;
-
-#ifdef PSP
-  nCpuFreq = scePowerGetCpuClockFrequency();
-  nBusFreq = scePowerGetBusClockFrequency();
-#endif
 
   SDL_Init(SDL_INIT_EVERYTHING);
 
@@ -117,7 +104,7 @@ int SDL_main(int argc, char *argv[])
 //  printf("Copyright (C) 2003 Naoyuki Sawa\n");
 //  printf("=================================\n");
 
-  /* Ý’è•œŒ³B */
+  /* è¨­å®šå¾©å…ƒã€‚ */
   context.o_oc = OC_DEFAULT;
   context.o_fps = FPS_DEFAULT;
   context.o_nowait = 0;
@@ -126,19 +113,11 @@ int SDL_main(int argc, char *argv[])
   memset(context.vbuff, 0, sizeof context.vbuff);
   memset(context.keystate, 0, sizeof context.keystate);
 
-  /* UI‰Šú‰»B */
+  /* UIåˆæœŸåŒ–ã€‚ */
   ui_init(&context);
 
-  /* ƒGƒ~ƒ…ƒŒ[ƒ^‰Šú‰»B */
+  /* ã‚¨ãƒŸãƒ¥ãƒ¬ãƒ¼ã‚¿åˆæœŸåŒ–ã€‚ */
   emu_init(&context);
-
-#ifdef PSP
-  SDL_JoystickEventState(SDL_ENABLE);
-  if(SDL_NumJoysticks() > 0)
-    context.pad = SDL_JoystickOpen(0);
-
-  SDL_ShowCursor(SDL_DISABLE);
-#endif
 
   context.bEndFlag = 0;
   thEmuThread = SDL_CreateThread(emu_work, &context);
@@ -200,11 +179,6 @@ L_EXIT:
   if(SDL_JoystickOpened(0))
     SDL_JoystickClose(context.pad);
   SDL_CloseAudio();
-
-#ifdef PSP
-  scePowerSetCpuClockFrequency(nCpuFreq);
-  scePowerSetBusClockFrequency(nBusFreq);
-#endif
 
   SDL_Quit();
 

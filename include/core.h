@@ -5,7 +5,7 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - çÏê¨äJénÅB
+ *  - ‰ΩúÊàêÈñãÂßã„ÄÇ
  */
 #ifndef __CORE_H__
 #define __CORE_H__
@@ -16,16 +16,16 @@
 
 #define SYSTEM_CLOCK  (24 * 1000 * 1000)
 
-/* Ç±ÇÃÉVÉìÉ{ÉãÇíËã`Ç∑ÇÈÇ∆ÅAïsê≥Ç»ÉRÅ[ÉhÇÉAÉTÅ[ÉgÇµÇ‹Ç∑ÅBÅiíxÇ¢Ç≈Ç∑Åj */
-#undef CORE_DEBUG /* Ç‹Ç∏ämé¿Ç…ñ¢íËã`Ç…ÇµÇƒÇ©ÇÁÅc */
-//#define CORE_DEBUG  /* ïKóvÇ…âûÇ∂ÇƒíËã`ÇµÇƒÇ≠ÇæÇ≥Ç¢ */
+/* „Åì„ÅÆ„Ç∑„É≥„Éú„É´„ÇíÂÆöÁæ©„Åô„Çã„Å®„ÄÅ‰∏çÊ≠£„Å™„Ç≥„Éº„Éâ„Çí„Ç¢„Çµ„Éº„Éà„Åó„Åæ„Åô„ÄÇÔºàÈÅÖ„ÅÑ„Åß„ÅôÔºâ */
+#undef CORE_DEBUG /* „Åæ„ÅöÁ¢∫ÂÆü„Å´Êú™ÂÆöÁæ©„Å´„Åó„Å¶„Åã„Çâ‚Ä¶ */
+//#define CORE_DEBUG  /* ÂøÖË¶Å„Å´Âøú„Åò„Å¶ÂÆöÁæ©„Åó„Å¶„Åè„Å†„Åï„ÅÑ */
 
 /****************************************************************************
  *
  ****************************************************************************/
 
 //////////////////// CLASS 0 ////////////////////
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  0000  00  nop
  *  0000  01  slp
  *  0000  10  halt
@@ -44,14 +44,14 @@
  *  0011  11  ---
  */
 typedef struct _CLASS_0A {
-  unsigned short imm2_rd_rs : 4;
-  unsigned short      : 2;
-  unsigned short op2    : 2;
-  unsigned short d    : 1;
-  unsigned short op1    : 4;
-  unsigned short cls    : 3;
+  uint16_t imm2_rd_rs : 4;
+  uint16_t      : 2;
+  uint16_t op2    : 2;
+  uint16_t d    : 1;
+  uint16_t op1    : 4;
+  uint16_t cls    : 3;
 } CLASS_0A;
-/*  op1   ÉjÅ[ÉÇÉjÉbÉN
+/*  op1   „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  0100    jrgt sign8
  *  0101    jrge sign8
  *  0110    jrlt sign8
@@ -66,13 +66,13 @@ typedef struct _CLASS_0A {
  *  1111    jp sign8
  */
 typedef struct _CLASS_0B {
-  unsigned short sign8    : 8;
-  unsigned short d    : 1;
-  unsigned short op1    : 4;
-  unsigned short cls    : 3;
+  uint16_t sign8    : 8;
+  uint16_t d    : 1;
+  uint16_t op1    : 4;
+  uint16_t cls    : 3;
 } CLASS_0B;
 //////////////////// CLASS 1 ////////////////////
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000 00  ld.b %rd,[%rb]
  *  001 00  ld.ub %rd,[%rb]
  *  010 00  ld.h %rd,[%rb]
@@ -91,13 +91,13 @@ typedef struct _CLASS_0B {
  *  111 01  ld.w [%rb]+,%rs
  */
 typedef struct _CLASS_1A {
-  unsigned short rs_rd    : 4;
-  unsigned short rb   : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rs_rd    : 4;
+  uint16_t rb   : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_1A;
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000 10  add %rd,%rs
  *  001 10  sub %rd,%rs
  *  010 10  cmp %rd,%rs
@@ -116,14 +116,14 @@ typedef struct _CLASS_1A {
  *  111 11  ---
  */
 typedef struct _CLASS_1B {
-  unsigned short rd   : 4;
-  unsigned short rs   : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rd   : 4;
+  uint16_t rs   : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_1B;
 //////////////////// CLASS 2 ////////////////////
-/*  op1   ÉjÅ[ÉÇÉjÉbÉN
+/*  op1   „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000   ld.b %rd,[%sp+imm6]
  *  001   ld.ub %rd,[%sp+imm6]
  *  010   ld.h %rd,[%sp+imm6]
@@ -134,13 +134,13 @@ typedef struct _CLASS_1B {
  *  111   ld.w [%sp+imm6],%rs
  */
 typedef struct _CLASS_2 {
-  unsigned short rs_rd    : 4;
-  unsigned short imm6   : 6;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rs_rd    : 4;
+  uint16_t imm6   : 6;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_2;
 //////////////////// CLASS 3 ////////////////////
-/*  op1   ÉjÅ[ÉÇÉjÉbÉN
+/*  op1   „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000   add %rd,imm6
  *  001   sub %rd,imm6
  *  010   cmp %rd,sign6
@@ -151,22 +151,22 @@ typedef struct _CLASS_2 {
  *  111   not %rd,sign6
  */
 typedef struct _CLASS_3 {
-  unsigned short rd   : 4;
-  unsigned short imm6_sign6 : 6;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rd   : 4;
+  uint16_t imm6_sign6 : 6;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_3;
 //////////////////// CLASS 4 ////////////////////
-/*  op1   ÉjÅ[ÉÇÉjÉbÉN
+/*  op1   „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000   add %sp,imm10
  *  001   sub %sp,imm10
  */
 typedef struct _CLASS_4A {
-  unsigned short imm10    :10;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t imm10    :10;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_4A;
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000 00  --- (CLASS 4A)
  *  001 00  --- (CLASS 4A)
  *  010 00  srl %rd,imm4
@@ -185,13 +185,13 @@ typedef struct _CLASS_4A {
  *  111 01  rl %rd,%rs
  */
 typedef struct _CLASS_4B {
-  unsigned short rd   : 4;
-  unsigned short imm4_rs    : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rd   : 4;
+  uint16_t imm4_rs    : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_4B;
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000 10  --- (CLASS 4A)
  *  001 10  --- (CLASS 4A)
  *  010 10  scan0 %rd,%rs
@@ -210,39 +210,39 @@ typedef struct _CLASS_4B {
  *  111 11  ---
  */
 typedef struct _CLASS_4C {
-  unsigned short rd   : 4;
-  unsigned short rs   : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rd   : 4;
+  uint16_t rs   : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_4C;
 //////////////////// CLASS 5 ////////////////////
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  000 00  ld.w %sd,%rs
  *  001 00  ld.w %rd,%ss
  */
 typedef struct _CLASS_5A {
-  unsigned short sd_rd    : 4;
-  unsigned short rs_ss    : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t sd_rd    : 4;
+  uint16_t rs_ss    : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_5A;
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  010 00  btst [%rb],imm3
  *  011 00  bclr [%rb],imm3
  *  100 00  bset [%rb],imm3
  *  101 00  bnot [%rb],imm3
  */
 typedef struct _CLASS_5B {
-  unsigned short imm3   : 3;
-  unsigned short      : 1;
-  unsigned short rb   : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t imm3   : 3;
+  uint16_t      : 1;
+  uint16_t rb   : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_5B;
-/*  op1 op2 ÉjÅ[ÉÇÉjÉbÉN
+/*  op1 op2 „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *  110 00  adc %rd,%rs
  *  111 00  sbc %rd,%rs
  *  000 01  ld.b %rd,%rs
@@ -271,31 +271,31 @@ typedef struct _CLASS_5B {
  *  111 11  ---
  */
 typedef struct _CLASS_5C {
-  unsigned short rd   : 4;
-  unsigned short rs   : 4;
-  unsigned short op2    : 2;
-  unsigned short op1    : 3;
-  unsigned short cls    : 3;
+  uint16_t rd   : 4;
+  uint16_t rs   : 4;
+  uint16_t op2    : 2;
+  uint16_t op1    : 3;
+  uint16_t cls    : 3;
 } CLASS_5C;
 //////////////////// CLASS 6 ////////////////////
-/*      ÉjÅ[ÉÇÉjÉbÉN
+/*      „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *      ext imm13
  */
 typedef struct _CLASS_6 {
-  unsigned short imm13    :13;
-  unsigned short cls    : 3;
+  uint16_t imm13    :13;
+  uint16_t cls    : 3;
 } CLASS_6;
 //////////////////// CLASS 7 ////////////////////
-/*      ÉjÅ[ÉÇÉjÉbÉN
+/*      „Éã„Éº„É¢„Éã„ÉÉ„ÇØ
  *      ---
  */
 typedef struct _CLASS_7 {
-  unsigned short      :13;
-  unsigned short cls    : 3;
+  uint16_t      :13;
+  uint16_t cls    : 3;
 } CLASS_7;
 
 typedef union _INST {
-  unsigned short s  ;
+  uint16_t s  ;
   CLASS_0A       c0a;
   CLASS_0B       c0b;
   CLASS_1A       c1a;
@@ -318,32 +318,32 @@ typedef union _INST {
 
 typedef struct _CORE {
 /* public */
-  unsigned r[16];
-  unsigned s[ 4];
-  unsigned pc;
+  uint32_t r[16];
+  uint32_t s[ 4];
+  uint32_t pc;
 /* private */
   INST ext[2];
-  unsigned d;
-  unsigned clk;
-//  int acc;  // yui: ÉAÉLÉÖÉÄÉåÅ[É^
-  unsigned rZ;   // yui: dummy
+  uint32_t d;
+  uint32_t clk;
+//  int acc;  // yui: „Ç¢„Ç≠„É•„É†„É¨„Éº„Çø
+  uint32_t rZ;   // yui: dummy
 
-  unsigned nop_count; // nop Ç∑ÇÈÇΩÇ—Ç…ÉCÉìÉNÉäÉÅÉìÉgÅANOP_WAIT Ç‹Ç≈ÇΩÇ‹Ç¡ÇΩÇÁ
-                      // Sleep(1) Ç∑ÇÈÅB
-  int in_halt;        // halt íÜÉCÉìÉNÉäÉÅÉìÉg, core_trap() Ç≈ÉfÉNÉäÉÅÉìÉg
+  uint32_t nop_count; // nop „Åô„Çã„Åü„Å≥„Å´„Ç§„É≥„ÇØ„É™„É°„É≥„Éà„ÄÅNOP_WAIT „Åæ„Åß„Åü„Åæ„Å£„Åü„Çâ
+                      // Sleep(1) „Åô„Çã„ÄÇ
+  int in_halt;        // halt ‰∏≠„Ç§„É≥„ÇØ„É™„É°„É≥„Éà, core_trap() „Åß„Éá„ÇØ„É™„É°„É≥„Éà
 } CORE;
 
 typedef struct _tPSR {
-  unsigned n  : 1;
-  unsigned z  : 1;
-  unsigned v  : 1;
-  unsigned c  : 1;
-  unsigned ie : 1;
-  unsigned  : 1;
-  unsigned ds : 1;
-  unsigned mo : 1;
-  unsigned il : 4;
-  unsigned  :20;
+  uint32_t n  : 1;
+  uint32_t z  : 1;
+  uint32_t v  : 1;
+  uint32_t c  : 1;
+  uint32_t ie : 1;
+  uint32_t  : 1;
+  uint32_t ds : 1;
+  uint32_t mo : 1;
+  uint32_t il : 4;
+  uint32_t  :20;
 } tPSR;
 #define PSR (*(tPSR*)&context->core.s[0])
 #define SP  (context->core.s[1])
@@ -365,7 +365,7 @@ void core_work(struct tagPIEMU_CONTEXT* context);
 void core_trap(struct tagPIEMU_CONTEXT* context, int no, int level);
 void core_inst(struct tagPIEMU_CONTEXT* context, INST inst);
 
-// Ç‡Ç¡Ç∆ë¨Ç≠
-unsigned core_workex(struct tagPIEMU_CONTEXT* context, unsigned mils_org, unsigned nClocksDivBy1k);
+// „ÇÇ„Å£„Å®ÈÄü„Åè
+uint32_t core_workex(struct tagPIEMU_CONTEXT* context, uint32_t mils_org, uint32_t nClocksDivBy1k);
 
 #endif /*__CORE_H__*/

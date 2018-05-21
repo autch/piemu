@@ -5,16 +5,16 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- çÏê¨äJénÅB
+ *	- ‰ΩúÊàêÈñãÂßã„ÄÇ
  */
 #ifndef __FRAM_H__
 #define __FRAM_H__
 
 #include "bcu.h"
 
-#define FRAM_SIZE	0x2000		/* 0x0000000Å`0x0001fff */
+#define FRAM_SIZE	0x2000		/* 0x0000000„Äú0x0001fff */
 typedef struct _FRAM {
-	unsigned char mem[FRAM_SIZE];
+	uint8_t mem[FRAM_SIZE];
 } FRAM;
 
 void fram_init(struct tagPIEMU_CONTEXT* context);

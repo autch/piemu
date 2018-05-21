@@ -13,11 +13,11 @@
 
 typedef struct tagPFIHEADER
 {
-	unsigned long dwSignature; // 'PFI1', '1' indicates its version, initially 1.
-	unsigned long dwOffsetToFlash; // offset, in bytes, to the flash image.
+	uint8_t dwSignature[4]; // 'PFI1', '1' indicates its version, initially 1.
+	uint32_t dwOffsetToFlash; // offset, in bytes, to the flash image.
 	SYSTEMINFO siSysInfo;          // machine information.
 	// ... and flash image follows.
-}PFIHEADER;
+}PFIHEADER __attribute__((packed));
 
 
 #endif // !PFI_H

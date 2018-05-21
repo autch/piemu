@@ -5,21 +5,16 @@
  *  Copyright (C) 2003 Naoyuki Sawa
  *
  *  * Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *  - ì¬ŠJnB
+ *  - ä½œæˆé–‹å§‹ã€‚
  */
 #ifndef __APP_H__
 #define __APP_H__
-
-#ifdef PSP
-#include <pspkernel.h>
-#include <psppower.h>
-#include <pspthreadman.h>
-#endif
 
 #include <SDL.h>
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdint.h>
 #include <string.h>
 #include <stdarg.h>
 
@@ -30,35 +25,27 @@
 #define APPNAME   "P/EMU"
 #define VERSION   "20030430"
 
-#define ABOUT_CAPTION "P/EMU‚Ìƒo[ƒWƒ‡ƒ“î•ñ"
+#define ABOUT_CAPTION "P/EMUã®ãƒãƒ¼ã‚¸ãƒ§ãƒ³æƒ…å ±"
 #define ABOUT_TEXT  "P/EMU - P/ECE Emulator (" VERSION ")\n" \
       "Copyright(C) 2003 Naoyuki Sawa"
 
-#ifdef WIN32
-typedef          __int64   int64;
-typedef unsigned __int64  uint64;
-#define INLINE      __inline
-#else
-#ifndef PSP
-typedef          long long  int64;
-#endif
-typedef unsigned long long  uint64;
-#define INLINE      __inline__
-#endif
+typedef int64_t  int64;
+typedef uint64_t uint64;
+#define INLINE
 
-/* /usr/PIECE/include/piece.h‚æ‚èc */
-typedef struct tagSYSTEMINFO {    // (piece.h‚æ‚è)
-  unsigned short size;    //  0 ‚±‚Ì\‘¢‘Ì‚ÌƒTƒCƒY
-  unsigned short hard_ver;  //  2 ƒn[ƒhƒEƒGƒAEƒo[ƒWƒ‡ƒ“
-  unsigned short bios_ver;  //  4 BIOSƒo[ƒWƒ‡ƒ“
-  unsigned short bios_date; //  6 BIOSXV“ú YY(7):MM(4):DD(5)
-  unsigned long sys_clock;  //  8 ƒVƒXƒeƒ€EƒNƒƒbƒN(Hz)
-  unsigned short vdde_voltage;  // 12 VDDE(ü•Ó)“dˆ³(mV)
-  unsigned short resv1;   // 14 —\–ñ
-  unsigned char *sram_top;  // 16 SRAM ŠJnƒAƒhƒŒƒX
-  unsigned char *sram_end;  // 20 SRAM I—¹ƒAƒhƒŒƒX+1
-  unsigned char *pffs_top;  // 24 pffs ŠJnƒAƒhƒŒƒX
-  unsigned char *pffs_end;  // 28 pffs I—¹ƒAƒhƒŒƒX
+/* /usr/PIECE/include/piece.hã‚ˆã‚Šâ€¦ */
+typedef struct tagSYSTEMINFO {    // (piece.hã‚ˆã‚Š)
+  uint16_t size;    //  0 ã“ã®æ§‹é€ ä½“ã®ã‚µã‚¤ã‚º
+  uint16_t hard_ver;  //  2 ãƒãƒ¼ãƒ‰ã‚¦ã‚¨ã‚¢ãƒ»ãƒãƒ¼ã‚¸ãƒ§ãƒ³
+  uint16_t bios_ver;  //  4 BIOSãƒãƒ¼ã‚¸ãƒ§ãƒ³
+  uint16_t bios_date; //  6 BIOSæ›´æ–°æ—¥ YY(7):MM(4):DD(5)
+  uint32_t sys_clock;  //  8 ã‚·ã‚¹ãƒ†ãƒ ãƒ»ã‚¯ãƒ­ãƒƒã‚¯(Hz)
+  uint16_t vdde_voltage;  // 12 VDDE(å‘¨è¾º)é›»åœ§(mV)
+  uint16_t resv1;   // 14 äºˆç´„
+  uint32_t sram_top;  // 16 SRAM é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+  uint32_t sram_end;  // 20 SRAM çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹+1
+  uint32_t pffs_top;  // 24 pffs é–‹å§‹ã‚¢ãƒ‰ãƒ¬ã‚¹
+  uint32_t pffs_end;  // 28 pffs çµ‚äº†ã‚¢ãƒ‰ãƒ¬ã‚¹
 } SYSTEMINFO;
 
 struct tagPIEMU_CONTEXT;
@@ -86,7 +73,7 @@ struct tagPIEMU_CONTEXT;
 //void dbg(const char* fmt, ...);
 //void die(const char* fmt, ...);
 //#define DIE() die(__FILE__ "(%d)", __LINE__)
-#define DIE()  exit(-1)
+#define DIE()  { *(int*)(0xdeadbeef) = 0xdeadbeef; exit(-1); }
 #define dbg()  ((void)0)
 
 #define KEY_UP    SDLK_UP
@@ -109,11 +96,11 @@ struct tagPIEMU_CONTEXT;
 #define JOY_DOWN    6  // as DOWN
 #endif // PSP
 
-// ”Ä—pƒƒ‚ƒŠƒŠ[ƒhBƒp[ƒVƒƒƒ‹ƒŒƒWƒXƒ^ƒXƒg[ƒ‹‚ğ–h‚°‚é‚µA
-// ƒGƒ“ƒfƒBƒAƒ“ƒlƒX‚Ìˆá‚¤ƒ}ƒVƒ“‚ÖˆÚA‚·‚é‚Æ‚«‚Í‚±‚±‚¾‚¯‘‚«Š·‚¦‚ê‚Î‚æ‚¢
-// –ß‚è’l‚Í‚·‚×‚Ä 32bit int, ƒvƒƒgƒ^ƒCƒv‚à•Ğ‚Á’[‚©‚ç•ÏX‚Ì•K—v‚ ‚è
+// æ±ç”¨ãƒ¡ãƒ¢ãƒªãƒªãƒ¼ãƒ‰ã€‚ãƒ‘ãƒ¼ã‚·ãƒ£ãƒ«ãƒ¬ã‚¸ã‚¹ã‚¿ã‚¹ãƒˆãƒ¼ãƒ«ã‚’é˜²ã’ã‚‹ã—ã€
+// ã‚¨ãƒ³ãƒ‡ã‚£ã‚¢ãƒ³ãƒã‚¹ã®é•ã†ãƒã‚·ãƒ³ã¸ç§»æ¤ã™ã‚‹ã¨ãã¯ã“ã“ã ã‘æ›¸ãæ›ãˆã‚Œã°ã‚ˆã„
+// æˆ»ã‚Šå€¤ã¯ã™ã¹ã¦ 32bit int, ãƒ—ãƒ­ãƒˆã‚¿ã‚¤ãƒ—ã‚‚ç‰‡ã£ç«¯ã‹ã‚‰å¤‰æ›´ã®å¿…è¦ã‚ã‚Š
 
-// little endian —p
+// little endian ç”¨
 #define MEM_MASK(type) ((1 << (sizeof(type) << 3)) - 1)
 #define READ_MEM(mem, type) ((*(int*)(mem)) & MEM_MASK(type))
 #define READ_MEM_B(mem) READ_MEM((mem), char)

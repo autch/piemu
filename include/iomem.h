@@ -5,23 +5,23 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- ì¬ŠJŽnB
+ *	- ä½œæˆé–‹å§‹ã€‚
  */
 #ifndef __IOMEM_H__
 #define __IOMEM_H__
 
 /* SOUND */
 
-// ƒzƒXƒg‚ÌƒTƒEƒ“ƒhƒfƒoƒCƒX‚Öˆê“x‚É‘—‚ç‚ê‚éƒTƒ“ƒvƒ‹”
+// ãƒ›ã‚¹ãƒˆã®ã‚µã‚¦ãƒ³ãƒ‰ãƒ‡ãƒã‚¤ã‚¹ã¸ä¸€åº¦ã«é€ã‚‰ã‚Œã‚‹ã‚µãƒ³ãƒ—ãƒ«æ•°
 #define WAVEBUFFER_SAMPLES 2048
-// ª‚Ì•ª‚¾‚¯ƒoƒbƒtƒ@‚ð–ž‚½‚·‚½‚ß‚É•K—v‚È HDMA —v‹”
+// â†‘ã®åˆ†ã ã‘ãƒãƒƒãƒ•ã‚¡ã‚’æº€ãŸã™ãŸã‚ã«å¿…è¦ãª HDMA è¦æ±‚æ•°
 #define WAVEBUFFER_MIN_FILLED_BUFFERS (WAVEBUFFER_SAMPLES * 2 / 256)
-// —]—T‚ðŽ‚Á‚Äª‚Ì 2 ”{‚Æ‚·‚é
-#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 2)		/* ƒoƒbƒtƒ@”i¦’²®‰Âj */
+// ä½™è£•ã‚’æŒã£ã¦â†‘ã® 2 å€ã¨ã™ã‚‹
+#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 2)		/* ãƒãƒƒãƒ•ã‚¡æ•°ï¼ˆâ€»èª¿æ•´å¯ï¼‰ */
 
-#define IOMEM_SIZE	0x10000		/* 0x0040000`0x004ffff */
+#define IOMEM_SIZE	0x10000		/* 0x0040000ã€œ0x004ffff */
 
-#define IOMAP_SIZE	0x10      // I/O mapping ƒe[ƒuƒ‹‚ÌƒTƒCƒY
+#define IOMAP_SIZE	0x10      // I/O mapping ãƒ†ãƒ¼ãƒ–ãƒ«ã®ã‚µã‚¤ã‚º
 
 typedef struct _IOMAP {
 	volatile void* addr;

@@ -5,7 +5,7 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- ì¬ŠJnB
+ *	- ä½œæˆé–‹å§‹ã€‚
  */
 #ifndef __EMU_H__
 #define __EMU_H__

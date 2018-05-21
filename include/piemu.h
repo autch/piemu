@@ -7,7 +7,7 @@
 #if !defined(PIEMU_H)
 #define PIEMU_H
 
-// ‚±‚±‚É‚·‚×‚Ä‚Ìó‘Ô•Ï”‚ÆƒR[ƒ‹ƒoƒbƒN‚ğ‚Â
+// ã“ã“ã«ã™ã¹ã¦ã®çŠ¶æ…‹å¤‰æ•°ã¨ã‚³ãƒ¼ãƒ«ãƒãƒƒã‚¯ã‚’æŒã¤
 typedef struct tagPIEMU_CONTEXT
 {
   EMU emu;
@@ -18,13 +18,13 @@ typedef struct tagPIEMU_CONTEXT
   FRAM fram;
   LCDC lcdc;
   IOMEM iomem;
-  int o_oc;   /* ƒI[ƒo[ƒNƒƒbƒNƒŒ[ƒg(`100[%]`) */
-  int o_fps;    /* ‰æ–ÊXVƒŒ[ƒgi[frame/sec]j */
-  int o_nowait;   /* ÀŠÔ‚Æ‚Ì“¯Šú‚È‚µi0:‚ ‚è/1:‚È‚µj */
-  int o_dbg;    /* ƒfƒoƒbƒOƒƒbƒZ[ƒW‚Ìo—Í—L‚èH */
+  int o_oc;   /* ã‚ªãƒ¼ãƒãƒ¼ã‚¯ãƒ­ãƒƒã‚¯ãƒ¬ãƒ¼ãƒˆ(ã€œ100[%]ã€œ) */
+  int o_fps;    /* ç”»é¢æ›´æ–°ãƒ¬ãƒ¼ãƒˆï¼ˆ[frame/sec]ï¼‰ */
+  int o_nowait;   /* å®Ÿæ™‚é–“ã¨ã®åŒæœŸãªã—ï¼ˆ0:ã‚ã‚Š/1:ãªã—ï¼‰ */
+  int o_dbg;    /* ãƒ‡ãƒãƒƒã‚°ãƒ¡ãƒƒã‚»ãƒ¼ã‚¸ã®å‡ºåŠ›æœ‰ã‚Šï¼Ÿ */
   //
-  unsigned char keystate[SDLK_LAST];    /* ƒL[ó‘Ô */
-  unsigned char vbuff[DISP_Y][DISP_X];  /* ‰¼‘zVRAM */
+  uint8_t keystate[SDLK_LAST];    /* ã‚­ãƒ¼çŠ¶æ…‹ */
+  uint8_t vbuff[DISP_Y][DISP_X];  /* ä»®æƒ³VRAM */
 
   // SDL
   SDL_Surface* screen;

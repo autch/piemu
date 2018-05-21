@@ -5,7 +5,7 @@
  *	Copyright (C) 2003 Naoyuki Sawa
  *
  *	* Mon Apr 14 00:00:00 JST 2003 Naoyuki Sawa
- *	- ì¬ŠJnB
+ *	- ä½œæˆé–‹å§‹ã€‚
  */
 #include "app.h"
 
@@ -13,17 +13,17 @@
  *	
  ****************************************************************************/
 
-#define SECTOR_SIZE	0x01000		/* ƒZƒNƒ^  Á‹’PˆÊ= 4KB */
-#define BLOCK_SIZE	0x10000		/* ƒuƒƒbƒNÁ‹’PˆÊ=64KB */
+#define SECTOR_SIZE	0x01000		/* ã‚»ã‚¯ã‚¿  æ¶ˆå»å˜ä½= 4KB */
+#define BLOCK_SIZE	0x10000		/* ãƒ–ãƒ­ãƒƒã‚¯æ¶ˆå»å˜ä½=64KB */
 
 /****************************************************************************
- *	ƒOƒ[ƒoƒ‹•Ï”
+ *	ã‚°ãƒ­ãƒ¼ãƒãƒ«å¤‰æ•°
  ****************************************************************************/
 
 //FLASH flash;
 
 /****************************************************************************
- *	ƒOƒ[ƒoƒ‹ŠÖ”
+ *	ã‚°ãƒ­ãƒ¼ãƒãƒ«é–¢æ•°
  ****************************************************************************/
 
 void
@@ -36,7 +36,7 @@ flash_init(PIEMU_CONTEXT* context)
 
 	memset(&context->flash, 0, sizeof context->flash);
 
-	/* CFIƒNƒGƒŠ[î•ñì¬B(‚Æ‚è‚ ‚¦‚¸•K—v‚ÈƒtƒB[ƒ‹ƒh‚¾‚¯) */
+	/* CFIã‚¯ã‚¨ãƒªãƒ¼æƒ…å ±ä½œæˆã€‚(ã¨ã‚Šã‚ãˆãšå¿…è¦ãªãƒ•ã‚£ãƒ¼ãƒ«ãƒ‰ã ã‘) */
 	size = (int)context->emu.sysinfo.pffs_end - FLASH_TOP;
 	bits = 0;
 	for(;;) {
@@ -45,11 +45,11 @@ flash_init(PIEMU_CONTEXT* context)
 	}
 	context->flash.cfiinfo.device_size = bits;
 
-	/* ƒƒ‚ƒŠŠ„‚è“–‚ÄB */
+	/* ãƒ¡ãƒ¢ãƒªå‰²ã‚Šå½“ã¦ã€‚ */
 	context->flash.mem_size = 1 << context->flash.cfiinfo.device_size;
 	context->flash.mem = (unsigned char*)calloc(context->flash.mem_size, 1);
 
-	/* ƒCƒ[ƒW“Ç‚İ‚İB */
+	/* ã‚¤ãƒ¡ãƒ¼ã‚¸èª­ã¿è¾¼ã¿ã€‚ */
   context->pfnLoadFlashImage(context, &context->flash, context->pUser);
 
 #undef FLASH_TOP
@@ -69,7 +69,7 @@ flash_init(PIEMU_CONTEXT* context)
 			return READ_MEM((char*)&context->flash.cfiinfo + ofs, type); \
 	} \
 	DIE(); \
-	return -1; /* Œx—}§ */ \
+	return -1; /* è­¦å‘ŠæŠ‘åˆ¶ */ \
 }
 
 int
@@ -85,7 +85,7 @@ flash_read(PIEMU_CONTEXT* context, unsigned ofs, int size)
 		}
 		DIE();
 	case FLASH_CFI_QUERY:
-		/* ¦ƒ\ƒtƒgƒEƒFƒAIDƒ‚[ƒh–¢‘Î‰ */
+		/* â€»ã‚½ãƒ•ãƒˆã‚¦ã‚§ã‚¢IDãƒ¢ãƒ¼ãƒ‰æœªå¯¾å¿œ */
 		ofs -= CFIINFO_OFFSET * sizeof(short);
 		if(ofs > sizeof(CFIINFO)) DIE();
 		switch(size) {
@@ -96,7 +96,7 @@ flash_read(PIEMU_CONTEXT* context, unsigned ofs, int size)
 		DIE();
 	}
 	DIE();
-	return -1; /* Œx—}§ */
+	return -1; /* è­¦å‘ŠæŠ‘åˆ¶ */
 }
 
 void
@@ -104,11 +104,11 @@ flash_write(PIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 {
 	int cmd;
 
-	if(size != 2) DIE(); /* ‘‚«‚İ‚Íƒn[ƒtƒ[ƒh’PˆÊ‚Ì‚İI */
+	if(size != 2) DIE(); /* æ›¸ãè¾¼ã¿ã¯ãƒãƒ¼ãƒ•ãƒ¯ãƒ¼ãƒ‰å˜ä½ã®ã¿ï¼ */
 	ofs &= context->flash.mem_size - 1;
 	cmd = data & 0xff;
 
-	/* WORD PROGRAMˆÈŠO‚Å‚Ì0xf0‘‚«‚İ‚ÍA”Ä—pEXITƒRƒ}ƒ“ƒh‚ÆŒ©‚È‚µ‚Ü‚·B */
+	/* WORD PROGRAMä»¥å¤–ã§ã®0xf0æ›¸ãè¾¼ã¿ã¯ã€æ±ç”¨EXITã‚³ãƒãƒ³ãƒ‰ã¨è¦‹ãªã—ã¾ã™ã€‚ */
 	if(context->flash.stat != FLASH_WORD_PROGRAM && cmd == 0xf0) {
 		context->flash.stat = FLASH_NORMAL; /* MANUAL EXIT */
 		return;
@@ -135,8 +135,8 @@ flash_write(PIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 			case 0x80:
 				context->flash.stat = FLASH_ENTER3;
 				break;
-			case 0x90: /* SOFTWARE ID ‚Æ                     */
-			case 0x98: /* CFI QUERY   ‚ÍA“¯‚¶‚à‚Ì‚Æ‚µ‚Äˆµ‚¤ */
+			case 0x90: /* SOFTWARE ID ã¨                     */
+			case 0x98: /* CFI QUERY   ã¯ã€åŒã˜ã‚‚ã®ã¨ã—ã¦æ‰±ã† */
 				context->flash.stat = FLASH_CFI_QUERY;
 				break;
 			case 0xa0:
@@ -193,8 +193,8 @@ flash_write(PIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 	case FLASH_CFI_QUERY:
 		if((ofs == 0x5555 * 2 && cmd == 0xaa) ||
 		   (ofs == 0x2aaa * 2 && cmd == 0x55)) {
-			/* ’·‚¢•û‚ÌEXITƒV[ƒPƒ“ƒXO–½—ß(aa-55-f0)‚Ì‚¤‚¿Aæs‚·‚é“ñ–½—ß‚ğ–³‹‚µ‚Ü‚·B
-			 * ÅŒã‚Ìˆê–½—ß‚Í”Ä—pEXITƒRƒ}ƒ“ƒh‚Æ‚µ‚ÄA‚±‚ÌŠÖ”‚ÌÅ‰‚Å‚Ü‚Æ‚ß‚Äˆ—‚µ‚Ä‚¢‚Ü‚·B
+			/* é•·ã„æ–¹ã®EXITã‚·ãƒ¼ã‚±ãƒ³ã‚¹ä¸‰å‘½ä»¤(aa-55-f0)ã®ã†ã¡ã€å…ˆè¡Œã™ã‚‹äºŒå‘½ä»¤ã‚’ç„¡è¦–ã—ã¾ã™ã€‚
+			 * æœ€å¾Œã®ä¸€å‘½ä»¤ã¯æ±ç”¨EXITã‚³ãƒãƒ³ãƒ‰ã¨ã—ã¦ã€ã“ã®é–¢æ•°ã®æœ€åˆã§ã¾ã¨ã‚ã¦å‡¦ç†ã—ã¦ã„ã¾ã™ã€‚
 			 */
 		} else {
 			DIE();
@@ -241,7 +241,7 @@ IOHANDLER_R(flash, W)
 			return READ_MEM_W((char*)&context->flash.cfiinfo + ofs);
 	}
 	DIE();
-	return -1; /* Œx—}§ */
+	return -1; /* è­¦å‘ŠæŠ‘åˆ¶ */
 }
 
 IOHANDLER_W(flash, W)
