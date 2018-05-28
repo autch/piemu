@@ -37,10 +37,12 @@ target_include_directories(piemu
 )
 target_compile_options(piemu
     PRIVATE
-    ${SDL1_CFLAGS})
+    ${SDL1_CFLAGS}
+)
 target_link_libraries(piemu
+    ${SDL1_LDFLAGS}
     ${SDL1_LIBRARIES}
-    SDLmain
+#    SDLmain
 )
 
 add_subdirectory(./tools)
