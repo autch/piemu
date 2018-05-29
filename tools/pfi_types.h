@@ -5,7 +5,7 @@
 #ifndef PFI_TYPES_H
 #define PFI_TYPES_H
 
-#include "types.h"
+#include "c33types.h"
 #include "piece_types.h"
 #include "pffs_types.h"
 

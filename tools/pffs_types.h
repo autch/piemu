@@ -1,7 +1,7 @@
 #ifndef PFFS_TYPES_H
 #define PFFS_TYPES_H
 
-#include "types.h"
+#include "../include/c33types.h"
 
 // from /usr/piece/include/piece.h
 // piece flash file system

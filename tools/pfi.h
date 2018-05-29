@@ -1,7 +1,7 @@
 #ifndef PFI_H
 #define PFI_H
 
-#include "types.h"
+#include "../include/c33types.h"
 #include "pfi_types.h"
 
 void PFIInit(PFI* pfi);

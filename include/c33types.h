@@ -1,6 +1,5 @@
-
-#ifndef TYPES_H
-#define TYPES_H
+#ifndef C33TYPES_H
+#define C33TYPES_H
 
 #include <stdint.h>
 

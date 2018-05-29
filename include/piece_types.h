@@ -5,7 +5,7 @@
 #ifndef PIECE_TYPES_H
 #define PIECE_TYPES_H
 
-#include "types.h"
+#include "c33types.h"
 
 // derived from P/ECE SDK
 typedef struct systeminfo

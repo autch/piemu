@@ -27,13 +27,23 @@ pkg_check_modules(FUSE REQUIRED fuse)
 include_directories(${FUSE_INCLUDE_DIRS})
 link_directories(${FUSE_LIBRARY_DIRS})
 
+include_directories(${CMAKE_SOURCE_DIR}/include)
+
+add_library(c33core
+    core/class0.c
+    core/class1.c
+    core/class2.c
+    core/class3.c
+    core/class4.c
+    core/class5.c
+    core/class6.c
+    core/ext.c
+    core/common.c
+)
+
 add_executable(piemu
     bcu.c   emu.c    fram.c   lcdc.c  piemu.c  usbc.c
     core.c  flash.c  iomem.c  main.c  sram.c
-)
-target_include_directories(piemu
-    PRIVATE
-    ${CMAKE_SOURCE_DIR}/include
 )
 target_compile_options(piemu
     PRIVATE
@@ -42,9 +52,9 @@ target_compile_options(piemu
 target_link_libraries(piemu
     ${SDL1_LDFLAGS}
     ${SDL1_LIBRARIES}
+    c33core
 #    SDLmain
 )
 
 add_subdirectory(./tools)
 #add_subdirectory(./tools-old)
-

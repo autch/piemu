@@ -31,7 +31,7 @@
 
 typedef int64_t  int64;
 typedef uint64_t uint64;
-#define INLINE
+#define INLINE inline
 
 /* /usr/PIECE/include/piece.hより… */
 typedef struct tagSYSTEMINFO {    // (piece.hより)
