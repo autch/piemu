@@ -1,7 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(piemu)
-find_package(PkgConfig REQUIRED)
 
+find_package(PkgConfig REQUIRED)
+find_package(SDL REQUIRED)
 set(THREADS_PREFER_PTHREAD_FLAG ON)
 find_package(Threads REQUIRED)
 
@@ -19,14 +20,13 @@ add_compile_options(
 #include_directories(${SDL2_INCLUDE_DIRS})
 #link_directories(${SDL2_LIBRARY_DIRS})
 
-pkg_check_modules(SDL1 REQUIRED sdl)
-include_directories(${SDL1_INCLUDE_DIRS})
-link_directories(${SDL1_LIBRARY_DIRS})
+pkg_check_modules(FUSE fuse)
+if(FUSE_FOUND)
+    include_directories(${FUSE_INCLUDE_DIRS})
+    link_directories(${FUSE_LIBRARY_DIRS})
+endif()
 
-pkg_check_modules(FUSE REQUIRED fuse)
-include_directories(${FUSE_INCLUDE_DIRS})
-link_directories(${FUSE_LIBRARY_DIRS})
-
+include_directories(${SDL_INCLUDE_DIR})
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(c33core
@@ -47,11 +47,9 @@ add_executable(piemu
 )
 target_compile_options(piemu
     PRIVATE
-    ${SDL1_CFLAGS}
 )
 target_link_libraries(piemu
-    ${SDL1_LDFLAGS}
-    ${SDL1_LIBRARIES}
+    ${SDL_LIBRARY}
     c33core
 #    SDLmain
 )
