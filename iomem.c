@@ -333,6 +333,8 @@ DECLSPEC void SDLCALL SDLAudioCallback(void* userdata, Uint8* stream, int len)
   WAVEBUFFER* node;
   Uint8* p = stream;
 
+  memset(stream, 0, len);
+
   node = context->iomem.head;
   while(node && nBytesToRender)
   {

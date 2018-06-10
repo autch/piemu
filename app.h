@@ -76,14 +76,14 @@ struct tagPIEMU_CONTEXT;
 #define DIE()  { *(int*)(0xdeadbeef) = 0xdeadbeef; exit(-1); }
 #define dbg()  ((void)0)
 
-#define KEY_UP    SDLK_UP
-#define KEY_DOWN  SDLK_DOWN
-#define KEY_LEFT  SDLK_LEFT
-#define KEY_RIGHT SDLK_RIGHT
-#define KEY_A   SDLK_z
-#define KEY_B   SDLK_x
-#define KEY_START SDLK_a
-#define KEY_SELECT  SDLK_s
+#define KEY_UP    SDL_SCANCODE_UP
+#define KEY_DOWN  SDL_SCANCODE_DOWN
+#define KEY_LEFT  SDL_SCANCODE_LEFT
+#define KEY_RIGHT SDL_SCANCODE_RIGHT
+#define KEY_A   SDL_SCANCODE_Z
+#define KEY_B   SDL_SCANCODE_X
+#define KEY_START SDL_SCANCODE_A
+#define KEY_SELECT  SDL_SCANCODE_S
 
 #ifdef PSP
 #define JOY_CIRCLE  1  // as A

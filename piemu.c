@@ -50,21 +50,24 @@ int LoadFlashImage(struct tagPIEMU_CONTEXT* context, FLASH* pFlashInfo, void* pU
   return 1;
 }
 
+static const uint32_t palette[] = {
+  0xffffffff,
+  0xffaaaaaa,
+  0xff555555,
+  0xff000000
+};
+
 int UpdateScreen(PIEMU_CONTEXT* context, void* pUser)
 {
-  SDL_Surface* surface;
-  static const unsigned int palette[] = { 0x00ffffff, 0x00aaaaaa, 0x00555555, 0x00000000 };
-  unsigned int* px;
-  unsigned int* py;
-  char* pp;
+  uint32_t* pixels;
+  uint32_t* px;
+  uint32_t* py;
+  uint8_t* pp;
 
-  surface = context->screen;
-  if(SDL_MUSTLOCK(surface))
-    SDL_LockSurface(surface);
-
+  pixels = context->texture_pixels;
   pp = *context->vbuff;
-  for(py = (unsigned int*)surface->pixels;
-      py != (unsigned int*)surface->pixels + DISP_X * DISP_Y;
+  for(py = pixels;
+      py != (pixels + DISP_X * DISP_Y);
       py += DISP_X)
   {
     for(px = py; px != py + DISP_X; px++)
@@ -72,12 +75,11 @@ int UpdateScreen(PIEMU_CONTEXT* context, void* pUser)
       *px = palette[*pp++ & 0x03];
     }
   }
-  if(SDL_MUSTLOCK(surface))
-    SDL_UnlockSurface(surface);
+  SDL_UpdateTexture(context->texture, NULL, pixels, DISP_X * sizeof(uint32_t));
 
-//  SDL_BlitSurface(context->buffer, NULL, context->screen, NULL);
-  SDL_UpdateRect(context->screen, 0, 0, 0, 0);
-//  SDL_Flip(context->screen);
-//  SDL_UpdateRects(context->screen, 1, &rctDest);
+  SDL_RenderClear(context->renderer);
+  SDL_RenderCopy(context->renderer, context->texture, NULL, NULL);
+  SDL_RenderPresent(context->renderer);
+
   return 1;
 }

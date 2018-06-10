@@ -2,9 +2,9 @@ cmake_minimum_required(VERSION 3.0)
 project(piemu)
 
 find_package(PkgConfig REQUIRED)
-find_package(SDL REQUIRED)
-set(THREADS_PREFER_PTHREAD_FLAG ON)
-find_package(Threads REQUIRED)
+find_package(SDL2 REQUIRED)
+#set(THREADS_PREFER_PTHREAD_FLAG ON)
+#find_package(Threads REQUIRED)
 
 find_program(CCACHE_FOUND ccache)
 if(CCACHE_FOUND)
@@ -16,17 +16,13 @@ add_compile_options(
     -Wall
 )
 
-#pkg_check_modules(SDL2 REQUIRED sdl2)
-#include_directories(${SDL2_INCLUDE_DIRS})
-#link_directories(${SDL2_LIBRARY_DIRS})
-
 pkg_check_modules(FUSE fuse)
 if(FUSE_FOUND)
     include_directories(${FUSE_INCLUDE_DIRS})
     link_directories(${FUSE_LIBRARY_DIRS})
 endif()
 
-include_directories(${SDL_INCLUDE_DIR})
+include_directories(${SDL2_INCLUDE_DIRS})
 include_directories(${CMAKE_SOURCE_DIR}/include)
 
 add_library(c33core
@@ -45,11 +41,8 @@ add_executable(piemu
     bcu.c   emu.c    fram.c   lcdc.c  piemu.c  usbc.c
     core.c  flash.c  iomem.c  main.c  sram.c
 )
-target_compile_options(piemu
-    PRIVATE
-)
 target_link_libraries(piemu
-    ${SDL_LIBRARY}
+    ${SDL2_LIBRARIES}
     c33core
 #    SDLmain
 )

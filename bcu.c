@@ -16,14 +16,6 @@
  *  エリア定義
  ****************************************************************************/
 
-#define STUB_READB(name, ctx, ofs) name##_read(ctx, ofs, 1)
-#define STUB_READH(name, ctx, ofs) name##_read(ctx, ofs, 2)
-#define STUB_READW(name, ctx, ofs) name##_read(ctx, ofs, 4)
-
-#define STUB_WRITEB(name, ctx, ofs, data) name##_write(ctx, ofs, data, 1)
-#define STUB_WRITEH(name, ctx, ofs, data) name##_write(ctx, ofs, data, 2)
-#define STUB_WRITEW(name, ctx, ofs, data) name##_write(ctx, ofs, data, 4)
-
 typedef struct _AREA {
   unsigned addr;
   int (*read)(PIEMU_CONTEXT* context, unsigned ofs, int size);

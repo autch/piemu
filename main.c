@@ -75,13 +75,11 @@ unsigned char fsbuff[DISP_Y * 5][DISP_X * 5]; /* フルスクリーン展開用 
 
 void ui_init(PIEMU_CONTEXT* context)
 {
-
-  SDL_WM_SetCaption("P/EMU/SDL", "P/EMU/SDL");
-
-  context->screen = SDL_SetVideoMode(128, 88, 32, SDL_HWSURFACE /*| SDL_HWPALETTE*/);
-//  context->buffer = SDL_CreateRGBSurface(SDL_HWPALETTE, 128, 88, 8, 0xff, 0xff << 8, 0xff << 16, 0xff << 24);
-
-  SDL_EnableKeyRepeat(0, 0);
+  context->window = SDL_CreateWindow("P/EMU/SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, 128 * 4, 88 * 4, 0);
+  context->renderer = SDL_CreateRenderer(context->window, -1, 0);
+  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
+  SDL_RenderSetLogicalSize(context->renderer, 128, 88);
+  context->texture = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_ARGB8888, SDL_TEXTUREACCESS_STREAMING, 128, 88);
 }
 
 int main(int argc, char *argv[])
@@ -90,10 +88,9 @@ int main(int argc, char *argv[])
   SDL_Event event;
   SDL_Thread* thEmuThread;
 
-  SDL_Init(SDL_INIT_EVERYTHING);
+  memset(&context, 0, sizeof context);
 
-  //setvbuf(stdout, NULL, _IONBF, 0);
-  //setvbuf(stderr, NULL, _IONBF, 0);
+  SDL_Init(SDL_INIT_EVERYTHING ^ SDL_INIT_HAPTIC);
 
   context.pfnSetEmuParameters = SetEmuParameters;
   context.pfnLoadFlashImage = LoadFlashImage;
@@ -111,7 +108,6 @@ int main(int argc, char *argv[])
   context.o_nowait = context.o_nowait != 0;
 
   memset(context.vbuff, 0, sizeof context.vbuff);
-  memset(context.keystate, 0, sizeof context.keystate);
 
   /* UI初期化。 */
   ui_init(&context);
@@ -119,8 +115,14 @@ int main(int argc, char *argv[])
   /* エミュレータ初期化。 */
   emu_init(&context);
 
+  context.keystate = (uint8_t *) SDL_GetKeyboardState(NULL);
+
   context.bEndFlag = 0;
-  thEmuThread = SDL_CreateThread(emu_work, &context);
+  thEmuThread = SDL_CreateThread(emu_work, "piemu-core", &context);
+
+  if(SDL_NumJoysticks() > 0) {
+    context.pad = SDL_JoystickOpen(0);
+  }
 
   while(1)
   {
@@ -130,13 +132,7 @@ int main(int argc, char *argv[])
       {
         case SDL_QUIT:
           goto L_EXIT;
-        case SDL_KEYDOWN:
-          context.keystate[event.key.keysym.sym] = 1;
-          break;
-        case SDL_KEYUP:
-          context.keystate[event.key.keysym.sym] = 0;
-          break;
-#ifdef PSP
+ #ifdef PSP
         case SDL_JOYBUTTONDOWN:
         {
           switch(event.jbutton.button)
@@ -176,7 +172,7 @@ L_EXIT:
   context.bEndFlag = 1;
   SDL_WaitThread(thEmuThread, NULL);
 
-  if(SDL_JoystickOpened(0))
+  if(SDL_JoystickGetAttached(context.pad))
     SDL_JoystickClose(context.pad);
   SDL_CloseAudio();
 

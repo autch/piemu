@@ -23,12 +23,14 @@ typedef struct tagPIEMU_CONTEXT
   int o_nowait;   /* 実時間との同期なし（0:あり/1:なし） */
   int o_dbg;    /* デバッグメッセージの出力有り？ */
   //
-  uint8_t keystate[SDLK_LAST];    /* キー状態 */
+  uint8_t* keystate;    /* キー状態 */
   uint8_t vbuff[DISP_Y][DISP_X];  /* 仮想VRAM */
+  uint32_t texture_pixels[DISP_Y * DISP_X];  // pixels in ARGB8888
 
   // SDL
-  SDL_Surface* screen;
-  SDL_Surface* buffer;
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+  SDL_Texture* texture;
   SDL_Joystick* pad; // only for PSP
 
   int bEndFlag;
