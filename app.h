@@ -18,8 +18,6 @@
 #include <string.h>
 #include <stdarg.h>
 
-#include "sleep.h"
-
 //#include "resource.h"
 
 #define APPNAME   "P/EMU"

@@ -50,6 +50,7 @@ int LoadFlashImage(struct tagPIEMU_CONTEXT* context, FLASH* pFlashInfo, void* pU
   return 1;
 }
 
+// ARGB8888
 static const uint32_t palette[] = {
   0xffffffff,
   0xffaaaaaa,
@@ -60,19 +61,15 @@ static const uint32_t palette[] = {
 int UpdateScreen(PIEMU_CONTEXT* context, void* pUser)
 {
   uint32_t* pixels;
-  uint32_t* px;
-  uint32_t* py;
   uint8_t* pp;
 
   pixels = context->texture_pixels;
   pp = *context->vbuff;
-  for(py = pixels;
-      py != (pixels + DISP_X * DISP_Y);
-      py += DISP_X)
+  for(int row = 0; row < DISP_Y; row++)
   {
-    for(px = py; px != py + DISP_X; px++)
+    for(int col = 0; col < DISP_X; col++)
     {
-      *px = palette[*pp++ & 0x03];
+      pixels[row * DISP_X + col] = palette[*pp++ & 0x03];
     }
   }
   SDL_UpdateTexture(context->texture, NULL, pixels, DISP_X * sizeof(uint32_t));

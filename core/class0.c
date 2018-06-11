@@ -7,32 +7,31 @@
 void exec_nop(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
     NO_EXT NO_DELAY
-    STD_NOP;
     PC += 2;
-    CLK += 1 * NOP_CLK_MULTIPLY;
+    CLK += 1;
 }
 
 // 呼ばれてないらしい？
 void exec_slp(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
     NO_EXT NO_DELAY
-    STD_NOP;
-    /* ※TODO: */
-    context->core.in_halt = 1;
-    PC += 2;
-    CLK += 1 * NOP_CLK_MULTIPLY;
 
+    /* ※TODO: */
+    PC += 2;
+    CLK += 1;
+
+    context->core.in_halt = 1;
 }
 
 void exec_halt(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
     NO_EXT NO_DELAY
-    STD_NOP;
-    /* ※TODO: */
-    /*context->core.in_halt = 1;*/
-    PC += 2;
-    CLK += 1 * HALT_CLK_MULTIPLY;
 
+    /* ※TODO: */
+    PC += 2;
+    CLK += 1;
+
+    context->core.in_halt = 1;
 }
 
 void exec_pushn_rs(PIEMU_CONTEXT *context, CLASS_0A inst)
@@ -78,8 +77,7 @@ void exec_int_imm2(PIEMU_CONTEXT *context, CLASS_0A inst)
     if (inst.imm2_rd_rs < 0 || inst.imm2_rd_rs > 3) DIE();
     PC += 2;
     CLK += 10;
-    core_trap(context, TRAP_SOFTINT0 + inst.imm2_rd_rs, 0);
-
+    core_trap_from_core(context, TRAP_SOFTINT0 + inst.imm2_rd_rs, 0);
 }
 
 void exec_reti(PIEMU_CONTEXT *context, CLASS_0A inst)

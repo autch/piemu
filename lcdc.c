@@ -23,6 +23,8 @@ void
 lcdc_init(PIEMU_CONTEXT* context)
 {
 	memset(&context->lcdc, 0, sizeof context->lcdc);
+
+	context->lcdc.mutex = SDL_CreateMutex();
 }
 
 void
@@ -54,8 +56,12 @@ lcdc_write(PIEMU_CONTEXT* context, unsigned char data)
 			break;
 		}
 	} else { /* データ */
-		context->lcdc.vram[context->lcdc.page][context->lcdc.col2] = data;
-		context->lcdc.col2 = (context->lcdc.col2 + 1) & 0xff;
+		SDL_LockMutex(context->lcdc.mutex);
+		{
+			context->lcdc.vram[context->lcdc.page][context->lcdc.col2] = data;
+			context->lcdc.col2 = (context->lcdc.col2 + 1) & 0xff;
+		}
+		SDL_UnlockMutex(context->lcdc.mutex);
 	}
 }
 
@@ -65,18 +71,22 @@ lcdc_conv(PIEMU_CONTEXT* context, unsigned char bits[DISP_Y][DISP_X])
 	int page, col, x, y, i;
 	unsigned char c, c1, c2;
 
-	for(page = 0; page < 16; page++) {
-		x = (DISP_X - 1) - ((page - 10) & 0x0f) * 8;
-		for(col = 0; col < DISP_Y; col++) {
-			y = col;
-			c1 = context->lcdc.vram[page][col * 2 + 0];
-			c2 = context->lcdc.vram[page][col * 2 + 1];
-			for(i = 0; i < 8; i++) {
-				c = (c1 & 1) << 1 | (c2 & 1);
-				bits[y][x - i] = c;
-				c1 >>= 1;
-				c2 >>= 1;
+	SDL_LockMutex(context->lcdc.mutex);
+	{
+		for(page = 0; page < 16; page++) {
+			x = (DISP_X - 1) - ((page - 10) & 0x0f) * 8;
+			for(col = 0; col < DISP_Y; col++) {
+				y = col;
+				c1 = context->lcdc.vram[page][col * 2 + 0];
+				c2 = context->lcdc.vram[page][col * 2 + 1];
+				for(i = 0; i < 8; i++) {
+					c = (c1 & 1) << 1 | (c2 & 1);
+					bits[y][x - i] = c;
+					c1 >>= 1;
+					c2 >>= 1;
+				}
 			}
 		}
 	}
+	SDL_UnlockMutex(context->lcdc.mutex);
 }

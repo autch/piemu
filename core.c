@@ -34,6 +34,10 @@ core_init(PIEMU_CONTEXT *context)
 {
     memset(&context->core, 0, sizeof context->core);
     PC = mem_readW(context, 0x0c00000);
+
+    context->core.cond_halt = SDL_CreateCond();
+    context->core.mut_halt = SDL_CreateMutex();
+    context->core.mut_core = SDL_CreateMutex();
 }
 
 void
@@ -41,34 +45,39 @@ core_work(PIEMU_CONTEXT *context)
 {
     INST inst;
 
-    if (context->core.in_halt) {
-        STD_NOP;
-        CLK += HALT_INT_CLK; //1 * NOP_CLK_MULTIPLY;
-        return;
-    }
-
     inst.s = mem_readH(context, PC);
     core_inst(context, inst);
+}
+
+void core_handle_hlt(PIEMU_CONTEXT* context)
+{
+    if(context->core.in_halt == 0)
+        return;
+
+    SDL_LockMutex(context->core.mut_halt);
+    {
+        while(context->core.in_halt != 0) {
+            SDL_CondWait(context->core.cond_halt, context->core.mut_halt);
+        }
+    }
+    SDL_UnlockMutex(context->core.mut_halt);
 }
 
 unsigned
 core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
 {
-    INST inst;
     unsigned insts = 0;
     do {
-        inst.s = mem_readH(context, PC);
-        core_inst(context, inst);
-//    inst.s = mem_readH(context, PC); core_inst(context, inst);
-//    inst.s = mem_readH(context, PC); core_inst(context, inst);
-//    inst.s = mem_readH(context, PC); core_inst(context, inst);
+        core_work(context);
         insts++;
+        if(context->core.in_halt)
+            break;
     } while (!context->bEndFlag && (CLK - mils_org) < nClocksDivBy1k); /* 1ミリ秒分の処理 */
     return insts;
 }
 
 void
-core_trap(PIEMU_CONTEXT *context, int no, int level)
+core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
 {
     c33word addr;
 
@@ -77,9 +86,6 @@ core_trap(PIEMU_CONTEXT *context, int no, int level)
         if (!PSR.ie) return;
         if ((unsigned) level <= PSR.il) return;
     }
-
-    if (context->core.in_halt)
-        context->core.in_halt = 0;
 
     addr = mem_readW(context, pTTBR_REG + no * 4);  /* ※要検討:トラップテーブル直読みしてます */
     SP -= 4;
@@ -93,6 +99,21 @@ core_trap(PIEMU_CONTEXT *context, int no, int level)
     if (no >= 16) {
         PSR.il = level;
     }
+}
+
+void
+core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
+{
+    SDL_LockMutex(context->core.mut_core);
+    core_trap_from_core(context, no, level);
+    SDL_UnlockMutex(context->core.mut_core);
+
+    SDL_LockMutex(context->core.mut_halt);
+    {
+        context->core.in_halt = 0;
+        SDL_CondBroadcast(context->core.cond_halt);
+    }
+    SDL_UnlockMutex(context->core.mut_halt);
 }
 
 #if 1

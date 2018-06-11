@@ -17,7 +17,7 @@
 // ↑の分だけバッファを満たすために必要な HDMA 要求数
 #define WAVEBUFFER_MIN_FILLED_BUFFERS (WAVEBUFFER_SAMPLES * 2 / 256)
 // 余裕を持って↑の 2 倍とする
-#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 2)		/* バッファ数（※調整可） */
+#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 4)		/* バッファ数（※調整可） */
 
 #define IOMEM_SIZE	0x10000		/* 0x0040000〜0x004ffff */
 

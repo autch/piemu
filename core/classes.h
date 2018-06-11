@@ -15,19 +15,6 @@
 #define HALT_CLK_MULTIPLY   240
 #define HALT_INT_CLK      24000
 
-#if 1
-#define STD_NOP {  \
-  context->core.nop_count++; \
-  context->core.nop_count &= (1 << NOP_WAIT) - 1; \
-  if(!context->core.nop_count) \
-  { \
-    SDL_Delay(1); \
-  } \
-}
-#else // 0
-#define STD_NOP OS_YIELD() //__asm { nop }
-#endif
-
 /* 関数の先頭で使えるように、ダミー変数を初期化します。 */
 
 // C33 には無効命令例外がないので、不正なオペコードを検知したとしてもできることはない。

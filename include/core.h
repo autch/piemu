@@ -10,6 +10,8 @@
 #ifndef __CORE_H__
 #define __CORE_H__
 
+#include <SDL.h>
+
 /****************************************************************************
  *
  ****************************************************************************/
@@ -325,12 +327,13 @@ typedef struct _CORE {
   INST ext[2];
   uint32_t d;
   uint32_t clk;
-//  int acc;  // yui: アキュムレータ
-  uint32_t rZ;   // yui: dummy
 
-  uint32_t nop_count; // nop するたびにインクリメント、NOP_WAIT までたまったら
-                      // Sleep(1) する。
   int in_halt;        // halt 中インクリメント, core_trap() でデクリメント
+
+  SDL_mutex* mut_halt;
+  SDL_cond* cond_halt;
+
+  SDL_mutex* mut_core;
 } CORE;
 
 typedef struct _tPSR {
@@ -354,7 +357,6 @@ typedef struct _tPSR {
 #define EXT1  (context->core.ext[0])
 #define EXT2  (context->core.ext[1])
 #define CLK (context->core.clk)
-//#define ACC (context->core.acc)
 
 /****************************************************************************
  *
@@ -362,7 +364,9 @@ typedef struct _tPSR {
 
 void core_init(struct tagPIEMU_CONTEXT* context);
 void core_work(struct tagPIEMU_CONTEXT* context);
-void core_trap(struct tagPIEMU_CONTEXT* context, int no, int level);
+void core_handle_hlt(struct tagPIEMU_CONTEXT* context);
+void core_trap_from_core(struct tagPIEMU_CONTEXT* context, int no, int level);
+void core_trap_from_devices(struct tagPIEMU_CONTEXT* context, int no, int level);
 void core_inst(struct tagPIEMU_CONTEXT* context, INST inst);
 
 // もっと速く

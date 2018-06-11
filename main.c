@@ -87,6 +87,8 @@ int main(int argc, char *argv[])
   PIEMU_CONTEXT context;
   SDL_Event event;
   SDL_Thread* thEmuThread;
+  SDL_Thread* thDevicesThread;
+  SDL_Thread* thLCDThread;
 
   memset(&context, 0, sizeof context);
 
@@ -119,6 +121,8 @@ int main(int argc, char *argv[])
 
   context.bEndFlag = 0;
   thEmuThread = SDL_CreateThread(emu_work, "piemu-core", &context);
+  thDevicesThread = SDL_CreateThread(emu_devices_work, "piemu-devices", &context);
+  thLCDThread = SDL_CreateThread(emu_lcd_work, "piemu-lcd", &context);
 
   if(SDL_NumJoysticks() > 0) {
     context.pad = SDL_JoystickOpen(0);
@@ -170,7 +174,18 @@ int main(int argc, char *argv[])
 L_EXIT:
 
   context.bEndFlag = 1;
+
+  // wake up core
+  SDL_LockMutex(context.core.mut_halt);
+  {
+    context.core.in_halt = 0;
+    SDL_CondBroadcast(context.core.cond_halt);
+  }
+  SDL_UnlockMutex(context.core.mut_halt);
+
   SDL_WaitThread(thEmuThread, NULL);
+  SDL_WaitThread(thDevicesThread, NULL);
+  SDL_WaitThread(thLCDThread, NULL);
 
   if(SDL_JoystickGetAttached(context.pad))
     SDL_JoystickClose(context.pad);
