@@ -13,11 +13,11 @@
 /* SOUND */
 
 // ホストのサウンドデバイスへ一度に送られるサンプル数
-#define WAVEBUFFER_SAMPLES 2048
+#define WAVEBUFFER_SAMPLES (1024)
 // ↑の分だけバッファを満たすために必要な HDMA 要求数
 #define WAVEBUFFER_MIN_FILLED_BUFFERS (WAVEBUFFER_SAMPLES * 2 / 256)
 // 余裕を持って↑の 2 倍とする
-#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 4)		/* バッファ数（※調整可） */
+#define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 2)		/* バッファ数（※調整可） */
 
 #define IOMEM_SIZE	0x10000		/* 0x0040000〜0x004ffff */
 
@@ -49,14 +49,22 @@ typedef struct tagWAVEBUFFER
 #define WAVEBUFFER_READY 1
 #define WAVEBUFFER_DONE 2
 
+#define HSDMA1_EDGE_NONE		0
+#define HSDMA1_EDGE_ENABLED		1
+#define HSDMA1_EDGE_DISABLED	2
+
 typedef struct _IOMEM {
 	unsigned char mem[IOMEM_SIZE];
 	IOMAP* iomap_tbl;
+
 	/* SOUND */
 	WAVEBUFFER buffer[BLKN];
 	WAVEBUFFER* head;
 	WAVEBUFFER* tail;
 	int nQueuedBuffers;
+
+    SDL_AudioSpec desired, obtained;
+    SDL_atomic_t hsdma1_en;
 } IOMEM;
 
 #define IOOFS(p)	((unsigned)(p) - (unsigned)context->iomem.mem)

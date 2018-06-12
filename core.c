@@ -68,7 +68,9 @@ core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
 {
     unsigned insts = 0;
     do {
+        SDL_LockMutex(context->core.mut_core);
         core_work(context);
+        SDL_UnlockMutex(context->core.mut_core);
         insts++;
         if(context->core.in_halt)
             break;

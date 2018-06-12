@@ -88,11 +88,9 @@ int emu_work(void *ctx)
 
         /* 命令実行。 */
         do {
-            SDL_LockMutex(context->core.mut_core);
             mils_org = CLK;
             insts += core_workex(context, mils_org, nClocksDivBy1k);
             //        core_work(context);
-            SDL_UnlockMutex(context->core.mut_core);
 
             core_handle_hlt(context);
         } while (!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
@@ -143,20 +141,18 @@ int emu_devices_work(void *ctx)
 //    pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
         /*}}仮*/
 
-        {
-            /* ※要注意！
-             * 必ず、モジュール処理→NMI生成の順で行ってください！
-             * そうしないと、モジュール処理からの割り込み発行が常にNMIにブロックされてしまいます。
-             */
-            /* 各モジュールの処理。 */
-            for (MODULE *module = context->emu.module_tbl; module->init || module->work; module++) {
-                if (module->work) module->work(context);
-            }
-            /* コンテキストスイッチ用の16bitタイマ0コンペアB割り込み生成 */
-            if (bINT_E16T01_E16TU0) core_trap_from_devices(context, TRAP_16TU0, bINT_P16T01_P16T0);
-            /* P/ECEシステムタイマ用のNMI生成。 */
-            if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
+        /* ※要注意！
+         * 必ず、モジュール処理→NMI生成の順で行ってください！
+         * そうしないと、モジュール処理からの割り込み発行が常にNMIにブロックされてしまいます。
+         */
+        /* 各モジュールの処理。 */
+        for (MODULE *module = context->emu.module_tbl; module->init || module->work; module++) {
+            if (module->work) module->work(context);
         }
+        /* コンテキストスイッチ用の16bitタイマ0コンペアB割り込み生成 */
+        if (bINT_E16T01_E16TU0) core_trap_from_devices(context, TRAP_16TU0, bINT_P16T01_P16T0);
+        /* P/ECEシステムタイマ用のNMI生成。 */
+        if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
 
         SDL_Delay(1);
     } while (!context->bEndFlag);
