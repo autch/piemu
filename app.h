@@ -71,7 +71,7 @@ struct tagPIEMU_CONTEXT;
 //void dbg(const char* fmt, ...);
 //void die(const char* fmt, ...);
 //#define DIE() die(__FILE__ "(%d)", __LINE__)
-#define DIE()  { *(int*)(0xdeadbeef) = 0xdeadbeef; exit(-1); }
+#define DIE(fmt, ...)  { SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "%s:%d:%s: DIE: " fmt, __FILE__, __LINE__, __func__, ##__VA_ARGS__); abort(); }
 #define dbg()  ((void)0)
 
 #define KEY_UP    SDL_SCANCODE_UP

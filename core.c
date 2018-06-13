@@ -584,6 +584,6 @@ core_inst(PIEMU_CONTEXT *context, INST inst)
         case 8:
             return;
     }
-    DIE();
+    DIE("Unexpected opcode: %02x", inst.s);
 }
 

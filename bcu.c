@@ -75,9 +75,9 @@ area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:内部RDWR
   /* 整列チェック。 */
   switch(size) {
   case 1:                     break;
-  case 2: if(addr & 1) DIE(); break;
-  case 4: if(addr & 3) DIE(); break;
-  default: DIE();
+  case 2: if(addr & 1) DIE("bcu: odd-aligned access"); break;
+  case 4: if(addr & 3) DIE("bcu: odd-aligned access"); break;
+  default: DIE("bcu: odd-aligned access");
   }
 
   /* エリア選択。 */

@@ -189,7 +189,10 @@ void exec_mirror_rd_rs(PIEMU_CONTEXT *context, CLASS_4C inst)
 void exec_div0s_rs(PIEMU_CONTEXT *context, CLASS_4C inst)
 {
     NO_EXT NO_DELAY
-    if (!R(inst.rs)) DIE()/*core_trap(TRAP_ZERODIV, 0)*/;
+    if (!R(inst.rs)) {
+        core_trap_from_core(context, TRAP_ZERODIV, 0);
+        return;
+    }
     AHR = (int) ALR >> 31;
     PSR.ds = ALR >> 31;
     PSR.n = R(inst.rs) >> 31;
@@ -200,7 +203,10 @@ void exec_div0s_rs(PIEMU_CONTEXT *context, CLASS_4C inst)
 void exec_div0u_rs(PIEMU_CONTEXT *context, CLASS_4C inst)
 {
     NO_EXT NO_DELAY
-    if (!R(inst.rs)) DIE()/*core_trap(TRAP_ZERODIV, 0)*/;
+    if (!R(inst.rs)) {
+        core_trap_from_core(context, TRAP_ZERODIV, 0);
+        return;
+    }
     AHR = 0;
     PSR.ds = 0;
     PSR.n = 0;

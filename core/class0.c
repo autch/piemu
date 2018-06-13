@@ -63,18 +63,18 @@ void exec_popn_rd(PIEMU_CONTEXT *context, CLASS_0A inst)
 
 void exec_brk(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
-    DIE();
+    DIE("BRK: not implemented");
 }
 
 void exec_retd(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
-    DIE();
+    DIE("RETD: not implemented");
 }
 
 void exec_int_imm2(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
     NO_EXT NO_DELAY
-    if (inst.imm2_rd_rs < 0 || inst.imm2_rd_rs > 3) DIE();
+    if (inst.imm2_rd_rs < 0 || inst.imm2_rd_rs > 3) DIE("%%rs out of range: %x", inst.imm2_rd_rs);
     PC += 2;
     CLK += 10;
     core_trap_from_core(context, TRAP_SOFTINT0 + inst.imm2_rd_rs, 0);
