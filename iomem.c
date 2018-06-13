@@ -292,7 +292,7 @@ void iomem_work(PIEMU_CONTEXT *context)
                 }
                 if (buffer->nReady == WAVEBUFFER_NOT_READY) break;
             }
-            if (i == BLKN) DIE(); // no buffers available
+            if (i == BLKN) DIE("sound: no free buffers available to receive DMA!"); // no buffers available
         }
         SDL_UnlockAudioDevice(context->audio_device);
 

@@ -13,9 +13,9 @@
 /* SOUND */
 
 // ホストのサウンドデバイスへ一度に送られるサンプル数
-#define WAVEBUFFER_SAMPLES (1024)
+#define WAVEBUFFER_SAMPLES (512)
 // ↑の分だけバッファを満たすために必要な HDMA 要求数
-#define WAVEBUFFER_MIN_FILLED_BUFFERS (WAVEBUFFER_SAMPLES * 2 / 256)
+#define WAVEBUFFER_MIN_FILLED_BUFFERS (WAVEBUFFER_SAMPLES * 2 * 2 / 256)
 // 余裕を持って↑の 2 倍とする
 #define BLKN		(WAVEBUFFER_MIN_FILLED_BUFFERS * 2)		/* バッファ数（※調整可） */
 
