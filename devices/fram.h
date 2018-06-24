@@ -10,7 +10,7 @@
 #ifndef __FRAM_H__
 #define __FRAM_H__
 
-#include "bcu.h"
+#include "../core/bcu.h"
 
 #define FRAM_SIZE	0x2000		/* 0x0000000〜0x0001fff */
 typedef struct _FRAM {

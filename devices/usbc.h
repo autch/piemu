@@ -10,7 +10,7 @@
 #ifndef __USBC_H__
 #define __USBC_H__
 
-#include "bcu.h"
+#include "../core/bcu.h"
 
 typedef struct _USBC {
 	int dummy;

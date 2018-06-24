@@ -15,9 +15,9 @@
  *  * May 29, 2018
  *  * マクロとかやめやめ
  */
-#include "app.h"
+#include "../app.h"
 #include "c33types.h"
-#include "core/classes.h"
+#include "classes.h"
 
 /****************************************************************************
  *  グローバル変数
@@ -78,8 +78,8 @@ core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
     return insts;
 }
 
-void
-core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
+// coreスレッド内から割り込みをかける eg. INT insn or TRAP
+void core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
 {
     c33word addr;
 
@@ -103,8 +103,8 @@ core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
     }
 }
 
-void
-core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
+// デバイススレッドから割り込みをかける eg. HSDMA ready
+void core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
 {
     SDL_LockMutex(context->core.mut_core);
     core_trap_from_core(context, no, level);

@@ -1,7 +1,7 @@
 #ifndef C33TYPES_H
 #define C33TYPES_H
 
-#include <stdint.h>
+#include <cstdint>
 
 typedef int32_t  c33int;
 typedef uint32_t c33word;

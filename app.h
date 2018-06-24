@@ -50,16 +50,17 @@ struct tagPIEMU_CONTEXT;
 
 #include "emu.h"
 //
-#include "fram.h"
-#include "iomem.h"
-#include "sram.h"
-#include "usbc.h"
-#include "flash.h"
-#include "lcdc.h"
+#include "devices/fram.h"
+#include "devices/iomem.h"
+#include "devices/sram.h"
+#include "devices/usbc.h"
+#include "devices/flash.h"
+#include "devices/lcdc.h"
 //
-#include "bcu.h"
-#include "core.h"
+#include "core/bcu.h"
+#include "core/core.h"
 //
+#define plc_IO ((volatile struct c_IOtag*)context->iomem.mem)
 #include "c33209e.h"
 #include "vector.h"
 //#include "iomap.h"

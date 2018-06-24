@@ -1,0 +1,335 @@
+#include "pme_iomem.h"
+#include <functional>
+#include "c33209e.h"
+#include <SDL_log.h>
+
+/****************************************************************************
+ *  I/Oマップ定義
+ ****************************************************************************/
+
+// private
+DECLSPEC void SDLCALL SDLAudioCallback(void *userdata, Uint8 *stream, int len);
+
+/****************************************************************************
+ *  グローバル関数
+ ****************************************************************************/
+
+void C33IOMem::init(void* context)
+{
+    int i;
+    WAVEBUFFER *buffer;
+
+    std::fill(iomem.begin(), iomem.end(), 0);
+
+/* PAD */
+// IOR_(pK5_K5D)
+//    iomap.addr = PIOR_(pK5_K5D);
+//    iomap.read = IOR_(pK5_K5D);
+//    iomap.write = NULL;
+    iomap[0x402c1 - 0x40000] = std::make_tuple(&C33IOMem::io_read_pK5_K5D, &C33IOMem::iomem_write_dummy);
+
+// IOR_(pK6_K6D)
+//    iomap.addr = PIOR_(pK6_K6D);
+//    iomap.read = IOR_(pK6_K6D);
+//    iomap.write = NULL;
+    iomap[0x402c4 - 0x40000] = std::make_tuple(&C33IOMem::io_read_pK6_K6D, &C33IOMem::iomem_write_dummy);
+
+/* LCDC */
+// IO_W(pSIF3_TXD)
+//    iomap.addr = PIO_W(pSIF3_TXD);
+//    iomap.read = NULL;
+//    iomap.write = IO_W(pSIF3_TXD);
+    iomap[0x401f5 - 0x40000] = std::make_tuple(&C33IOMem::iomem_read_dummy, &C33IOMem::io_write_pSIF3_TXD);
+
+/* SOUND */
+// IO_W(pHS1_EN)
+//    iomap.addr = PIO_W(pHS1_EN);
+//    iomap.read = NULL;
+//    iomap.write = IO_W(pHS1_EN);
+    iomap[0x4823c - 0x40000] = std::make_tuple(&C33IOMem::iomem_read_dummy, &C33IOMem::io_write_pHS1_EN);
+
+    /* LCDC */
+    iomem_write_default(0x401f7 - 0x40000, 2, 1);
+//    bSIF3_STATUS_TDBE3 = 1; /* 常に転送データバッファエンプティ */
+
+    /* SOUND */
+    SDL_memset(&desired, 0, sizeof(SDL_AudioSpec));
+    desired.freq = 32000;
+    desired.channels = 1;
+    desired.format = AUDIO_S16LSB;
+    desired.samples = WAVEBUFFER_SAMPLES; // 変えちゃだめ
+    desired.userdata = (void *) context;
+    desired.callback = SDLAudioCallback;
+
+    for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++) {
+        buffer->dwBufferLength = desired->samples * sizeof(short);
+        buffer->pData = malloc(buffer->dwBufferLength);
+        buffer->dwBytesRecorded = 0;
+        buffer->nReady = WAVEBUFFER_NOT_READY;
+        buffer->next = NULL;
+    }
+    context->iomem.head = context->iomem.tail = NULL;
+    context->iomem.nQueuedBuffers = 0;
+
+    context->audio_device = SDL_OpenAudioDevice(NULL, 0, &desired, &obtained, 0);
+    if (context->audio_device <= 0) {
+        SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Cannot open Audio: %s", SDL_GetError());
+    }
+    SDL_LogInfo(SDL_LOG_CATEGORY_AUDIO, "Opened fs %d, ch %d, fmt %d, samples %d",
+                obtained.freq, obtained.channels, obtained.format, obtained.samples);
+}
+
+//#define INVOKE_MEMBER_FUNC(fn, obj) ((obj).*(fn))
+
+c33int C33IOMem::bus_read(c33word ofs, int size)
+{
+    ofs &= IOMEM_SIZE - 1; /* 必要 */
+
+    /* ハンドラ検索。 */
+    auto h = iomap.find(ofs);
+    if (h != iomap.end() && h->second.first != NULL) {
+        auto r = std::invoke(h->second.first, this, ofs, size);   // C++17
+        return r;
+    }
+
+    /* ハンドラがなければ、iomem.mem[]から単純に読み出す。 */
+    // dbg("未対応I/O読み出し: %07x", ofs);
+    return iomem_read_default(ofs, size);
+}
+
+/* iomem.mem[]からの読み出し。各I/Oハンドラからも利用可能です。 */
+int C33IOMem::iomem_read_default(c33word ofs, int size)
+{
+    return acc.mem_read(ofs, size);
+}
+
+void C33IOMem::bus_write(c33word ofs, c33int data, int size)
+{
+    ofs &= IOMEM_SIZE - 1; /* 必要 */
+
+    auto h = iomap.find(ofs);
+    if(h != iomap.end() && h->second.second != NULL) {
+        std::invoke(h->second.second, this, ofs, data, size);
+        return;
+    }
+
+    /* ハンドラがなければ、iomem.mem[]に単純に書き込む。 */
+    // dbg("未対応I/O書き込み: %07x", ofs);
+    iomem_write_default(ofs, data, size);
+}
+
+/* iomem.mem[]への書き込み。各I/Oハンドラからも利用可能です。 */
+void C33IOMem::iomem_write_default(c33word ofs, c33int data, int size)
+{
+    acc.mem_write(ofs, data, size);
+}
+
+/****************************************************************************
+ *  I/Oハンドラ
+ ****************************************************************************/
+
+c33int C33IOMem::io_read_pK5_K5D(c33word ofs, int size)
+{
+    int data = -1;
+    if (context->keystate[KEY_SELECT]) data &= ~(1 << 3); /* SELECT */
+    if (context->keystate[KEY_START]) data &= ~(1 << 4); /* START  */
+    return data;
+}
+
+c33int C33IOMem::io_read_pK6_K6D(c33word ofs, int size)
+{
+    int data = -1;
+    if (context->keystate[KEY_RIGHT]) data &= ~(1 << 0);
+    if (context->keystate[KEY_LEFT]) data &= ~(1 << 1);
+    if (context->keystate[KEY_DOWN]) data &= ~(1 << 2);
+    if (context->keystate[KEY_UP]) data &= ~(1 << 3);
+    if (context->keystate[KEY_B]) data &= ~(1 << 4); /* B */
+    if (context->keystate[KEY_A]) data &= ~(1 << 5); /* A */
+    return data;
+}
+
+/*
+ 1f5  pSIF3_TXD
+ 1f8  pSIF3_CTL default
+ 2d9  pP2_P2D   default
+8220  pHS0_CNT  default
+8224  pHS0_SADR default
+8228  pHS0_DADR default
+822c  pHS0_EN   default
+822e  pHS0_TF   default
+*/
+
+void C33IOMem::io_write_pSIF3_TXD(c33word ofs, c33int data, int size)
+{
+    for (;;) {
+        lcdc_write(context, (unsigned char) data);   /* シリアルCh.3データ→LCDCへ */
+        if (!bHS0_EN_HS0EN) break;     /* HSDMA Ch.0停止なら抜ける */
+        data = mem_read_nowait(context, bHS0_SADR_S0ADR, 1);  /* 次のデータを取得 */
+        bHS0_SADR_S0ADR++;        /* 転送元アドレスを進める */
+        if (!--bHS0_CNT_SIG_TC0) bHS0_EN_HS0EN = 0;  /* 転送カウンタを減らし、0になったらDMA停止 */
+    }
+}
+
+void C33IOMem::io_write_pHS1_EN(c33word ofs, c33int data, int size)
+{
+    int en_save;
+
+    /* HSDMA1イネーブルビットの書き込み。 */
+    en_save = bHS1_EN_HS1EN;
+    iomem_write_default(ofs, data, size);
+    if (bHS1_EN_HS1EN == en_save) return; /* DISABLE→DISABLE or ENABLE→ENABLE */
+    if (!bHS1_EN_HS1EN) /* ENABLE→DISABLE */
+    {
+        // 発音停止→バッファを破棄
+        SDL_AtomicSet(&hsdma1_en, HSDMA1_EDGE_DISABLED);
+        return;
+    }
+    /* 以下、DISABLE→ENABLE */
+    SDL_AtomicSet(&hsdma1_en, HSDMA1_EDGE_ENABLED);
+}
+
+
+// オーディオコールバックが別スレッドから呼ばれるのは
+// core module にとってきりのいいタイミングでないと困る
+void C33IOMem::work()
+{
+    int edge = SDL_AtomicGet(&hsdma1_en);
+    if(edge == HSDMA1_EDGE_DISABLED) {
+        // ENABLE -> DISABLE, stop audio
+        SDL_PauseAudioDevice(context->audio_device, 1);
+        SDL_LockAudioDevice(context->audio_device);
+        {
+            int i;
+            WAVEBUFFER *buffer;
+
+            // then free queued buffers
+            for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++)
+                buffer->nReady = WAVEBUFFER_NOT_READY;
+            context->iomem.head = context->iomem.tail = NULL;
+            context->iomem.nQueuedBuffers = 0;
+        }
+        SDL_UnlockAudioDevice(context->audio_device);
+
+        SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_NONE);
+    } else if(edge == HSDMA1_EDGE_ENABLED) {
+        // DISABLE -> ENABLE
+        WAVEBUFFER *buffer;
+
+        SDL_LockAudioDevice(context->audio_device);
+        {
+            int i;
+            /* 空きバッファを探します。 */
+            for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++) {
+                if (buffer->nReady == WAVEBUFFER_DONE) {
+                    buffer->nReady = WAVEBUFFER_NOT_READY;
+                    context->iomem.nQueuedBuffers--;
+                    break;
+                }
+                if (buffer->nReady == WAVEBUFFER_NOT_READY) break;
+            }
+            if (i == BLKN) DIE("sound: no free buffers available to receive DMA!"); // no buffers available
+        }
+        SDL_UnlockAudioDevice(context->audio_device);
+
+        /* 必要に応じてバッファメモリを拡張。 */
+        uint32_t buflen = bHS1_CNT_SIG_TC1 * sizeof(short);
+        if (buffer->dwBufferLength < (unsigned) buflen) {
+            buffer->pData = realloc(buffer->pData, buflen);
+            if (!buffer->pData) DIE();
+            buffer->dwBufferLength = buflen;
+        }
+        buffer->dwBytesRecorded = buflen;
+
+        /* ウェーブデータ変換。 */
+        int16_t* p = (int16_t *) buffer->pData;
+        do {
+            int v;
+            v = (short) mem_read_nowait(context, bHS1_SADR_S1ADR, 2);  /*      0〜750〜 1500 */
+            v -= 750;          /*   -750〜  0〜  750 */
+            v <<= 16;
+            v /= 750;        /* -32767〜  0〜32767 */
+            if(v > 32767) v = 32767;
+            if(v < -32768) v = -32768;
+            *p++ = (int16_t)v;
+            bHS1_SADR_S1ADR += 2;
+        } while (--bHS1_CNT_SIG_TC1);
+
+        SDL_LockAudioDevice(context->audio_device);
+        {
+            buffer->nReady = WAVEBUFFER_READY;
+            buffer->next = NULL;  // こいつが末尾のノード
+            if (context->iomem.head) // 先客がいる
+                context->iomem.tail->next = buffer; // 現在の末尾の次に割り当てる
+            else
+                context->iomem.head = buffer; // 先頭に割り当てる
+            context->iomem.tail = buffer;   // 末尾を更新する
+            context->iomem.nQueuedBuffers++;
+        }
+        SDL_UnlockAudioDevice(context->audio_device);
+        if (context->iomem.nQueuedBuffers > WAVEBUFFER_MIN_FILLED_BUFFERS)
+            SDL_PauseAudioDevice(context->audio_device, 0);
+
+        SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_NONE);
+    } else {
+        SDL_LockAudioDevice(context->audio_device);
+        {
+            int i;
+            WAVEBUFFER *buffer;
+            for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++) {
+                // 使用済みバッファを片付ける
+                if (buffer->nReady == WAVEBUFFER_DONE) {
+                    buffer->nReady = WAVEBUFFER_NOT_READY;
+                    context->iomem.nQueuedBuffers--;
+                }
+                /* HSDMA1動作中で、空きバッファがあれば、HSDMA1転送完了と見なして割り込み要因発生。 */
+                if (bHS1_EN_HS1EN && buffer->nReady == WAVEBUFFER_NOT_READY) {
+                    bHS1_EN_HS1EN = 0;
+                    bINT_FDMA_FHDM1 = 1;
+                }
+            }
+        }
+        SDL_UnlockAudioDevice(context->audio_device);
+    }
+
+    /* HSDMA1割り込みが許可されていて、割り込み要因が発生していたら、割り込み発行。 */
+    if (bINT_EDMA_EHDM1 && bINT_FDMA_FHDM1) {
+        //core_trap(context, TRAP_HDM1, bINT_PHSD01L_PHSD1L);
+        //↑本当はこうですが...
+        //　P/ECEカーネルのサウンドドライバは多重割り込みを許可しているのですが、
+        //　サウンド処理中(IL=5で多重割り込み受付)にサウンドの割り込み(IL=7なので割り込み可能)が発生すると、
+        //　ノイズになるようです。
+        //　通常のWave再生なら軽いので大丈夫みたいですけれど、muslibによるBGM再生でノイズが乗りまくります。
+        //↓muslibのノイズを防ぐために、超法規的にサウンドの割り込みレベルを下げてみました。
+        //　本物のカーネルでも、サウンド処理中のサウンド割り込み受け付けはなくした方がよさそうな気が…(^^;
+        core_trap_from_devices(context, TRAP_HDM1, 1/*5以下ならなんでもいいけど、とりあえず割り込み可能な最低レベルにしてみた*/);
+    }
+}
+
+C33IOMem::C33IOMem() : acc(iomem)
+{
+}
+
+DECLSPEC void SDLCALL SDLAudioCallback(void *userdata, Uint8 *stream, int len)
+{
+    int nBytesToRender = len;
+    PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) userdata;
+    WAVEBUFFER *node;
+    Uint8 *p = stream;
+
+    memset(stream, 0, len);
+
+    node = context->iomem.head;
+    while (node && nBytesToRender) {
+        if (node->nReady == WAVEBUFFER_READY) {
+            SDL_memcpy(p, node->pData, node->dwBytesRecorded);
+            p += node->dwBytesRecorded;
+            nBytesToRender -= node->dwBytesRecorded;
+            node->nReady = WAVEBUFFER_DONE;
+        }
+        node = node->next;
+        context->iomem.head = node;
+    }
+    if(nBytesToRender > 0) {
+        SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Buffer underrun, expect noises");
+    }
+}

@@ -10,7 +10,7 @@
 #ifndef __SRAM_H__
 #define __SRAM_H__
 
-#include "bcu.h"
+#include "../core/bcu.h"
 
 typedef struct _SRAM {
 	int mem_size;

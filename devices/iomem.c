@@ -11,7 +11,7 @@
  *  * Wed Apr 22 05:37:00 JST 2003 Naoyuki Sawa
  *  - muslibのノイズ回避。(サウンド割り込みのレベルを下げた)
  */
-#include "app.h"
+#include "../app.h"
 
 #include <math.h>
 
