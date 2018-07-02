@@ -91,7 +91,6 @@ int main(int argc, char *argv[])
     SDL_Event event;
     SDL_Thread *thEmuThread;
     SDL_Thread *thDevicesThread;
-    SDL_Thread *thLCDThread;
 
     memset(&context, 0, sizeof context);
 
@@ -126,14 +125,17 @@ int main(int argc, char *argv[])
     context.bEndFlag = 0;
     thEmuThread = SDL_CreateThread(emu_work, "piemu-core", &context);
     thDevicesThread = SDL_CreateThread(emu_devices_work, "piemu-devices", &context);
-    thLCDThread = SDL_CreateThread(emu_lcd_work, "piemu-lcd", &context);
 
     if (SDL_NumJoysticks() > 0) {
         context.pad = SDL_JoystickOpen(0);
     }
 
+    unsigned nMSecPerFrame = 1000 / context.o_fps;
+
     while (1) {
-        while (SDL_WaitEvent(&event)) {
+        unsigned real_org = SDL_GetTicks();
+
+        while (SDL_PollEvent(&event)) {
             switch (event.type) {
                 case SDL_QUIT:
                     goto L_EXIT;
@@ -171,6 +173,20 @@ int main(int argc, char *argv[])
 #endif
             }
         }
+
+        /* 画面更新。 */
+        lcdc_conv(&context, context.vbuff);
+        context.pfnUpdateScreen(&context, context.pUser);
+
+        /* 実時間との同期 */
+        if (!context.o_nowait) {
+            int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
+            if (nExpectedWait > 0)
+                SDL_Delay(nExpectedWait);
+            else
+                SDL_Delay(1);
+        }
+	
     }
     L_EXIT:
 
@@ -186,7 +202,6 @@ int main(int argc, char *argv[])
 
     SDL_WaitThread(thEmuThread, NULL);
     SDL_WaitThread(thDevicesThread, NULL);
-    SDL_WaitThread(thLCDThread, NULL);
 
     if (context.pad != NULL && SDL_JoystickGetAttached(context.pad))
         SDL_JoystickClose(context.pad);

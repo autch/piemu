@@ -161,28 +161,3 @@ int emu_devices_work(void *ctx)
 
     return 0;
 }
-
-int emu_lcd_work(void *ctx)
-{
-    PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
-    unsigned nMSecPerFrame = 1000 / context->o_fps;
-
-    do {
-        unsigned real_org = SDL_GetTicks();
-
-        /* 画面更新。 */
-        lcdc_conv(context, context->vbuff);
-        context->pfnUpdateScreen(context, context->pUser);
-
-        /* 実時間との同期 */
-        if (!context->o_nowait) {
-            int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
-            if (nExpectedWait > 0)
-                SDL_Delay(nExpectedWait);
-            else
-                SDL_Delay(1);
-        }
-    } while (!context->bEndFlag);
-
-    return 0;
-}
