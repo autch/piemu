@@ -35,11 +35,44 @@ add_library(c33core
     core/class6.c
     core/ext.c
     core/common.c
+
+    core/classes.h
+    include/core.h
+    include/c33209e.h
+    include/c33types.h
 )
 
 add_executable(piemu
-    bcu.c   emu.c    fram.c   lcdc.c  piemu.c  usbc.c
-    core.c  flash.c  iomem.c  main.c  sram.c
+    bcu.c
+    emu.c
+    fram.c
+    lcdc.c
+    piemu.c
+    usbc.c
+    core.c
+    flash.c
+    iomem.c
+    main.c
+    sram.c
+
+    app.h
+    pfi.h
+
+    include/bcu.h
+    include/c33types.h
+    include/c33209e.h
+    include/core.h
+    include/emu.h
+    include/flash.h
+    include/fram.h
+    include/iomap.h
+    include/iomem.h
+    include/lcdc.h
+    include/piece_types.h
+    include/piemu.h
+    include/sram.h
+    include/usbc.h
+    include/vector.h
 )
 target_link_libraries(piemu
     ${SDL2_LIBRARIES}
