@@ -92,6 +92,7 @@ int emu_work(void *ctx)
             insts += core_workex(context, mils_org, nClocksDivBy1k);
             //        core_work(context);
 
+            core_handle_trap(context);
             core_handle_hlt(context);
         } while (!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
 

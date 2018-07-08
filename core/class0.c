@@ -63,12 +63,14 @@ void exec_popn_rd(PIEMU_CONTEXT *context, CLASS_0A inst)
 
 void exec_brk(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
-    DIE("BRK: not implemented");
+//    DIE("BRK: not implemented");
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "BRK: not implemented");
 }
 
 void exec_retd(PIEMU_CONTEXT *context, CLASS_0A inst)
 {
-    DIE("RETD: not implemented");
+//    DIE("RETD: not implemented");
+    SDL_LogError(SDL_LOG_CATEGORY_APPLICATION, "RETD: not implemented");
 }
 
 void exec_int_imm2(PIEMU_CONTEXT *context, CLASS_0A inst)

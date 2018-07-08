@@ -37,7 +37,9 @@ core_init(PIEMU_CONTEXT *context)
 
     context->core.cond_halt = SDL_CreateCond();
     context->core.mut_halt = SDL_CreateMutex();
-    context->core.mut_core = SDL_CreateMutex();
+    context->core.mut_trap = SDL_CreateMutex();
+    context->core.sem_trap_free = SDL_CreateSemaphore(8);
+    context->core.sem_trap_queued = SDL_CreateSemaphore(0);
 }
 
 void
@@ -63,14 +65,50 @@ void core_handle_hlt(PIEMU_CONTEXT* context)
     SDL_UnlockMutex(context->core.mut_halt);
 }
 
+void core_handle_trap(PIEMU_CONTEXT* context)
+{
+    if(SDL_SemTryWait(context->core.sem_trap_queued) == 0) {
+        SDL_LockMutex(context->core.mut_trap);
+        if (context->core.trap_no > -1) {
+            int trap_no = context->core.trap_no;
+            struct core_trap_list *trapentry = context->core.traplist + trap_no;
+
+            core_trap_from_core(context, trapentry->no, trapentry->level);
+
+            context->core.trap_no--;
+        }
+        SDL_UnlockMutex(context->core.mut_trap);
+        SDL_SemPost(context->core.sem_trap_free);
+    }
+}
+
+void core_assert_trap(PIEMU_CONTEXT* context, int no, int level)
+{
+    SDL_SemWait(context->core.sem_trap_free);
+    SDL_LockMutex(context->core.mut_trap);
+    {
+        int trap_no = context->core.trap_no + 1;
+        if (trap_no >= NUM_PENDING_TRAPS) {
+            DIE("pending traps list overflow");
+        }
+
+        struct core_trap_list *trapentry = context->core.traplist + trap_no;
+        trapentry->no = no;
+        trapentry->level = level;
+
+        context->core.trap_no = trap_no;
+    }
+    SDL_UnlockMutex(context->core.mut_trap);
+    SDL_SemPost(context->core.sem_trap_queued);
+}
+
+
 unsigned
 core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
 {
     unsigned insts = 0;
     do {
-        SDL_LockMutex(context->core.mut_core);
         core_work(context);
-        SDL_UnlockMutex(context->core.mut_core);
         insts++;
         if(context->core.in_halt)
             break;
@@ -106,9 +144,7 @@ core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
 void
 core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
 {
-    SDL_LockMutex(context->core.mut_core);
-    core_trap_from_core(context, no, level);
-    SDL_UnlockMutex(context->core.mut_core);
+    core_assert_trap(context, no, level);
 
     SDL_LockMutex(context->core.mut_halt);
     {
