@@ -84,31 +84,31 @@ area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:内部RDWR
   addr &= (1 << 28) - 1; /* S1C33のアドレス空間は28ビット */
 
   // これはうまくジャンプテーブルになるからこれでいい
-  switch(addr >> 24)
+  switch((addr >> 24) & 0x0f)
   {
     case 0x0:
-      switch(addr >> 20)
+      switch((addr >> 20) & 0x0f)
       {
         case 0x00:
         {
-          switch(addr >> 16)
+          switch((addr >> 16) & 0x0f)
           {
-            case 0x000:
-            case 0x001:
-            case 0x002: no = 0;               goto NO_WAIT;
-            case 0x003:
-            case 0x004:
-            case 0x005: no = 1;               goto NO_WAIT;
-            case 0x006:
-            case 0x007: no = 2;               goto NO_WAIT;
-            case 0x008:
-            case 0x009:
-            case 0x00a:
-            case 0x00b:
-            case 0x00c:
-            case 0x00d:
-            case 0x00e:
-            case 0x00f: no = 3;               goto NO_WAIT;
+            case 0x00:
+            case 0x01:
+            case 0x02: no = 0;               goto NO_WAIT;
+            case 0x03:
+            case 0x04:
+            case 0x05: no = 1;               goto NO_WAIT;
+            case 0x06:
+            case 0x07: no = 2;               goto NO_WAIT;
+            case 0x08:
+            case 0x09:
+            case 0x0a:
+            case 0x0b:
+            case 0x0c:
+            case 0x0d:
+            case 0x0e:
+            case 0x0f: no = 3;               goto NO_WAIT;
           }
           DIE();
         }
@@ -131,24 +131,24 @@ area_sel(PIEMU_CONTEXT* context, unsigned addr, int size, int mode/*0:内部RDWR
       DIE();
     case 0x1:
     {
-      switch(addr >> 20)
+      switch((addr >> 20) & 0x0f)
       {
-        case 0x10:
-        case 0x11:
-        case 0x12:
-        case 0x13:
-        case 0x14:
-        case 0x15:
-        case 0x16:
-        case 0x17:    no = 11;  sz = bA12_11_A12SZ; wt = bA12_11_A12WT; goto WAIT;
-        case 0x18:
-        case 0x19:
-        case 0x1a:
-        case 0x1b:
-        case 0x1c:
-        case 0x1d:
-        case 0x1e:
-        case 0x1f:    no = 12;  sz = bA12_11_A12SZ; wt = bA12_11_A12WT; goto WAIT;
+        case 0x0:
+        case 0x1:
+        case 0x2:
+        case 0x3:
+        case 0x4:
+        case 0x5:
+        case 0x6:
+        case 0x7:    no = 11;  sz = bA12_11_A12SZ; wt = bA12_11_A12WT; goto WAIT;
+        case 0x8:
+        case 0x9:
+        case 0xa:
+        case 0xb:
+        case 0xc:
+        case 0xd:
+        case 0xe:
+        case 0xf:    no = 12;  sz = bA12_11_A12SZ; wt = bA12_11_A12WT; goto WAIT;
       }
       DIE();
     }
