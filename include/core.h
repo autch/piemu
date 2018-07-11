@@ -370,6 +370,9 @@ typedef struct _tPSR {
 #define EXT2  (context->core.ext[1])
 #define CLK (context->core.clk)
 
+typedef void (*C33INST_EXEC)(struct tagPIEMU_CONTEXT*, INST inst);
+
+
 /****************************************************************************
  *
  ****************************************************************************/
@@ -389,6 +392,6 @@ void core_handle_trap(struct tagPIEMU_CONTEXT* context);
 void core_inst(struct tagPIEMU_CONTEXT *context, INST inst);
 
 // もっと速く
-uint32_t core_workex(struct tagPIEMU_CONTEXT *context, uint32_t mils_org, uint32_t nClocksDivBy1k);
+uint32_t core_workex(struct tagPIEMU_CONTEXT *context, uint32_t nClocksDivBy1k);
 
 #endif /*__CORE_H__*/

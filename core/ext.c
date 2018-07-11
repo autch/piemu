@@ -4,8 +4,7 @@
  *  即値拡張
  ****************************************************************************/
 
-int
-ext_imm6(PIEMU_CONTEXT *context, int imm6)
+int ext_imm6(PIEMU_CONTEXT *context, int imm6)
 {
     int data;
     imm6 &= (1 << 6) - 1;
@@ -21,8 +20,7 @@ ext_imm6(PIEMU_CONTEXT *context, int imm6)
     return data;
 }
 
-int
-ext_sign6(PIEMU_CONTEXT *context, int sign6)
+int ext_sign6(PIEMU_CONTEXT *context, int sign6)
 {
     int data, bits;
     sign6 &= (1 << 6) - 1;
@@ -41,8 +39,7 @@ ext_sign6(PIEMU_CONTEXT *context, int sign6)
     return sign_ext(data, bits);
 }
 
-int
-ext_RB(PIEMU_CONTEXT *context, int rb)
+int ext_RB(PIEMU_CONTEXT *context, int rb)
 {
     int disp;
     if (EXT2.s) {
@@ -57,8 +54,7 @@ ext_RB(PIEMU_CONTEXT *context, int rb)
     return R(rb) + disp;
 }
 
-int
-ext_SPxIMM6(PIEMU_CONTEXT *context, int imm6, int size)
+int ext_SPxIMM6(PIEMU_CONTEXT *context, int imm6, int size)
 {
     int disp;
     imm6 &= (1 << 6) - 1;
@@ -82,8 +78,7 @@ ext_SPxIMM6(PIEMU_CONTEXT *context, int imm6, int size)
     return SP + disp;
 }
 
-int
-ext_3op(PIEMU_CONTEXT *context)
+int ext_3op(PIEMU_CONTEXT *context)
 {
     /* NOTE1: 少なくともEXT1が存在することを呼び出し側で確認してください。 */
     /* NOTE2: cmp/and/or/xor/notも、3op拡張時はsignではなくimmとなります。 */
@@ -100,8 +95,7 @@ ext_3op(PIEMU_CONTEXT *context)
     return data;
 }
 
-int
-ext_PCxSIGN8(PIEMU_CONTEXT *context, int sign8)
+int ext_PCxSIGN8(PIEMU_CONTEXT *context, int sign8)
 {
     int disp, bits;
     sign8 &= (1 << 8) - 1;

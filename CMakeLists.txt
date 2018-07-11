@@ -1,6 +1,8 @@
 cmake_minimum_required(VERSION 3.0)
 project(piemu)
 
+option(USE_PROF "Use Google Profiler" OFF)
+
 find_package(PkgConfig REQUIRED)
 find_package(SDL2 REQUIRED)
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
@@ -13,6 +15,8 @@ endif(CCACHE_FOUND)
 
 add_compile_options(
     -g
+    -O3
+    -funroll-loops
     -Wall
 )
 
@@ -79,6 +83,13 @@ target_link_libraries(piemu
     c33core
 #    SDLmain
 )
+if (USE_PROF)
+    target_compile_definitions(piemu
+        PRIVATE
+        USE_PROF
+    )
+    target_link_libraries (piemu profiler)
+endif (USE_PROF)
 
 add_subdirectory(./tools)
 #add_subdirectory(./tools-old)

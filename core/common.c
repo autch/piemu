@@ -12,16 +12,15 @@ sign_ext(int data, int bits)
 /* ディレイド分岐命令の中から使用。引数dに1が指定されたら、ディレイド命令を実行します。 */
 void exec_delay(PIEMU_CONTEXT *context, int dflag)
 {
-    if (dflag) {
-        INST d_inst;
+    if (!dflag) return;
+    INST d_inst;
 
-        if (context->core.d) DIE();  /* 念のため、ディレイドが二重になっていないことを検査 */
-        context->core.d = 1;    /* ディレイド開始 */
-        d_inst.s = mem_readH(context, PC + 2);
-        core_inst(context, d_inst);
-        if (!context->core.d) DIE(); /* 念のため、予期しないディレイド解除がないことを検査 */
-        context->core.d = 0;    /* ディレイド終了 */
-    }
+    if (context->core.d) DIE();  /* 念のため、ディレイドが二重になっていないことを検査 */
+    context->core.d = 1;    /* ディレイド開始 */
+    d_inst.s = mem_readH(context, PC + 2);
+    core_inst(context, d_inst);
+    if (!context->core.d) DIE(); /* 念のため、予期しないディレイド解除がないことを検査 */
+    context->core.d = 0;    /* ディレイド終了 */
 }
 
 

@@ -9,6 +9,10 @@
  */
 #include "app.h"
 
+#ifdef USE_PROF
+#include <gperftools/profiler.h>
+#endif
+
 /****************************************************************************
  *  グローバル変数
  ****************************************************************************/
@@ -73,9 +77,11 @@ emu_init(PIEMU_CONTEXT *context)
 
 int emu_work(void *ctx)
 {
+#ifdef USE_PROF
+    ProfilerRegisterThread();
+#endif
+
     PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
-    unsigned real_org;
-    unsigned mils_org;
 
     // きついループ内で計算などさせない
     unsigned nSystemClock = context->emu.sysinfo.sys_clock;
@@ -83,27 +89,25 @@ int emu_work(void *ctx)
     unsigned nMSecPerFrame = 1000 / context->o_fps;
 
     do {
-        real_org = SDL_GetTicks();
+        unsigned real_org = SDL_GetTicks();
         unsigned insts = 0;
 
         /* 命令実行。 */
         do {
-            mils_org = CLK;
-            insts += core_workex(context, mils_org, nClocksDivBy1k);
+            insts += core_workex(context, nClocksDivBy1k);
             //        core_work(context);
 
             core_handle_trap(context);
             core_handle_hlt(context);
         } while (!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
-
         /* 実時間との同期 */
+
         if (!context->o_nowait) {
             int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
             if (nExpectedWait > 0)
-                SDL_Delay(nExpectedWait);
-            else
-                SDL_Delay(1);
+                SDL_Delay((unsigned)nExpectedWait);
         }
+
     } while (!context->bEndFlag);
 
     return 0;
@@ -116,7 +120,7 @@ Uint32 emu_timer_work(Uint32 interval, void *ctx)
     unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
 
     /*{{仮*/
-    pCLK_TCD += 1;
+    pCLK_TCD += 8;
     //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
     pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
     /*}}仮*/
@@ -126,6 +130,9 @@ Uint32 emu_timer_work(Uint32 interval, void *ctx)
 
 int emu_devices_work(void *ctx)
 {
+#ifdef USE_PROF
+    ProfilerRegisterThread();
+#endif
     PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
     unsigned nSystemClock = context->emu.sysinfo.sys_clock;
     unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits

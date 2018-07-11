@@ -4,15 +4,15 @@
  *  CLASS 6
  ****************************************************************************/
 
-void exec_ext_imm13(PIEMU_CONTEXT *context, CLASS_6 inst)
+void exec_ext_imm13(PIEMU_CONTEXT *context, INST inst)
 {
-    NO_DELAY
+    NO_DELAY;
     INST inst2;
 
     if (!EXT1.s) {
-        EXT1.c6 = inst;
+        EXT1.s = inst.s;
     } else if (!EXT2.s) {
-        EXT2.c6 = inst;
+        EXT2.s = inst.s;
     } else {
         DIE();
     }

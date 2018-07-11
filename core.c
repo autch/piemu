@@ -23,14 +23,86 @@
  *  グローバル変数
  ****************************************************************************/
 
-//CORE core;
+void exec_DIE(PIEMU_CONTEXT* context, INST inst)
+{
+    DIE("invalid opcode: %04x", inst.s);
+}
+
+/****
+ * 命令表
+ ****/
+
+// [op1][op2]
+static const C33INST_EXEC C33INST_TABLE_C0A[4][4] = {
+    { exec_nop, exec_slp, exec_halt, exec_DIE },
+    { exec_pushn_rs, exec_popn_rd, exec_DIE, exec_DIE },
+    { exec_brk, exec_retd, exec_int_imm2, exec_reti },
+    { exec_call_rb, exec_ret, exec_jp_rb, exec_DIE }
+};
+
+static const C33INST_EXEC C33INST_TABLE_C0B[16] = {
+    exec_DIE, exec_DIE, exec_DIE, exec_DIE,
+
+    exec_jrgt_sign8, exec_jrge_sign8, exec_jrlt_sign8, exec_jrle_sign8,
+    exec_jrugt_sign8, exec_jruge_sign8, exec_jrult_sign8, exec_jrule_sign8,
+    exec_jreq_sign8, exec_jrne_sign8, exec_call_sign8, exec_jp_sign8
+};
+
+// [op2][op1]
+static const C33INST_EXEC C33INST_TABLE_C1[4][8] = {
+    { exec_ld_b_rd_RB, exec_ld_ub_rd_RB, exec_ld_h_rd_RB, exec_ld_uh_rd_RB,
+      exec_ld_w_rd_RB, exec_ld_b_RB_rs, exec_ld_h_RB_rs, exec_ld_w_RB_rs },
+    { exec_ld_b_rd_RBx, exec_ld_ub_rd_RBx, exec_ld_h_rd_RBx, exec_ld_uh_rd_RBx,
+      exec_ld_w_rd_RBx, exec_ld_b_RBx_rs, exec_ld_h_RBx_rs, exec_ld_w_RBx_rs },
+    { exec_add_rd_rs, exec_sub_rd_rs, exec_cmp_rd_rs, exec_ld_w_rd_rs,
+      exec_and_rd_rs, exec_or_rd_rs, exec_xor_rd_rs, exec_not_rd_rs },
+    { exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE },
+};
+
+static const C33INST_EXEC C33INST_TABLE_C2[8] = {
+    exec_ld_b_rd_SPxIMM6, exec_ld_ub_rd_SPxIMM6, exec_ld_h_rd_SPxIMM6, exec_ld_uh_rd_SPxIMM6,
+    exec_ld_w_rd_SPxIMM6, exec_ld_b_SPxIMM6_rs, exec_ld_h_SPxIMM6_rs, exec_ld_w_SPxIMM6_rs
+};
+
+static const C33INST_EXEC C33INST_TABLE_C3[8] = {
+    exec_add_rd_imm6, exec_sub_rd_imm6, exec_cmp_rd_sign6, exec_ld_w_rd_sign6,
+    exec_and_rd_sign6, exec_or_rd_sign6, exec_xor_rd_sign6, exec_not_rd_sign6
+};
+
+static const C33INST_EXEC C33INST_TABLE_C4A[8] = {
+    exec_add_sp_imm10, exec_sub_sp_imm10, exec_DIE, exec_DIE,
+    exec_DIE, exec_DIE, exec_DIE, exec_DIE
+};
+
+// [op2][op1]
+static const C33INST_EXEC C33INST_TABLE_C4BC[4][8] = {
+    { exec_DIE, exec_DIE, exec_srl_rd_imm4, exec_sll_rd_imm4,
+        exec_sra_rd_imm4, exec_sla_rd_imm4, exec_rr_rd_imm4, exec_rl_rd_imm4 },
+    { exec_DIE, exec_DIE, exec_srl_rd_rs, exec_sll_rd_rs,
+        exec_sra_rd_rs, exec_sla_rd_rs, exec_rr_rd_rs, exec_rl_rd_rs },
+    { exec_DIE, exec_DIE, exec_scan0_rd_rs, exec_scan1_rd_rs,
+        exec_swap_rd_rs, exec_mirror_rd_rs, exec_DIE, exec_DIE },
+    { exec_DIE, exec_DIE, exec_div0s_rs, exec_div0u_rs,
+        exec_div1_rs, exec_div2s_rs, exec_div3s, exec_DIE }
+};
+
+// [op2][op1]
+static const C33INST_EXEC C33INST_TABLE_C5[4][8] = {
+    { exec_ld_w_sd_rs, exec_ld_w_rd_ss, exec_btst_RB_imm3, exec_bclr_RB_imm3,
+        exec_bset_RB_imm3, exec_bnot_RB_imm3, exec_adc_rd_rs, exec_sbc_rd_rs  },
+    { exec_ld_b_rd_rs, exec_ld_ub_rd_rs, exec_ld_h_rd_rs, exec_ld_uh_rd_rs,
+        exec_DIE, exec_DIE, exec_DIE, exec_DIE },
+    { exec_mlt_h_rd_rs, exec_mltu_h_rd_rs, exec_mlt_w_rd_rs, exec_mltu_w_rd_rs,
+        exec_mac_rs, exec_DIE, exec_DIE, exec_DIE },
+    { exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE, exec_DIE },
+};
+
 
 /****************************************************************************
  *  グローバル関数
  ****************************************************************************/
 
-void
-core_init(PIEMU_CONTEXT *context)
+void core_init(PIEMU_CONTEXT *context)
 {
     memset(&context->core, 0, sizeof context->core);
     PC = mem_readW(context, 0x0c00000);
@@ -42,8 +114,7 @@ core_init(PIEMU_CONTEXT *context)
     context->core.sem_trap_queued = SDL_CreateSemaphore(0);
 }
 
-void
-core_work(PIEMU_CONTEXT *context)
+void core_work(PIEMU_CONTEXT *context)
 {
     INST inst;
 
@@ -51,6 +122,7 @@ core_work(PIEMU_CONTEXT *context)
     core_inst(context, inst);
 }
 
+// HLT が実行中なら割り込みがあるまでここで寝る
 void core_handle_hlt(PIEMU_CONTEXT* context)
 {
     if(context->core.in_halt == 0)
@@ -65,6 +137,7 @@ void core_handle_hlt(PIEMU_CONTEXT* context)
     SDL_UnlockMutex(context->core.mut_halt);
 }
 
+// コアがデバイスから通知された割り込みを取り扱う
 void core_handle_trap(PIEMU_CONTEXT* context)
 {
     if(SDL_SemTryWait(context->core.sem_trap_queued) == 0) {
@@ -82,6 +155,7 @@ void core_handle_trap(PIEMU_CONTEXT* context)
     }
 }
 
+// デバイスがコアへ割り込みを通知する
 void core_assert_trap(PIEMU_CONTEXT* context, int no, int level)
 {
     SDL_SemWait(context->core.sem_trap_free);
@@ -102,11 +176,10 @@ void core_assert_trap(PIEMU_CONTEXT* context, int no, int level)
     SDL_SemPost(context->core.sem_trap_queued);
 }
 
-
-unsigned
-core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
+unsigned core_workex(PIEMU_CONTEXT *context, unsigned nClocksDivBy1k)
 {
     unsigned insts = 0;
+    unsigned mils_org = CLK;
     do {
         core_work(context);
         insts++;
@@ -116,8 +189,8 @@ core_workex(PIEMU_CONTEXT *context, unsigned mils_org, unsigned nClocksDivBy1k)
     return insts;
 }
 
-void
-core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
+// コア内から割り込みを発生（デバイスからは trap_from_device を使う）
+void core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
 {
     c33word addr;
 
@@ -141,8 +214,8 @@ core_trap_from_core(PIEMU_CONTEXT *context, int no, int level)
     }
 }
 
-void
-core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
+// デバイスから割り込みを発生する（コアが HLT/SLP 中なら起こす）
+void core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
 {
     core_assert_trap(context, no, level);
 
@@ -154,472 +227,39 @@ core_trap_from_devices(PIEMU_CONTEXT *context, int no, int level)
     SDL_UnlockMutex(context->core.mut_halt);
 }
 
-#if 1
-#define MASK(op, shr, and) ((inst.s >> (16 - (shr + and))) & ((1 << and) - 1))
-#else
-#define MASK(op, shr, and) (op)
-#endif
-
-void
-core_inst(PIEMU_CONTEXT *context, INST inst)
+// 命令デコード
+void core_inst(PIEMU_CONTEXT* context, INST inst)
 {
-    switch (MASK(inst.c0a.cls, 0, 3)) {
+    switch(inst.c0a.cls) {
         case 0:
-            switch (MASK(inst.c0a.op1, 3, 4)) {
-                /* CLASS 0A */
-                case 0:
-                    switch (MASK(inst.c0a.op2, 8, 2)) {
-                        case 0:
-                            exec_nop(context, inst.c0a);
-                            return;
-                        case 1:
-                            exec_slp(context, inst.c0a);
-                            return;
-                        case 2:
-                            exec_halt(context, inst.c0a);
-                            return;
-                        case 3:
-                            return;
-                    }
-                    break;
-                case 1:
-                    switch (MASK(inst.c0a.op2, 8, 2)) {
-                        case 0:
-                            exec_pushn_rs(context, inst.c0a);
-                            return;
-                        case 1:
-                            exec_popn_rd(context, inst.c0a);
-                            return;
-                        case 2:
-                            return;
-                        case 3:
-                            return;
-                    }
-                    break;
-                case 2:
-                    switch (MASK(inst.c0a.op2, 8, 2)) {
-                        case 0:
-                            exec_brk(context, inst.c0a);
-                            return;
-                        case 1:
-                            exec_retd(context, inst.c0a);
-                            return;
-                        case 2:
-                            exec_int_imm2(context, inst.c0a);
-                            return;
-                        case 3:
-                            exec_reti(context, inst.c0a);
-                            return;
-                    }
-                    break;
-                case 3:
-                    switch (MASK(inst.c0a.op2, 8, 2)) {
-                        case 0:
-                            exec_call_rb(context, inst.c0a);
-                            return;
-                        case 1:
-                            exec_ret(context, inst.c0a);
-                            return;
-                        case 2:
-                            exec_jp_rb(context, inst.c0a);
-                            return;
-                        case 3:
-                            return;
-                    }
-                    break;
-                    /* CLASS 0B */
-                case 4:
-                    exec_jrgt_sign8(context, inst.c0b);
-                    return;
-                case 5:
-                    exec_jrge_sign8(context, inst.c0b);
-                    return;
-                case 6:
-                    exec_jrlt_sign8(context, inst.c0b);
-                    return;
-                case 7:
-                    exec_jrle_sign8(context, inst.c0b);
-                    return;
-                case 8:
-                    exec_jrugt_sign8(context, inst.c0b);
-                    return;
-                case 9:
-                    exec_jruge_sign8(context, inst.c0b);
-                    return;
-                case 10:
-                    exec_jrult_sign8(context, inst.c0b);
-                    return;
-                case 11:
-                    exec_jrule_sign8(context, inst.c0b);
-                    return;
-                case 12:
-                    exec_jreq_sign8(context, inst.c0b);
-                    return;
-                case 13:
-                    exec_jrne_sign8(context, inst.c0b);
-                    return;
-                case 14:
-                    exec_call_sign8(context, inst.c0b);
-                    return;
-                case 15:
-                    exec_jp_sign8(context, inst.c0b);
-                    return;
-            }
-            break;
+            if(inst.c0a.op1 < 4)
+                (C33INST_TABLE_C0A[inst.c0a.op1][inst.c0a.op2])(context, inst);
+            else
+                (C33INST_TABLE_C0B[inst.c0b.op1])(context, inst);
+            return;
         case 1:
-            switch (MASK(inst.c1a.op2, 6, 2)) {
-                /* CLASS 1A */
-                case 0:
-                    switch (MASK(inst.c1a.op1, 3, 3)) {
-                        case 0:
-                            exec_ld_b_rd_RB(context, inst.c1a);
-                            return;
-                        case 1:
-                            exec_ld_ub_rd_RB(context, inst.c1a);
-                            return;
-                        case 2:
-                            exec_ld_h_rd_RB(context, inst.c1a);
-                            return;
-                        case 3:
-                            exec_ld_uh_rd_RB(context, inst.c1a);
-                            return;
-                        case 4:
-                            exec_ld_w_rd_RB(context, inst.c1a);
-                            return;
-                        case 5:
-                            exec_ld_b_RB_rs(context, inst.c1a);
-                            return;
-                        case 6:
-                            exec_ld_h_RB_rs(context, inst.c1a);
-                            return;
-                        case 7:
-                            exec_ld_w_RB_rs(context, inst.c1a);
-                            return;
-                    }
-                    break;
-                case 1:
-                    switch (MASK(inst.c1a.op1, 3, 3)) {
-                        case 0:
-                            exec_ld_b_rd_RBx(context, inst.c1a);
-                            return;
-                        case 1:
-                            exec_ld_ub_rd_RBx(context, inst.c1a);
-                            return;
-                        case 2:
-                            exec_ld_h_rd_RBx(context, inst.c1a);
-                            return;
-                        case 3:
-                            exec_ld_uh_rd_RBx(context, inst.c1a);
-                            return;
-                        case 4:
-                            exec_ld_w_rd_RBx(context, inst.c1a);
-                            return;
-                        case 5:
-                            exec_ld_b_RBx_rs(context, inst.c1a);
-                            return;
-                        case 6:
-                            exec_ld_h_RBx_rs(context, inst.c1a);
-                            return;
-                        case 7:
-                            exec_ld_w_RBx_rs(context, inst.c1a);
-                            return;
-                    }
-                    break;
-                    /* CLASS 1B */
-                case 2:
-                    switch (MASK(inst.c1a.op1, 3, 3)) {
-                        case 0:
-                            exec_add_rd_rs(context, inst.c1b);
-                            return;
-                        case 1:
-                            exec_sub_rd_rs(context, inst.c1b);
-                            return;
-                        case 2:
-                            exec_cmp_rd_rs(context, inst.c1b);
-                            return;
-                        case 3:
-                            exec_ld_w_rd_rs(context, inst.c1b);
-                            return;
-                        case 4:
-                            exec_and_rd_rs(context, inst.c1b);
-                            return;
-                        case 5:
-                            exec_or_rd_rs(context, inst.c1b);
-                            return;
-                        case 6:
-                            exec_xor_rd_rs(context, inst.c1b);
-                            return;
-                        case 7:
-                            exec_not_rd_rs(context, inst.c1b);
-                            return;
-                    }
-                    break;
-            }
-            break;
+            (C33INST_TABLE_C1[inst.c1a.op2][inst.c1a.op1])(context, inst);
+            return;
         case 2:
-            switch (MASK(inst.c2.op1, 3, 3)) {
-                /* CLASS 2 */
-                case 0:
-                    exec_ld_b_rd_SPxIMM6(context, inst.c2);
-                    return;
-                case 1:
-                    exec_ld_ub_rd_SPxIMM6(context, inst.c2);
-                    return;
-                case 2:
-                    exec_ld_h_rd_SPxIMM6(context, inst.c2);
-                    return;
-                case 3:
-                    exec_ld_uh_rd_SPxIMM6(context, inst.c2);
-                    return;
-                case 4:
-                    exec_ld_w_rd_SPxIMM6(context, inst.c2);
-                    return;
-                case 5:
-                    exec_ld_b_SPxIMM6_rs(context, inst.c2);
-                    return;
-                case 6:
-                    exec_ld_h_SPxIMM6_rs(context, inst.c2);
-                    return;
-                case 7:
-                    exec_ld_w_SPxIMM6_rs(context, inst.c2);
-                    return;
-            }
-            break;
+            (C33INST_TABLE_C2[inst.c2.op1])(context, inst);
+            return;
         case 3:
-            switch (MASK(inst.c3.op1, 3, 3)) {
-                /* CLASS 3 */
-                case 0:
-                    exec_add_rd_imm6(context, inst.c3);
-                    return;
-                case 1:
-                    exec_sub_rd_imm6(context, inst.c3);
-                    return;
-                case 2:
-                    exec_cmp_rd_sign6(context, inst.c3);
-                    return;
-                case 3:
-                    exec_ld_w_rd_sign6(context, inst.c3);
-                    return;
-                case 4:
-                    exec_and_rd_sign6(context, inst.c3);
-                    return;
-                case 5:
-                    exec_or_rd_sign6(context, inst.c3);
-                    return;
-                case 6:
-                    exec_xor_rd_sign6(context, inst.c3);
-                    return;
-                case 7:
-                    exec_not_rd_sign6(context, inst.c3);
-                    return;
-            }
-            break;
+            (C33INST_TABLE_C3[inst.c3.op1])(context, inst);
+            return;
         case 4:
-            switch (MASK(inst.c4a.op1, 3, 3)) {
-                /* CLASS 4A */
-                case 0:
-                    exec_add_sp_imm10(context, inst.c4a);
-                    return;
-                case 1:
-                    exec_sub_sp_imm10(context, inst.c4a);
-                    return;
-                default:
-                    switch (MASK(inst.c4b.op2, 6, 2)) {
-                        /* CLASS 4B */
-                        case 0:
-                            switch (MASK(inst.c4b.op1, 3, 3)) {
-                                case 0:
-                                    return;
-                                case 1:
-                                    return;
-                                case 2:
-                                    exec_srl_rd_imm4(context, inst.c4b);
-                                    return;
-                                case 3:
-                                    exec_sll_rd_imm4(context, inst.c4b);
-                                    return;
-                                case 4:
-                                    exec_sra_rd_imm4(context, inst.c4b);
-                                    return;
-                                case 5:
-                                    exec_sla_rd_imm4(context, inst.c4b);
-                                    return;
-                                case 6:
-                                    exec_rr_rd_imm4(context, inst.c4b);
-                                    return;
-                                case 7:
-                                    exec_rl_rd_imm4(context, inst.c4b);
-                                    return;
-                            }
-                            break;
-                        case 1:
-                            switch (MASK(inst.c4b.op1, 3, 3)) {
-                                case 0:
-                                    return;
-                                case 1:
-                                    return;
-                                case 2:
-                                    exec_srl_rd_rs(context, inst.c4b);
-                                    return;
-                                case 3:
-                                    exec_sll_rd_rs(context, inst.c4b);
-                                    return;
-                                case 4:
-                                    exec_sra_rd_rs(context, inst.c4b);
-                                    return;
-                                case 5:
-                                    exec_sla_rd_rs(context, inst.c4b);
-                                    return;
-                                case 6:
-                                    exec_rr_rd_rs(context, inst.c4b);
-                                    return;
-                                case 7:
-                                    exec_rl_rd_rs(context, inst.c4b);
-                                    return;
-                            }
-                            break;
-                            /* CLASS 4C */
-                        case 2:
-                            switch (MASK(inst.c4c.op1, 3, 3)) {
-                                case 0:
-                                    return;
-                                case 1:
-                                    return;
-                                case 2:
-                                    exec_scan0_rd_rs(context, inst.c4c);
-                                    return;
-                                case 3:
-                                    exec_scan1_rd_rs(context, inst.c4c);
-                                    return;
-                                case 4:
-                                    exec_swap_rd_rs(context, inst.c4c);
-                                    return;
-                                case 5:
-                                    exec_mirror_rd_rs(context, inst.c4c);
-                                    return;
-                            }
-                            break;
-                        case 3:
-                            switch (MASK(inst.c4c.op1, 3, 3)) {
-                                case 0:
-                                    return;
-                                case 1:
-                                    return;
-                                case 2:
-                                    exec_div0s_rs(context, inst.c4c);
-                                    return;
-                                case 3:
-                                    exec_div0u_rs(context, inst.c4c);
-                                    return;
-                                case 4:
-                                    exec_div1_rs(context, inst.c4c);
-                                    return;
-                                case 5:
-                                    exec_div2s_rs(context, inst.c4c);
-                                    return;
-                                case 6:
-                                    exec_div3s(context, inst.c4c);
-                                    return;
-                            }
-                            break;
-                    }
-                    break;
-            }
-            break;
+            if(inst.c4a.op1 < 2)
+                (C33INST_TABLE_C4A[inst.c4a.op1])(context, inst);
+            else
+                (C33INST_TABLE_C4BC[inst.c4b.op2][inst.c4b.op1])(context, inst);
+            return;
         case 5:
-            switch (MASK(inst.c5a.op2, 6, 2)) {
-                case 0:
-                    switch (MASK(inst.c5a.op1, 3, 3)) {
-                        /* CLASS 5A */
-                        case 0:
-                            exec_ld_w_sd_rs(context, inst.c5a);
-                            return;
-                        case 1:
-                            exec_ld_w_rd_ss(context, inst.c5a);
-                            return;
-                            /* CLASS 5B */
-                        case 2:
-                            exec_btst_RB_imm3(context, inst.c5b);
-                            return;
-                        case 3:
-                            exec_bclr_RB_imm3(context, inst.c5b);
-                            return;
-                        case 4:
-                            exec_bset_RB_imm3(context, inst.c5b);
-                            return;
-                        case 5:
-                            exec_bnot_RB_imm3(context, inst.c5b);
-                            return;
-                            /* CLASS 5C */
-                        case 6:
-                            exec_adc_rd_rs(context, inst.c5c);
-                            return;
-                        case 7:
-                            exec_sbc_rd_rs(context, inst.c5c);
-                            return;
-                    }
-                    break;
-                case 1:
-                    switch (MASK(inst.c5c.op1, 3, 3)) {
-                        case 0:
-                            exec_ld_b_rd_rs(context, inst.c5c);
-                            return;
-                        case 1:
-                            exec_ld_ub_rd_rs(context, inst.c5c);
-                            return;
-                        case 2:
-                            exec_ld_h_rd_rs(context, inst.c5c);
-                            return;
-                        case 3:
-                            exec_ld_uh_rd_rs(context, inst.c5c);
-                            return;
-                        case 4:
-                            return;
-                        case 5:
-                            return;
-                        case 6:
-                            return;
-                        case 7:
-                            return;
-                    }
-                    break;
-                case 2:
-                    switch (MASK(inst.c5c.op1, 3, 3)) {
-                        case 0:
-                            exec_mlt_h_rd_rs(context, inst.c5c);
-                            return;
-                        case 1:
-                            exec_mltu_h_rd_rs(context, inst.c5c);
-                            return;
-                        case 2:
-                            exec_mlt_w_rd_rs(context, inst.c5c);
-                            return;
-                        case 3:
-                            exec_mltu_w_rd_rs(context, inst.c5c);
-                            return;
-                        case 4:
-                            exec_mac_rs(context, inst.c5c);
-                            return;
-                        case 5:
-                            return;
-                        case 6:
-                            return;
-                        case 7:
-                            return;
-                    }
-                    break;
-            }
-            break;
+            (C33INST_TABLE_C5[inst.c5a.op2][inst.c5a.op1])(context, inst);
+            return;
         case 6:
-            /* CLASS 6 */
-            exec_ext_imm13(context, inst.c6);
+            exec_ext_imm13(context, inst);
             return;
-            break;
         case 7:
-            return;
-        case 8:
+        default:
             return;
     }
-    DIE("Unexpected opcode: %02x", inst.s);
 }
-
