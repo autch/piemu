@@ -72,7 +72,6 @@ struct tagPIEMU_CONTEXT;
 //void die(const char* fmt, ...);
 //#define DIE() die(__FILE__ "(%d)", __LINE__)
 #define DIE(fmt, ...)  { SDL_LogCritical(SDL_LOG_CATEGORY_ERROR, "%s:%d:%s: DIE: " fmt, __FILE__, __LINE__, __func__, ##__VA_ARGS__); abort(); }
-#define dbg()  ((void)0)
 
 #define KEY_UP    SDL_SCANCODE_UP
 #define KEY_DOWN  SDL_SCANCODE_DOWN
@@ -101,8 +100,8 @@ struct tagPIEMU_CONTEXT;
 // little endian 用
 #define MEM_MASK(type) ((1 << (sizeof(type) << 3)) - 1)
 #define READ_MEM(mem, type) ((*(int*)(mem)) & MEM_MASK(type))
-#define READ_MEM_B(mem) READ_MEM((mem), char)
-#define READ_MEM_H(mem) READ_MEM((mem), short)
-#define READ_MEM_W(mem) (*(int*)(mem))
+#define READ_MEM_B(mem) (*(int8_t*)(mem))
+#define READ_MEM_H(mem) (*(int16_t*)(mem))
+#define READ_MEM_W(mem) (*(int32_t*)(mem))
 
 #endif /*__APP_H__*/

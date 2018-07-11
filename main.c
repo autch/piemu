@@ -95,7 +95,7 @@ int main(int argc, char *argv[])
     memset(&context, 0, sizeof context);
 
     SDL_Init(SDL_INIT_EVERYTHING ^ SDL_INIT_HAPTIC);
-    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_DEBUG);
+    SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 
     context.pfnSetEmuParameters = SetEmuParameters;
     context.pfnLoadFlashImage = LoadFlashImage;
@@ -183,8 +183,6 @@ int main(int argc, char *argv[])
             int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
             if (nExpectedWait > 0)
                 SDL_Delay(nExpectedWait);
-            else
-                SDL_Delay(1);
         }
 	
     }
