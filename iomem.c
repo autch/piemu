@@ -30,44 +30,43 @@
 //#undef IOMAP_TBL
 
 // private
-DECLSPEC void SDLCALL SDLAudioCallback(void *userdata, Uint8 *stream, int len);
+DECLSPEC void SDLCALL SDLAudioCallback(void* userdata, Uint8* stream, int len);
 
 /****************************************************************************
  *  グローバル関数
  ****************************************************************************/
 
-void
-iomem_init(PIEMU_CONTEXT *context)
+void iomem_init(PIEMU_CONTEXT* context)
 {
     int i;
-    IOMAP *p;
+    IOMAP* p;
     IOMAP iomap;
-    WAVEBUFFER *buffer;
+    WAVEBUFFER* buffer;
 
     memset(&context->iomem, 0, sizeof context->iomem);
 
-    context->iomem.iomap_tbl = (IOMAP *) calloc(IOMAP_SIZE, sizeof(IOMAP));
+    context->iomem.iomap_tbl = (IOMAP*)calloc(IOMAP_SIZE, sizeof(IOMAP));
     p = context->iomem.iomap_tbl;
 
-/* PAD */
-// IOR_(pK5_K5D)
+    /* PAD */
+    // IOR_(pK5_K5D)
     iomap.addr = PIOR_(pK5_K5D);
     iomap.read = IOR_(pK5_K5D);
     iomap.write = NULL;
     *p++ = iomap;
-// IOR_(pK6_K6D)
+    // IOR_(pK6_K6D)
     iomap.addr = PIOR_(pK6_K6D);
     iomap.read = IOR_(pK6_K6D);
     iomap.write = NULL;
     *p++ = iomap;
-/* LCDC */
-// IO_W(pSIF3_TXD)
+    /* LCDC */
+    // IO_W(pSIF3_TXD)
     iomap.addr = PIO_W(pSIF3_TXD);
     iomap.read = NULL;
     iomap.write = IO_W(pSIF3_TXD);
     *p++ = iomap;
-/* SOUND */
-// IO_W(pHS1_EN)
+    /* SOUND */
+    // IO_W(pHS1_EN)
     iomap.addr = PIO_W(pHS1_EN);
     iomap.read = NULL;
     iomap.write = IO_W(pHS1_EN);
@@ -83,7 +82,7 @@ iomem_init(PIEMU_CONTEXT *context)
     desired->channels = 1;
     desired->format = AUDIO_S16LSB;
     desired->samples = WAVEBUFFER_SAMPLES; // 変えちゃだめ
-    desired->userdata = (void *) context;
+    desired->userdata = (void*)context;
     desired->callback = SDLAudioCallback;
 
     for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++) {
@@ -102,24 +101,27 @@ iomem_init(PIEMU_CONTEXT *context)
         SDL_LogError(SDL_LOG_CATEGORY_AUDIO, "Cannot open Audio: %s", SDL_GetError());
     }
     SDL_LogInfo(SDL_LOG_CATEGORY_AUDIO, "Opened fs %d, ch %d, fmt %d, samples %d",
-                obtained->freq, obtained->channels, obtained->format, obtained->samples);
+        obtained->freq, obtained->channels, obtained->format, obtained->samples);
+
+    context->iomem.cond_queued = SDL_CreateCond();
+    context->iomem.cond_avail = SDL_CreateCond();
 }
 
-static IOMAP *
-iomap_sel(PIEMU_CONTEXT *context, unsigned ofs)
+static IOMAP*
+iomap_sel(PIEMU_CONTEXT* context, unsigned ofs)
 {
-    IOMAP *iomap;
+    IOMAP* iomap;
     /* 呼び出し側で「ofs &= IOMEM_SIZE - 1;」しておくこと。 */
     for (iomap = context->iomem.iomap_tbl; iomap->addr; iomap++) {
-        if (ofs == IOOFS(iomap->addr)) return iomap;
+        if (ofs == IOOFS(iomap->addr))
+            return iomap;
     }
     return NULL;
 }
 
-int
-iomem_read(PIEMU_CONTEXT *context, unsigned ofs, int size)
+int iomem_read(PIEMU_CONTEXT* context, unsigned ofs, int size)
 {
-    IOMAP *iomap;
+    IOMAP* iomap;
 
     ofs &= IOMEM_SIZE - 1; /* 必要 */
 
@@ -135,26 +137,25 @@ iomem_read(PIEMU_CONTEXT *context, unsigned ofs, int size)
 }
 
 /* iomem.mem[]からの読み出し。各I/Oハンドラからも利用可能です。 */
-int
-iomem_read_default(PIEMU_CONTEXT *context, unsigned ofs, int size)
+int iomem_read_default(PIEMU_CONTEXT* context, unsigned ofs, int size)
 {
-    if (ofs & ~(IOMEM_SIZE - 1)) DIE();
+    if (ofs & ~(IOMEM_SIZE - 1))
+        DIE();
     switch (size) {
-        case 1:
-            return READ_MEM_B(context->iomem.mem + ofs);
-        case 2:
-            return READ_MEM_H(context->iomem.mem + ofs);
-        case 4:
-            return READ_MEM_W(context->iomem.mem + ofs);
+    case 1:
+        return READ_MEM_B(context->iomem.mem + ofs);
+    case 2:
+        return READ_MEM_H(context->iomem.mem + ofs);
+    case 4:
+        return READ_MEM_W(context->iomem.mem + ofs);
     }
     DIE();
     return -1; /* 警告抑制 */
 }
 
-void
-iomem_write(PIEMU_CONTEXT *context, unsigned ofs, int data, int size)
+void iomem_write(PIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 {
-    IOMAP *iomap;
+    IOMAP* iomap;
 
     ofs &= IOMEM_SIZE - 1; /* 必要 */
 
@@ -171,20 +172,20 @@ iomem_write(PIEMU_CONTEXT *context, unsigned ofs, int data, int size)
 }
 
 /* iomem.mem[]への書き込み。各I/Oハンドラからも利用可能です。 */
-void
-iomem_write_default(PIEMU_CONTEXT *context, unsigned ofs, int data, int size)
+void iomem_write_default(PIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 {
-    if (ofs & ~(IOMEM_SIZE - 1)) DIE();
+    if (ofs & ~(IOMEM_SIZE - 1))
+        DIE();
     switch (size) {
-        case 1:
-            *(char *) &context->iomem.mem[ofs] = data;
-            return;
-        case 2:
-            *(short *) &context->iomem.mem[ofs] = data;
-            return;
-        case 4:
-            *(int *) &context->iomem.mem[ofs] = data;
-            return;
+    case 1:
+        *(char*)&context->iomem.mem[ofs] = data;
+        return;
+    case 2:
+        *(short*)&context->iomem.mem[ofs] = data;
+        return;
+    case 4:
+        *(int*)&context->iomem.mem[ofs] = data;
+        return;
     }
     DIE();
 }
@@ -193,23 +194,31 @@ iomem_write_default(PIEMU_CONTEXT *context, unsigned ofs, int data, int size)
  *  I/Oハンドラ
  ****************************************************************************/
 
-int IOR_(pK5_K5D)(struct tagPIEMU_CONTEXT *context, unsigned ofs, int size)
+int IOR_(pK5_K5D)(struct tagPIEMU_CONTEXT* context, unsigned ofs, int size)
 {
     int data = -1;
-    if (context->keystate[KEY_SELECT]) data &= ~(1 << 3); /* SELECT */
-    if (context->keystate[KEY_START]) data &= ~(1 << 4); /* START  */
+    if (context->keystate[KEY_SELECT])
+        data &= ~(1 << 3); /* SELECT */
+    if (context->keystate[KEY_START])
+        data &= ~(1 << 4); /* START  */
     return data;
 }
 
-int IOR_(pK6_K6D)(struct tagPIEMU_CONTEXT *context, unsigned ofs, int size)
+int IOR_(pK6_K6D)(struct tagPIEMU_CONTEXT* context, unsigned ofs, int size)
 {
     int data = -1;
-    if (context->keystate[KEY_RIGHT]) data &= ~(1 << 0);
-    if (context->keystate[KEY_LEFT]) data &= ~(1 << 1);
-    if (context->keystate[KEY_DOWN]) data &= ~(1 << 2);
-    if (context->keystate[KEY_UP]) data &= ~(1 << 3);
-    if (context->keystate[KEY_B]) data &= ~(1 << 4); /* B */
-    if (context->keystate[KEY_A]) data &= ~(1 << 5); /* A */
+    if (context->keystate[KEY_RIGHT])
+        data &= ~(1 << 0);
+    if (context->keystate[KEY_LEFT])
+        data &= ~(1 << 1);
+    if (context->keystate[KEY_DOWN])
+        data &= ~(1 << 2);
+    if (context->keystate[KEY_UP])
+        data &= ~(1 << 3);
+    if (context->keystate[KEY_B])
+        data &= ~(1 << 4); /* B */
+    if (context->keystate[KEY_A])
+        data &= ~(1 << 5); /* A */
     return data;
 }
 
@@ -224,48 +233,50 @@ int IOR_(pK6_K6D)(struct tagPIEMU_CONTEXT *context, unsigned ofs, int size)
 822e  pHS0_TF   default
 */
 
-void IO_W(pSIF3_TXD)(struct tagPIEMU_CONTEXT *context, unsigned ofs, int data, int size)
+void IO_W(pSIF3_TXD)(struct tagPIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 {
     for (;;) {
-        lcdc_write(context, (unsigned char) data);   /* シリアルCh.3データ→LCDCへ */
-        if (!bHS0_EN_HS0EN) break;     /* HSDMA Ch.0停止なら抜ける */
-        data = mem_read_nowait(context, bHS0_SADR_S0ADR, 1);  /* 次のデータを取得 */
-        bHS0_SADR_S0ADR++;        /* 転送元アドレスを進める */
-        if (!--bHS0_CNT_SIG_TC0) bHS0_EN_HS0EN = 0;  /* 転送カウンタを減らし、0になったらDMA停止 */
+        lcdc_write(context, (unsigned char)data); /* シリアルCh.3データ→LCDCへ */
+        if (!bHS0_EN_HS0EN)
+            break; /* HSDMA Ch.0停止なら抜ける */
+        data = mem_read_nowait(context, bHS0_SADR_S0ADR, 1); /* 次のデータを取得 */
+        bHS0_SADR_S0ADR++; /* 転送元アドレスを進める */
+        if (!--bHS0_CNT_SIG_TC0)
+            bHS0_EN_HS0EN = 0; /* 転送カウンタを減らし、0になったらDMA停止 */
     }
 }
 
-void IO_W(pHS1_EN)(struct tagPIEMU_CONTEXT *context, unsigned ofs, int data, int size)
+void IO_W(pHS1_EN)(struct tagPIEMU_CONTEXT* context, unsigned ofs, int data, int size)
 {
     int en_save;
 
     /* HSDMA1イネーブルビットの書き込み。 */
     en_save = bHS1_EN_HS1EN;
     iomem_write_default(context, ofs, data, size);
-    if (bHS1_EN_HS1EN == en_save) return; /* DISABLE→DISABLE or ENABLE→ENABLE */
+    if (bHS1_EN_HS1EN == en_save)
+        return; /* DISABLE→DISABLE or ENABLE→ENABLE */
     if (!bHS1_EN_HS1EN) /* ENABLE→DISABLE */
-    {
         // 発音停止→バッファを破棄
         SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_DISABLED);
-        return;
-    }
-    /* 以下、DISABLE→ENABLE */
-    SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_ENABLED);
+    else
+        /* 以下、DISABLE→ENABLE */
+        SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_ENABLED);
 }
-
 
 // オーディオコールバックが別スレッドから呼ばれるのは
 // core module にとってきりのいいタイミングでないと困る
-void iomem_work(PIEMU_CONTEXT *context)
+void iomem_work(PIEMU_CONTEXT* context)
 {
-    int edge = SDL_AtomicGet(&context->iomem.hsdma1_en);
-    if(edge == HSDMA1_EDGE_DISABLED) {
+    int edge = SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_NONE);
+
+    switch (edge) {
+    case HSDMA1_EDGE_DISABLED: {
         // ENABLE -> DISABLE, stop audio
         SDL_PauseAudioDevice(context->audio_device, 1);
         SDL_LockAudioDevice(context->audio_device);
         {
             int i;
-            WAVEBUFFER *buffer;
+            WAVEBUFFER* buffer;
 
             // then free queued buffers
             for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++)
@@ -274,11 +285,11 @@ void iomem_work(PIEMU_CONTEXT *context)
             context->iomem.nQueuedBuffers = 0;
         }
         SDL_UnlockAudioDevice(context->audio_device);
-
-        SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_NONE);
-    } else if(edge == HSDMA1_EDGE_ENABLED) {
+        break;
+    }
+    case HSDMA1_EDGE_ENABLED: {
         // DISABLE -> ENABLE
-        WAVEBUFFER *buffer;
+        WAVEBUFFER* buffer;
 
         SDL_LockAudioDevice(context->audio_device);
         {
@@ -290,56 +301,61 @@ void iomem_work(PIEMU_CONTEXT *context)
                     context->iomem.nQueuedBuffers--;
                     break;
                 }
-                if (buffer->nReady == WAVEBUFFER_NOT_READY) break;
+                if (buffer->nReady == WAVEBUFFER_NOT_READY)
+                    break;
             }
-            if (i == BLKN) DIE("sound: no free buffers available to receive DMA!"); // no buffers available
+            if (i == BLKN)
+                DIE("sound: no free buffers available to receive DMA!"); // no buffers available
         }
-        SDL_UnlockAudioDevice(context->audio_device);
+//        SDL_UnlockAudioDevice(context->audio_device);
 
         /* 必要に応じてバッファメモリを拡張。 */
         uint32_t buflen = bHS1_CNT_SIG_TC1 * sizeof(short);
-        if (buffer->dwBufferLength < (unsigned) buflen) {
+        if (buffer->dwBufferLength < (unsigned)buflen) {
             buffer->pData = realloc(buffer->pData, buflen);
-            if (!buffer->pData) DIE();
+            if (!buffer->pData)
+                DIE();
             buffer->dwBufferLength = buflen;
         }
         buffer->dwBytesRecorded = buflen;
 
         /* ウェーブデータ変換。 */
-        int16_t* p = (int16_t *) buffer->pData;
+        int16_t* p = (int16_t*)buffer->pData;
         do {
             int v;
-            v = (short) mem_read_nowait(context, bHS1_SADR_S1ADR, 2);  /*      0〜750〜 1500 */
-            v -= 750;          /*   -750〜  0〜  750 */
+            v = (short)mem_read_nowait(context, bHS1_SADR_S1ADR, 2); /*      0〜750〜 1500 */
+            v -= 750; /*   -750〜  0〜  750 */
             v <<= 16;
-            v /= 750;        /* -32767〜  0〜32767 */
-            if(v > 32767) v = 32767;
-            if(v < -32768) v = -32768;
+            v /= 750; /* -32767〜  0〜32767 */
+            if (v > 32767)
+                v = 32767;
+            if (v < -32768)
+                v = -32768;
             *p++ = (int16_t)v;
             bHS1_SADR_S1ADR += 2;
         } while (--bHS1_CNT_SIG_TC1);
 
-        SDL_LockAudioDevice(context->audio_device);
+//        SDL_LockAudioDevice(context->audio_device);
         {
             buffer->nReady = WAVEBUFFER_READY;
-            buffer->next = NULL;  // こいつが末尾のノード
+            buffer->next = NULL; // こいつが末尾のノード
             if (context->iomem.head) // 先客がいる
                 context->iomem.tail->next = buffer; // 現在の末尾の次に割り当てる
             else
                 context->iomem.head = buffer; // 先頭に割り当てる
-            context->iomem.tail = buffer;   // 末尾を更新する
+            context->iomem.tail = buffer; // 末尾を更新する
             context->iomem.nQueuedBuffers++;
         }
         SDL_UnlockAudioDevice(context->audio_device);
         if (context->iomem.nQueuedBuffers > WAVEBUFFER_MIN_FILLED_BUFFERS)
             SDL_PauseAudioDevice(context->audio_device, 0);
-
-        SDL_AtomicSet(&context->iomem.hsdma1_en, HSDMA1_EDGE_NONE);
-    } else {
+        break;
+    }
+    default: {
         SDL_LockAudioDevice(context->audio_device);
         {
             int i;
-            WAVEBUFFER *buffer;
+            WAVEBUFFER* buffer;
             for (i = 0, buffer = context->iomem.buffer; i < BLKN; i++, buffer++) {
                 // 使用済みバッファを片付ける
                 if (buffer->nReady == WAVEBUFFER_DONE) {
@@ -355,6 +371,7 @@ void iomem_work(PIEMU_CONTEXT *context)
         }
         SDL_UnlockAudioDevice(context->audio_device);
     }
+    }
 
     /* HSDMA1割り込みが許可されていて、割り込み要因が発生していたら、割り込み発行。 */
     if (bINT_EDMA_EHDM1 && bINT_FDMA_FHDM1) {
@@ -366,16 +383,16 @@ void iomem_work(PIEMU_CONTEXT *context)
         //　通常のWave再生なら軽いので大丈夫みたいですけれど、muslibによるBGM再生でノイズが乗りまくります。
         //↓muslibのノイズを防ぐために、超法規的にサウンドの割り込みレベルを下げてみました。
         //　本物のカーネルでも、サウンド処理中のサウンド割り込み受け付けはなくした方がよさそうな気が…(^^;
-        core_trap_from_devices(context, TRAP_HDM1, 1/*5以下ならなんでもいいけど、とりあえず割り込み可能な最低レベルにしてみた*/);
+        core_trap_from_devices(context, TRAP_HDM1, 1 /*5以下ならなんでもいいけど、とりあえず割り込み可能な最低レベルにしてみた*/);
     }
 }
 
-DECLSPEC void SDLCALL SDLAudioCallback(void *userdata, Uint8 *stream, int len)
+DECLSPEC void SDLCALL SDLAudioCallback(void* userdata, Uint8* stream, int len)
 {
     int nBytesToRender = len;
-    PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) userdata;
-    WAVEBUFFER *node;
-    Uint8 *p = stream;
+    PIEMU_CONTEXT* context = (PIEMU_CONTEXT*)userdata;
+    WAVEBUFFER* node;
+    Uint8* p = stream;
 
     memset(stream, 0, len);
 
@@ -390,7 +407,7 @@ DECLSPEC void SDLCALL SDLAudioCallback(void *userdata, Uint8 *stream, int len)
         node = node->next;
         context->iomem.head = node;
     }
-    if(nBytesToRender > 0) {
+    if (nBytesToRender > 0) {
         SDL_LogWarn(SDL_LOG_CATEGORY_AUDIO, "Buffer underrun, expect noises");
     }
 }

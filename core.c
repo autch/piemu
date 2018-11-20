@@ -183,6 +183,7 @@ unsigned core_workex(PIEMU_CONTEXT *context, unsigned nClocksDivBy1k)
     do {
         core_work(context);
         insts++;
+        core_handle_trap(context);
         if(context->core.in_halt)
             break;
     } while (!context->bEndFlag && (CLK - mils_org) < nClocksDivBy1k); /* 1ミリ秒分の処理 */

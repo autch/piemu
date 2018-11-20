@@ -11,7 +11,11 @@
 
 #ifdef USE_PROF
 #include <gperftools/profiler.h>
+#include <sys/time.h>
+
 #endif
+
+#include <time.h>
 
 /****************************************************************************
  *  グローバル変数
@@ -95,13 +99,10 @@ int emu_work(void *ctx)
         /* 命令実行。 */
         do {
             insts += core_workex(context, nClocksDivBy1k);
-            //        core_work(context);
-
-            core_handle_trap(context);
             core_handle_hlt(context);
         } while (!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
-        /* 実時間との同期 */
 
+        /* 実時間との同期 */
         if (!context->o_nowait) {
             int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
             if (nExpectedWait > 0)
@@ -113,17 +114,28 @@ int emu_work(void *ctx)
     return 0;
 }
 
-Uint32 emu_timer_work(Uint32 interval, void *ctx)
+Uint32 emu_clockkeeper_work(Uint32 interval, void* ctx)
 {
     PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
-    unsigned nSystemClock = context->emu.sysinfo.sys_clock;
-    unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
+    time_t now = time(NULL);
+    struct tm ltime;
 
-    /*{{仮*/
-    pCLK_TCD += 8;
-    //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
-    pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
-    /*}}仮*/
+    localtime_r(&now, &ltime);
+
+    pCLK_TCDD = ltime.tm_hour & 0x1f;
+    pCLK_TCHD = ltime.tm_min & 0x3f;
+    pCLK_TCMD = ltime.tm_sec & 0x3f;
+
+    {
+        int yy = ltime.tm_year + 1900;
+        int years = ltime.tm_year + 1900 - 2000;
+        int days = years * 365 + ltime.tm_yday + years / 4 - years / 100 + years / 400 + 1;
+        if(ltime.tm_mon < 2 && (yy % 4 == 0 && yy % 100 != 0 && yy % 400 == 0))
+            days--;
+
+        pCLK_TCNDL = days & 0xff;
+        pCLK_TCNDH = (days >> 8) & 0xff;
+    }
 
     return interval;
 }
@@ -138,15 +150,15 @@ int emu_devices_work(void *ctx)
     unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
     unsigned nMSecPerFrame = 1000 / context->o_fps;
 
-    SDL_TimerID timer = SDL_AddTimer(1, emu_timer_work, context);
+    SDL_TimerID clock_keeper = SDL_AddTimer(500, emu_clockkeeper_work, context);
 
     do {
         unsigned real_org = SDL_GetTicks();
 
         /*{{仮*/
-//    pCLK_TCD += 1;
+        pCLK_TCD += 1;
         //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
-//    pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
+        pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
         /*}}仮*/
 
         /* ※要注意！
@@ -157,15 +169,22 @@ int emu_devices_work(void *ctx)
         for (MODULE *module = context->emu.module_tbl; module->init || module->work; module++) {
             if (module->work) module->work(context);
         }
+
         /* コンテキストスイッチ用の16bitタイマ0コンペアB割り込み生成 */
         if (bINT_E16T01_E16TU0) core_trap_from_devices(context, TRAP_16TU0, bINT_P16T01_P16T0);
         /* P/ECEシステムタイマ用のNMI生成。 */
         if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
 
+/*        if (!context->o_nowait) {
+            int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
+            if (nExpectedWait > 0)
+                SDL_Delay((unsigned)nExpectedWait);
+        }
+*/
         SDL_Delay(1);
     } while (!context->bEndFlag);
 
-    SDL_RemoveTimer(timer);
+    SDL_RemoveTimer(clock_keeper);
 
     return 0;
 }
