@@ -120,7 +120,11 @@ Uint32 emu_clockkeeper_work(Uint32 interval, void* ctx)
     time_t now = time(NULL);
     struct tm ltime;
 
+#ifdef _WIN32
+    localtime_s(&ltime, &now);
+#else
     localtime_r(&now, &ltime);
+#endif
 
     pCLK_TCDD = ltime.tm_hour & 0x1f;
     pCLK_TCHD = ltime.tm_min & 0x3f;
