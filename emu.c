@@ -104,7 +104,7 @@ int emu_work(void *ctx)
             }
 
             /*{{仮*/
-            pCLK_TCD += 2;
+            pCLK_TCD += 1;
             //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
             pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
             /*}}仮*/
@@ -147,7 +147,11 @@ Uint32 emu_clockkeeper_work(Uint32 interval, void* ctx)
     time_t now = time(NULL);
     struct tm ltime;
 
+#ifdef _WIN32
+    localtime_s(&ltime, &now);
+#else
     localtime_r(&now, &ltime);
+#endif
 
     pCLK_TCDD = ltime.tm_hour & 0x1f;
     pCLK_TCHD = ltime.tm_min & 0x3f;

@@ -3,7 +3,7 @@ project(piemu)
 
 option(USE_PROF "Use Google Profiler" OFF)
 
-find_package(PkgConfig REQUIRED)
+find_package(PkgConfig)
 find_package(SDL2 REQUIRED)
 #set(THREADS_PREFER_PTHREAD_FLAG ON)
 #find_package(Threads REQUIRED)
@@ -13,12 +13,19 @@ if(CCACHE_FOUND)
     set_property(GLOBAL PROPERTY RULE_LAUNCH_COMPILE ccache)
 endif(CCACHE_FOUND)
 
+if(MSVC)
+add_compile_options(
+    /Wall
+    /utf-8
+)
+else()
 add_compile_options(
     -g
     -O3
     -funroll-loops
     -Wall
 )
+endif()
 
 pkg_check_modules(FUSE fuse)
 if(FUSE_FOUND)
