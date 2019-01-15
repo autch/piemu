@@ -68,9 +68,6 @@ typedef struct _IOMEM {
 
     SDL_AudioSpec desired, obtained;
     SDL_atomic_t hsdma1_en;
-
-    SDL_cond* cond_queued;
-    SDL_cond* cond_avail;
 } IOMEM;
 
 #define IOOFS(p) ((unsigned)(p) - (unsigned)context->iomem.mem)

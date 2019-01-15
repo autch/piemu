@@ -84,23 +84,47 @@ int emu_work(void *ctx)
 #ifdef USE_PROF
     ProfilerRegisterThread();
 #endif
-
-    PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
+    PIEMU_CONTEXT* context = (PIEMU_CONTEXT*)ctx;
 
     // きついループ内で計算などさせない
     unsigned nSystemClock = context->emu.sysinfo.sys_clock;
     unsigned nClocksDivBy1k = nSystemClock / 1000;
     unsigned nMSecPerFrame = 1000 / context->o_fps;
+    unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
+
+    SDL_TimerID clock_keeper = SDL_AddTimer(500, emu_clockkeeper_work, context);
 
     do {
         unsigned real_org = SDL_GetTicks();
-        unsigned insts = 0;
 
-        /* 命令実行。 */
         do {
-            insts += core_workex(context, nClocksDivBy1k);
-            core_handle_hlt(context);
-        } while (!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
+            /* 命令実行。 */
+            if(!context->core.in_halt) {
+                core_workex(context, nClocksDivBy1k);
+            }
+
+            /*{{仮*/
+            pCLK_TCD += 2;
+            //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
+            pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
+            /*}}仮*/
+
+            /* ※要注意！
+             * 必ず、モジュール処理→NMI生成の順で行ってください！
+             * そうしないと、モジュール処理からの割り込み発行が常にNMIにブロックされてしまいます。
+             */
+            /* 各モジュールの処理。 */
+            for (MODULE *module = context->emu.module_tbl; module->init || module->work; module++) {
+                if (module->work) module->work(context);
+            }
+
+            /* コンテキストスイッチ用の16bitタイマ0コンペアB割り込み生成 */
+            if (bINT_E16T01_E16TU0) core_trap_from_devices(context, TRAP_16TU0, bINT_P16T01_P16T0);
+            /* P/ECEシステムタイマ用のNMI生成。 */
+            if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
+
+            SDL_Delay(1);
+        }while(!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
 
         /* 実時間との同期 */
         if (!context->o_nowait) {
@@ -110,6 +134,9 @@ int emu_work(void *ctx)
         }
 
     } while (!context->bEndFlag);
+
+    SDL_RemoveTimer(clock_keeper);
+
 
     return 0;
 }
@@ -138,53 +165,4 @@ Uint32 emu_clockkeeper_work(Uint32 interval, void* ctx)
     }
 
     return interval;
-}
-
-int emu_devices_work(void *ctx)
-{
-#ifdef USE_PROF
-    ProfilerRegisterThread();
-#endif
-    PIEMU_CONTEXT *context = (PIEMU_CONTEXT *) ctx;
-    unsigned nSystemClock = context->emu.sysinfo.sys_clock;
-    unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
-    unsigned nMSecPerFrame = 1000 / context->o_fps;
-
-    SDL_TimerID clock_keeper = SDL_AddTimer(500, emu_clockkeeper_work, context);
-
-    do {
-        unsigned real_org = SDL_GetTicks();
-
-        /*{{仮*/
-        pCLK_TCD += 1;
-        //nSystemClock / 256 / 64 = nSystemClock >> 8 >> 6 = nSystemClock >> (8 + 6)
-        pT16_TC0 += nClocksShr14; /* GetSysClock()に24MHzに見せかけるためのつじつま合わせ */
-        /*}}仮*/
-
-        /* ※要注意！
-         * 必ず、モジュール処理→NMI生成の順で行ってください！
-         * そうしないと、モジュール処理からの割り込み発行が常にNMIにブロックされてしまいます。
-         */
-        /* 各モジュールの処理。 */
-        for (MODULE *module = context->emu.module_tbl; module->init || module->work; module++) {
-            if (module->work) module->work(context);
-        }
-
-        /* コンテキストスイッチ用の16bitタイマ0コンペアB割り込み生成 */
-        if (bINT_E16T01_E16TU0) core_trap_from_devices(context, TRAP_16TU0, bINT_P16T01_P16T0);
-        /* P/ECEシステムタイマ用のNMI生成。 */
-        if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
-
-/*        if (!context->o_nowait) {
-            int nExpectedWait = (real_org + nMSecPerFrame) - SDL_GetTicks();
-            if (nExpectedWait > 0)
-                SDL_Delay((unsigned)nExpectedWait);
-        }
-*/
-        SDL_Delay(1);
-    } while (!context->bEndFlag);
-
-    SDL_RemoveTimer(clock_keeper);
-
-    return 0;
 }

@@ -102,9 +102,6 @@ void iomem_init(PIEMU_CONTEXT* context)
     }
     SDL_LogInfo(SDL_LOG_CATEGORY_AUDIO, "Opened fs %d, ch %d, fmt %d, samples %d",
         obtained->freq, obtained->channels, obtained->format, obtained->samples);
-
-    context->iomem.cond_queued = SDL_CreateCond();
-    context->iomem.cond_avail = SDL_CreateCond();
 }
 
 static IOMAP*

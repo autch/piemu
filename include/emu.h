@@ -24,8 +24,7 @@ typedef struct _EMU {
 extern EMU emu;
 
 void emu_init(struct tagPIEMU_CONTEXT* context);
-//void emu_work(struct tagPIEMU_CONTEXT* context);
-int emu_work(void* ctx);
-int emu_devices_work(void* ctx);
+Uint32 emu_clockkeeper_work(Uint32 interval, void* ctx);
+int emu_work(void *ctx);
 
 #endif /*__EMU_H__*/
