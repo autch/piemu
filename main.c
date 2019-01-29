@@ -168,6 +168,52 @@ int main(int argc, char *argv[])
                   }
                   break;
                 }
+#else
+		case SDL_JOYAXISMOTION:
+		{
+		  //fprintf(stderr, "[axis:%d]: a%d: %d\n", event.jaxis.which, event.jaxis.axis, event.jaxis.value);
+		  if(event.jaxis.axis == 6) {
+		    context.keystate[KEY_LEFT] = (event.jaxis.value < -8192);
+		    context.keystate[KEY_RIGHT] = (event.jaxis.value > 8192);
+		  }
+		  if(event.jaxis.axis == 7) {
+		    context.keystate[KEY_UP] = (event.jaxis.value < -8192);
+		    context.keystate[KEY_DOWN] = (event.jaxis.value > 8192);
+		  }
+		  break;
+		}
+		case SDL_JOYHATMOTION:
+		{
+		  //fprintf(stderr, "[hat:%d]: h%d: %d\n", event.jhat.which, event.jhat.hat, event.jhat.value);
+		  context.keystate[KEY_LEFT] = (event.jhat.value & SDL_HAT_LEFT);
+		  context.keystate[KEY_RIGHT] = (event.jhat.value & SDL_HAT_RIGHT);
+		  context.keystate[KEY_UP] = (event.jhat.value & SDL_HAT_UP);
+		  context.keystate[KEY_DOWN] = (event.jhat.value & SDL_HAT_DOWN);
+		  break;
+
+		}
+                case SDL_JOYBUTTONDOWN:
+                {
+                  switch(event.jbutton.button)
+                  {
+                    case 1: context.keystate[KEY_A] = 1; break;
+                    case 0:  context.keystate[KEY_B] = 1; break;
+                    case 7: context.keystate[KEY_START] = 1; break;
+                    case 6: context.keystate[KEY_SELECT] = 1; break;
+                  }
+                  break;
+                }
+                case SDL_JOYBUTTONUP:
+                {
+                  switch(event.jbutton.button)
+                  {
+                    case 1: context.keystate[KEY_A] = 0; break;
+                    case 0:  context.keystate[KEY_B] = 0; break;
+                    case 7:  context.keystate[KEY_START] = 0; break;
+                    case 6: context.keystate[KEY_SELECT] = 0; break;
+                  }
+                  break;
+                }
 #endif
             }
         }
