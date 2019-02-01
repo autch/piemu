@@ -30,6 +30,7 @@ void PFFSLoadMasterBlock(PFI* pfi)
 	pfi->msb = (pffsMASTERBLOCK*)PFIGetPFFSTop(pfi);
 }
 
+// [a-z0-9_]{1,8}([.][a-z0-9_]{1,3})?
 int CheckFileName(const char* szFileName)
 {
 	int part;
@@ -313,12 +314,17 @@ int PFFSAddFile(PFI* pfi, char* pFileName)
 	int nSectors, nOldSectors, r = 0;
 	DIRECTORY* pDir;
 
-	if(CheckFileName(pFileName))
+	if(CheckFileName(pFileName)) {
+		fprintf(stderr, "Invalid filename for pffs: %s\n", pFileName);
 		return 0;
+	}
 
 	// measuring size of disk file
 	fp = fopen(pFileName, "rb");
-	if(!fp) return 0;
+	if(!fp) {
+		fprintf(stderr, "Cannot open disk file: %s\n", pFileName);
+		return 0;
+	}
 	fseek(fp, 0, SEEK_END);
 	dwSize = ftell(fp);
 	fclose(fp);
@@ -351,10 +357,14 @@ int PFFSAddFile(PFI* pfi, char* pFileName)
 	}
 	pDir->size = dwSize;
 
-	if(!AllocateSectors(pfi, pDir, nSectors, nOldSectors))
+	if(!AllocateSectors(pfi, pDir, nSectors, nOldSectors)) {
+		fprintf(stderr, "Unable to allocate sectors for %s\n", pFileName);
 		goto CreateEnd;
-	if(!WriteFileToSectors(pfi, pDir, pFileName, nSectors))
+	}
+	if(!WriteFileToSectors(pfi, pDir, pFileName, nSectors)) {
+		fprintf(stderr, "Cannot write file into pffs: %s\n", pFileName);
 		goto CreateEnd;
+	}
 
 CreateSuccess:
 	r = 1;
