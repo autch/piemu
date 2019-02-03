@@ -76,7 +76,7 @@ unsigned char fsbuff[DISP_Y * 5][DISP_X * 5]; /* フルスクリーン展開用 
 void ui_init(PIEMU_CONTEXT *context)
 {
     context->window = SDL_CreateWindow("P/EMU/SDL", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED,
-                                       128 * 4, 88 * 4, 0);
+                                       128 * 4, 88 * 4, SDL_WINDOW_ALLOW_HIGHDPI);
 //        0, 0, SDL_WINDOW_FULLSCREEN_DESKTOP);
     context->renderer = SDL_CreateRenderer(context->window, -1, 0);
 //  SDL_SetHint(SDL_HINT_RENDER_SCALE_QUALITY, "linear");  // make the scaled rendering look smoother.
