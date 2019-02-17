@@ -91,11 +91,14 @@ int emu_work(void *ctx)
     unsigned nClocksDivBy1k = nSystemClock / 1000;
     unsigned nMSecPerFrame = 1000 / context->o_fps;
     unsigned nClocksShr14 = nSystemClock >> 14; // nClocks SHift to Right 14bits
+    unsigned clocksPerFrame = nSystemClock / context->o_fps;
 
     SDL_TimerID clock_keeper = SDL_AddTimer(500, emu_clockkeeper_work, context);
 
     do {
         unsigned real_org = SDL_GetTicks();
+
+        CLK = 0;
 
         do {
             /* 命令実行。 */
@@ -124,7 +127,7 @@ int emu_work(void *ctx)
             if (bWD_EN_EWD) core_trap_from_devices(context, TRAP_NMI, 0);
 
             SDL_Delay(1);
-        }while(!context->bEndFlag && (SDL_GetTicks() - real_org) < nMSecPerFrame);
+        }while(!context->bEndFlag && CLK < clocksPerFrame);
 
         /* 実時間との同期 */
         if (!context->o_nowait) {
