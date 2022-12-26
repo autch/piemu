@@ -6,7 +6,7 @@ int SetEmuParameters(struct tagPIEMU_CONTEXT *context, EMU *pEmuInfo, void *pUse
     FILE *fp;
     PFIHEADER pfi;
 
-    fp = fopen("piece.pfi", "rb");
+    fp = fopen(context->image_filename == NULL ? "piece.pfi" : context->image_filename, "rb");
     if (fp == NULL) DIE("Cannot open piece.pfi");
     if (!fread(&pfi, sizeof(PFIHEADER), 1, fp)) DIE("Cannot read header from piece.pfi");
     if (memcmp(&pfi.dwSignature, "1IFP", 4) != 0) DIE("Signature mismatch in piece.pfi (possibly newer image version)");
@@ -27,7 +27,7 @@ int LoadFlashImage(struct tagPIEMU_CONTEXT *context, FLASH *pFlashInfo, void *pU
     PFIHEADER pfi;
     unsigned int nOffset = 0;
 
-    fp = fopen("piece.pfi", "rb");
+    fp = fopen(context->image_filename == NULL ? "piece.pfi" : context->image_filename, "rb");
     if (!fp) DIE("Cannot open piece.pfi");
     if (!fread(&pfi, sizeof(PFIHEADER), 1, fp)) DIE("Cannot read header from piece.pfi");
     if (memcmp(&pfi.dwSignature, "1IFP", 4) != 0) DIE("Signature mismatch in piece.pfi (possibly newer image version)");

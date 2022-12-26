@@ -94,6 +94,12 @@ int main(int argc, char *argv[])
 
     memset(&context, 0, sizeof context);
 
+    if(argc == 2)
+    {
+        printf("loading image from %s\n", argv[1]);
+        context.image_filename = argv[1];
+    }
+
     SDL_Init(SDL_INIT_EVERYTHING ^ SDL_INIT_HAPTIC);
     SDL_LogSetAllPriority(SDL_LOG_PRIORITY_VERBOSE);
 

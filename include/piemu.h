@@ -39,6 +39,8 @@ typedef struct tagPIEMU_CONTEXT
 
     void *pUser;
 
+    char* image_filename;   // may point to argv
+
     // zero if failure, others success.
     int (*pfnSetEmuParameters)(struct tagPIEMU_CONTEXT *context, EMU *pEmuInfo, void *pUser);
     int (*pfnLoadFlashImage)(struct tagPIEMU_CONTEXT *context, FLASH *pFlashInfo, void *pUser);
