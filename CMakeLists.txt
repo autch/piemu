@@ -98,5 +98,7 @@ if (USE_PROF)
     target_link_libraries (piemu profiler)
 endif (USE_PROF)
 
+install(TARGETS piemu)
+
 add_subdirectory(./tools)
 #add_subdirectory(./tools-old)

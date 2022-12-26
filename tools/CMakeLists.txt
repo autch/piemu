@@ -10,6 +10,8 @@ add_executable(mkpfi
     pfi.c
 )
 
+install(TARGETS pfar mkpfi)
+
 if(FUSE_FOUND)
     add_executable(fusepfi
         fusepfi.c
@@ -23,4 +25,5 @@ if(FUSE_FOUND)
     target_link_libraries(fusepfi
         ${FUSE_LIBRARIES}
     )
+    install(TARGETS fusepfi)
 endif()
